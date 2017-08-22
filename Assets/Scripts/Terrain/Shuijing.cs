@@ -30,10 +30,12 @@ public class Shuijing : MonoBehaviour
         }
     }
 
-    public void CreateBuildings(Transform chunk)
+    public void CreateBuildings(PATileTerrain tileTerrain)
     {
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
+
         foreach(var point in vPoints)
-            buildings.Add(point.CreateBuilding(chunk));
+            buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
     }
 
     public void RemoveBuildings()

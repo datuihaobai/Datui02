@@ -103,7 +103,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                     shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
                     Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
                     shuijing.level = selectLevel;
-                    shuijing.CreateBuildings(chunk.transform);
+                    //shuijing.CreateBuildings(chunk.transform);
                     crystalTile.leftBottomTile.shuijing = shuijing;
                     shuijing.tile = crystalTile.leftBottomTile;
                     PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
@@ -169,6 +169,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         if(shuijing.level == 1)
         {
             tileTerrain.PaintCrystalLevel1(shuijing.tile, brushType);
+            if (isPaint)
+                tileTerrain.PaintCrystalLevel_Specified(shuijing.tile,brushType);
             tileTerrain.PaintTileElementLevel1(shuijing.tile,PATileTerrain.TileElementType.Fire,!isPaint);
         }
         else if(shuijing.level == 2)
@@ -188,6 +190,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             }
             tileTerrain.PaintTileElementLevel3(shuijing.tile, PATileTerrain.TileElementType.Fire, !isPaint);
         }
+
+        shuijing.CreateBuildings(tileTerrain);
     }
 
     public void RepaintAllCrystals(bool isPaint)

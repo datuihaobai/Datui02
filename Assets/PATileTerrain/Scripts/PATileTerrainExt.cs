@@ -87,7 +87,10 @@ public partial class PATileTerrain
             return;
 
         foreach (PATileTerrainChunk c in settings.chunks)
+        {
             c.settings.crystalGo.SetActive(isShow);
+            c.settings.buildingsRoot.gameObject.SetActive(!isShow);
+        }
     }
 
     void SetTilesElementSym(PATile[] tiles, int startIndex,int count, 
@@ -344,6 +347,33 @@ public partial class PATileTerrain
         CalcTileBits(t, line10Tiles[3], 8);
     }
 
+    public void PaintCrystalLevel_Specified(PATile tile, int t)
+    {
+        PATile specifiedTile = GetATile(tile, 2, -1);
+        PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
+
+        specifiedTile = GetATile(tile, -1, 0);
+        PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
+
+        specifiedTile = GetATile(tile, 0, 0);
+        PaintNormalTile(specifiedTile, t, 34, UVRotateType._90);
+        specifiedTile = GetATile(tile, 1, 0);
+        PaintNormalTile(specifiedTile, t, 35, UVRotateType._90);
+        specifiedTile = GetATile(tile, 0, 1);
+        PaintNormalTile(specifiedTile, t, 18, UVRotateType._90);
+        specifiedTile = GetATile(tile, 1, 1);
+        PaintNormalTile(specifiedTile, t, 19, UVRotateType._90);
+
+        specifiedTile = GetATile(tile, 2, 1);
+        PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
+
+        specifiedTile = GetATile(tile, -1, 2);
+        PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
+
+        specifiedTile = GetATile(tile, 1, 2);
+        PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
+    }
+
     public void PaintCrystalLevel2(PATile tile, int t)
     {
         PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -2, -8, 6);
@@ -466,48 +496,49 @@ public partial class PATileTerrain
     public void PaintCrystalLevel2_B(PATile tile, int t)
     {
         PaintCrystalLevel1(tile, t);
+
         PATile specifiedTile = GetATile(tile, 1, -3);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 0, -2);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -2, -1);
-        PaintNormalTile(specifiedTile, t, 49, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
         specifiedTile = GetATile(tile, -1, -1);
-        PaintNormalTile(specifiedTile, t, 50, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 2, -1);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -3, 0);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -1, 0);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -1, 2);
-        PaintNormalTile(specifiedTile, t, 54, UVRotateType._90);
-        specifiedTile = GetATile(tile, 0, 2);
-        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-        specifiedTile = GetATile(tile, -1, 1);
         PaintNormalTile(specifiedTile, t, 62, UVRotateType._90);
-        specifiedTile = GetATile(tile, 0, 1);
+        specifiedTile = GetATile(tile, 0, 2);
         PaintNormalTile(specifiedTile, t, 63, UVRotateType._90);
+        specifiedTile = GetATile(tile, -1, 1);
+        PaintNormalTile(specifiedTile, t, 78, UVRotateType._90);
+        specifiedTile = GetATile(tile, 0, 1);
+        PaintNormalTile(specifiedTile, t, 79, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 4, 1);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 2, 2);
-        PaintNormalTile(specifiedTile, t, 49, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
         specifiedTile = GetATile(tile, 3, 2);
-        PaintNormalTile(specifiedTile, t, 50, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -1, 3);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 1, 4);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
     }
 
     public void PaintCrystalLevel3(PATile tile, int t)
@@ -714,56 +745,56 @@ public partial class PATileTerrain
         PaintALine(tile, -11, 0, 24, t, new byte[] { 3 });
 
         PATile specifiedTile = GetATile(tile,-1,-5);
-        PaintNormalTile(specifiedTile,t,52,UVRotateType._270);
+        PaintNormalTile(specifiedTile,t,58,UVRotateType._270);
 
         specifiedTile = GetATile(tile, 2, -5);
-        PaintNormalTile(specifiedTile, t, 49, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
         specifiedTile = GetATile(tile, 3, -5);
-        PaintNormalTile(specifiedTile, t, 50, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 4, -5);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -5, -3);
-        PaintNormalTile(specifiedTile, t, 54, UVRotateType._90);
-        specifiedTile = GetATile(tile, -4, -3);
-        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-        specifiedTile = GetATile(tile, -5, -4);
         PaintNormalTile(specifiedTile, t, 62, UVRotateType._90);
-        specifiedTile = GetATile(tile, -4, -4);
+        specifiedTile = GetATile(tile, -4, -3);
         PaintNormalTile(specifiedTile, t, 63, UVRotateType._90);
+        specifiedTile = GetATile(tile, -5, -4);
+        PaintNormalTile(specifiedTile, t, 78, UVRotateType._90);
+        specifiedTile = GetATile(tile, -4, -4);
+        PaintNormalTile(specifiedTile, t, 79, UVRotateType._90);
 
         specifiedTile = GetATile(tile, -3, -4);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 6, -1);
-        PaintNormalTile(specifiedTile, t, 52, UVRotateType.None);
+        PaintNormalTile(specifiedTile, t, 58, UVRotateType.None);
 
         specifiedTile = GetATile(tile, 6, 3);
-        PaintNormalTile(specifiedTile, t, 55, UVRotateType.None);
-        specifiedTile = GetATile(tile, 7, 3);
         PaintNormalTile(specifiedTile, t, 63, UVRotateType.None);
+        specifiedTile = GetATile(tile, 7, 3);
+        PaintNormalTile(specifiedTile, t, 79, UVRotateType.None);
         specifiedTile = GetATile(tile, 6, 2);
-        PaintNormalTile(specifiedTile, t, 54, UVRotateType.None);
-        specifiedTile = GetATile(tile, 7, 2);
         PaintNormalTile(specifiedTile, t, 62, UVRotateType.None);
+        specifiedTile = GetATile(tile, 7, 2);
+        PaintNormalTile(specifiedTile, t, 78, UVRotateType.None);
 
         specifiedTile = GetATile(tile, -4, 6);
-        PaintNormalTile(specifiedTile, t, 55, UVRotateType.None);
-        specifiedTile = GetATile(tile, -3, 6);
         PaintNormalTile(specifiedTile, t, 63, UVRotateType.None);
+        specifiedTile = GetATile(tile, -3, 6);
+        PaintNormalTile(specifiedTile, t, 79, UVRotateType.None);
         specifiedTile = GetATile(tile, -4, 5);
-        PaintNormalTile(specifiedTile, t, 54, UVRotateType.None);
-        specifiedTile = GetATile(tile, -3, 5);
         PaintNormalTile(specifiedTile, t, 62, UVRotateType.None);
+        specifiedTile = GetATile(tile, -3, 5);
+        PaintNormalTile(specifiedTile, t, 78, UVRotateType.None);
 
         specifiedTile = GetATile(tile, -1, 6);
-        PaintNormalTile(specifiedTile, t, 51, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
         specifiedTile = GetATile(tile, 2, 6);
-        PaintNormalTile(specifiedTile, t, 49, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
         specifiedTile = GetATile(tile, 3, 6);
-        PaintNormalTile(specifiedTile, t, 50, UVRotateType._90);
+        PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
     }
 
     public void PaintTileElementLevel1(PATile tile,TileElementType elementType,bool isReset = false)

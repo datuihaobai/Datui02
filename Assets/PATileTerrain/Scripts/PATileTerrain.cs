@@ -1081,6 +1081,9 @@ public partial class PATileTerrain: MonoBehaviour
                 crystalGo.transform.SetParent(go.transform);
                 crystalGo.transform.localPosition = new Vector3(0f,0.1f,0f);
                 crystalGo.SetActive(false);
+
+                GameObject buildingsRootGo = new GameObject("buildingsRoot");
+                buildingsRootGo.transform.SetParent(go.transform,false);
 				//go.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
 				//go.isStatic = true;
 			 
@@ -1241,6 +1244,7 @@ public partial class PATileTerrain: MonoBehaviour
 
 				chunk.settings.mesh = meshCollider.sharedMesh;
                 chunk.settings.crystalGo = crystalGo;
+                chunk.settings.buildingsRoot = buildingsRootGo.transform;
 			}
 
         if (jsnode != null)
@@ -1261,7 +1265,7 @@ public partial class PATileTerrain: MonoBehaviour
                 shuijingGo.transform.position = theCrystalTile.GetShuijingPos(this);
                 Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
                 shuijing.level = crystal.level;
-                shuijing.CreateBuildings(theChunk.transform);
+                //shuijing.CreateBuildings(theChunk.transform);
                 theTile.shuijing = shuijing;
                 shuijing.tile = theTile;
                 crystal.shuijing = shuijing;
