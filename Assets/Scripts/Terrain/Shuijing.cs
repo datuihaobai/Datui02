@@ -40,6 +40,9 @@ public class Shuijing : MonoBehaviour
 
     public void RemoveBuildings()
     {
+        if (buildings.Count == 0)
+            return;
+        //buildings[0].parent.gameObject.SetActive(true);
         foreach(var building in buildings)
             PoolManager.Pools["Shuijing"].Despawn(building);
         buildings.Clear();

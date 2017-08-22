@@ -191,7 +191,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             tileTerrain.PaintTileElementLevel3(shuijing.tile, PATileTerrain.TileElementType.Fire, !isPaint);
         }
 
-        shuijing.CreateBuildings(tileTerrain);
+        if(isPaint)
+            shuijing.CreateBuildings(tileTerrain);
     }
 
     public void RepaintAllCrystals(bool isPaint)
