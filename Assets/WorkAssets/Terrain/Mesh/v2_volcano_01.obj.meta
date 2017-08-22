@@ -1,22 +1,17 @@
 fileFormatVersion: 2
-guid: 317053f2dc8078a41ad9b50ec1e45563
-timeCreated: 1503299231
+guid: 556dbe37c4df55f499069a2acef936da
+timeCreated: 1503387387
 licenseType: Free
 ModelImporter:
   serializedVersion: 21
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: v_volcano_01
-    100004: v3_volcano_02
-    400000: //RootNode
-    400002: v_volcano_01
-    400004: v3_volcano_02
-    2300000: v_volcano_01
-    2300002: v3_volcano_02
-    3300000: v_volcano_01
-    3300002: v3_volcano_02
-    4300000: v_volcano_01
-    4300002: v3_volcano_02
+    100000: v2_volcano_01
+    100002: //RootNode
+    400000: v2_volcano_01
+    400002: //RootNode
+    2300000: v2_volcano_01
+    3300000: v2_volcano_01
+    4300000: v2_volcano_01
   materials:
     importMaterials: 1
     materialName: 0

@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: //RootNode
     100002: v_volcano_02
+    100004: v3_volcano_01
     400000: //RootNode
     400002: v_volcano_02
+    400004: v3_volcano_01
     2300000: v_volcano_02
+    2300002: v3_volcano_01
     3300000: v_volcano_02
+    3300002: v3_volcano_01
     4300000: v_volcano_02
+    4300002: v3_volcano_01
   materials:
     importMaterials: 1
     materialName: 0
