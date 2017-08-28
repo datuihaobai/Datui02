@@ -6,7 +6,7 @@ public class RandomManager : SingletonObject<RandomManager>
 {
     public void SetSeed(int seed)
     {
-        Debug.Log("RandomManager SetSeed seed = " + seed);
+        //Debug.Log("RandomManager SetSeed seed = " + seed);
         Random.InitState(seed);
     }
 
