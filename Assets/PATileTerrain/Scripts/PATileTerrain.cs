@@ -1115,7 +1115,9 @@ public partial class PATileTerrain: MonoBehaviour
 				meshRenderer = go.AddComponent<MeshRenderer>();
                 crystalMeshRenderer = crystalGo.AddComponent<MeshRenderer>();
 				//meshRenderer.hideFlags = HideFlags.HideInInspector | HideFlags.NotEditable;
-			
+
+                go.AddComponent<NavMeshSourceTag>();
+
 				//Creation of the mesh 
 			
 				//Chunk size
@@ -1292,6 +1294,7 @@ public partial class PATileTerrain: MonoBehaviour
         //tile.bits = tileNode["bits"].AsByte;
         //tile.tilesetIndex = tileNode["tilesetIndex"].AsInt;
         TerrainManager.instance.RepaintAllCrystals(true);
+        //LocalNavMeshBuilder.instance.UpdateNavMesh();
 		UpdateMesh();
 	}
 	

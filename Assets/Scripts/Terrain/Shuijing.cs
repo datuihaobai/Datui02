@@ -34,8 +34,33 @@ public class Shuijing : MonoBehaviour
     {
         PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
 
-        foreach(var point in vPoints)
+        foreach (var point in vPoints)
+        {
+            if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
+                continue;
             buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
+        }
+
+        LocalNavMeshBuilder.instance.UpdateNavMesh();
+
+        foreach (var point in vPoints)
+        {
+            if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
+                continue;
+            buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
+        }
+    }
+
+    public void CreateAnimals(PATileTerrain tileTerrain)
+    {
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
+
+        foreach (var point in vPoints)
+        {
+            if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
+                continue;
+            buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
+        }
     }
 
     public void RemoveBuildings()

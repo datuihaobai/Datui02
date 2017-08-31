@@ -95,7 +95,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 if (crystalTile.leftBottomTile.shuijing == null)
                 {
                     Shuijing shuijing = CreateCrystal(crystalTile,selectLevel);
-                    PaintCrystal(shuijing, true);
+                    PaintCrystalAndUpdateNavMesh(shuijing);
                 }
                 SetSelectShuijing(crystalTile.leftBottomTile.shuijing);
             }
@@ -150,7 +150,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         RemoveSelectShuijing();
 
         Shuijing newShuijing = CreateCrystal(tile,newLevel);
-        PaintCrystal(newShuijing,true);
+        PaintCrystalAndUpdateNavMesh(newShuijing);
         SetSelectShuijing(newShuijing);
     }
 
@@ -170,6 +170,13 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
         shuijing.tile.shuijing = null;
         RepaintAllCrystals(true);
+        //LocalNavMeshBuilder.instance.UpdateNavMesh();
+    }
+
+    void PaintCrystalAndUpdateNavMesh(Shuijing shuijing)
+    {
+        PaintCrystal(shuijing,true);
+        //LocalNavMeshBuilder.instance.UpdateNavMesh();
     }
 
     void PaintCrystal(Shuijing shuijing,bool isPaint)

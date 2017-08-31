@@ -13,4 +13,15 @@ public static class GameUtility
         }
         return str;
     }
+
+    public static void GetComponentsInChildrenRecursive<T>(Transform trans,ref List<T> results)
+    {
+        T component = trans.GetComponent<T>();
+        if(component != null)
+            results.Add(component);
+        for (int i = 0; i < trans.childCount; i++ )
+        {
+            GetComponentsInChildrenRecursive<T>(trans.GetChild(i),ref results);
+        }
+    }
 }

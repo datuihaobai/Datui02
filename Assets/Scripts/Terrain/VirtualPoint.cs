@@ -12,8 +12,15 @@ public class BuildingData
 
 public class VirtualPoint : MonoBehaviour 
 {
+    public enum VirtualPointType
+    {
+        Building,
+        Animals,
+    }
+
     public List<BuildingData> buildings = new List<BuildingData>();
-	
+    public VirtualPointType virtualPointType;
+
     public Transform CreateBuilding(Transform chunk)
     {
         int randomValue = RandomManager.instance.Range(0,buildings.Count);
