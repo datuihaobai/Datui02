@@ -79,12 +79,12 @@ public class NavMeshSourceTag : MonoBehaviour
 
             //var s = new NavMeshBuildSource();
             //s.shape = NavMeshBuildSourceShape.Box;
-            //s.sourceObject = m;
+            ////s.sourceObject = m;
             //s.transform = mf.transform.localToWorldMatrix;
             //s.area = 0;
             //Collider collider = mf.GetComponent<Collider>();
             //s.component = collider;
-            //s.size = new Vector3(collider.bounds.size.x / mf.transform.lossyScale.x, 
+            //s.size = new Vector3(collider.bounds.size.x / mf.transform.lossyScale.x,
             //    collider.bounds.size.y / mf.transform.lossyScale.y,
             //    collider.bounds.size.z / mf.transform.lossyScale.z);
             //sources.Add(s);
