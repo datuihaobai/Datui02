@@ -1044,7 +1044,8 @@ public partial class PATileTerrain: MonoBehaviour
 		PATileTerrainChunk chunk;
 		
 		Mesh mesh;
-		MeshCollider meshCollider;
+        MeshCollider meshCollider;
+        //BoxCollider boxCollider;
 		MeshFilter meshFilter;
 		MeshRenderer meshRenderer;
 
@@ -1076,7 +1077,7 @@ public partial class PATileTerrain: MonoBehaviour
 				str = settings.name + "_chunk_" + cx + "x" + cy + "_" + cId;
 				go = new GameObject(str);
 				go.transform.parent = transform;
-
+                go.layer = LayerMask.NameToLayer("TerrainChunk");
                 GameObject crystalGo = new GameObject("crystal");
                 crystalGo.transform.SetParent(go.transform);
                 crystalGo.transform.localPosition = new Vector3(0f,0.1f,0f);
@@ -1108,7 +1109,8 @@ public partial class PATileTerrain: MonoBehaviour
                 crystalMesh.name = "Crystal";
 
 				//MeshCollider
-				meshCollider = go.AddComponent<MeshCollider>();
+                meshCollider = go.AddComponent<MeshCollider>();
+                //boxCollider = go.AddComponent<BoxCollider>();
 				//meshCollider.hideFlags = HideFlags.HideInInspector | HideFlags.NotEditable;
 				
 				//MeshRenderer
@@ -1232,7 +1234,7 @@ public partial class PATileTerrain: MonoBehaviour
                 crystalMesh.triangles = tris.ToArray();
 			
 				meshFilter.sharedMesh = mesh;
-				meshCollider.sharedMesh = mesh;
+                meshCollider.sharedMesh = mesh;
 				meshRenderer.enabled = true;
 				meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 				meshRenderer.receiveShadows = false;
@@ -1244,7 +1246,7 @@ public partial class PATileTerrain: MonoBehaviour
                 crystalMeshRenderer.receiveShadows = false;
                 crystalMeshRenderer.sharedMaterial = Resources.Load<Material>("Terrain/Materials/tileset3");
 
-				chunk.settings.mesh = meshCollider.sharedMesh;
+				chunk.settings.mesh = mesh;
                 chunk.settings.crystalGo = crystalGo;
                 chunk.settings.buildingsRoot = buildingsRootGo.transform;
 			}

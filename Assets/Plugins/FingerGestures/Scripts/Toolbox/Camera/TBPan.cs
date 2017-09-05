@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 [AddComponentMenu( "FingerGestures/Toolbox/Camera/Pan" )]
 [RequireComponent( typeof( DragRecognizer ) )]
@@ -41,31 +42,100 @@ public class TBPan : MonoBehaviour
         dragGesture = ( gesture.State == GestureRecognitionState.Ended ) ? null : gesture;
     }
 
+    public void SetCameraPosition(Vector3 vPos)
+    {
+        trCameraRoot.position = vPos;
+    }
+
+    public Transform trCameraRoot;
+    public LayerMask colliderLayerMask;
+
+    private Ray ray;
+    private Vector3 mousePosStart = Vector3.zero;
+    private Vector3 vCamRootPosStart = Vector3.zero;
+    private Vector3 vPickOld;
+    private Vector3 vPickStart;
+    private bool inertiaActive;
+    private float inertiaAge;
+    private Vector3 inertiaSpeed;
+
     void Update()
     {
-        if( dragGesture != null )
+        if (this.inertiaActive && (this.inertiaSpeed.magnitude > 0.01f))
         {
-            if( dragGesture.DeltaMove.SqrMagnitude() > 0 )
-            {
-                isMoving = true;
-                Vector2 screenSpaceMove = sensitivity * dragGesture.DeltaMove;
-                Vector3 worldSpaceMove = screenSpaceMove.x * cachedTransform.right + screenSpaceMove.y * cachedTransform.up;
-                idealPos -= worldSpaceMove;
-
-                if( OnPan != null )
-                    OnPan( this, worldSpaceMove );
-            }
+            this.SetCameraPosition(this.trCameraRoot.position - this.inertiaSpeed);
+            this.inertiaSpeed = Vector3.Lerp(this.inertiaSpeed, Vector3.zero, this.inertiaAge);
+            this.inertiaAge += Time.smoothDeltaTime;
         }
         else
-            isMoving = false;
+        {
+            this.inertiaActive = false;
+        }
 
-        idealPos = ConstrainToMoveArea( idealPos );
-
-        if( smoothSpeed > 0 )
-            cachedTransform.position = Vector3.Lerp( cachedTransform.position, idealPos, Time.deltaTime * smoothSpeed );
-        else
-            cachedTransform.position = idealPos;
+        RaycastHit hit;
+        Vector3 mousePosition = Input.mousePosition;
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Debug.Log("GetMouseButtonDown mousePosition " + mousePosition);
+            mousePosStart = mousePosition;
+            vCamRootPosStart = trCameraRoot.position;
+            ray = Camera.main.ScreenPointToRay(mousePosition);
+            Physics.Raycast(ray, out hit, Mathf.Infinity, colliderLayerMask);
+            //Debug.Log("GetMouseButtonDown hit.point " + hit.point);
+            vPickStart = hit.point - trCameraRoot.position;
+            vPickOld = vPickStart;
+            inertiaActive = false;
+            inertiaAge = 0f;
+            inertiaSpeed = Vector3.zero;
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            if (Vector3.Distance(mousePosition, mousePosStart) > 5f)
+            {
+                ray = Camera.main.ScreenPointToRay(mousePosition);
+                Physics.Raycast(ray, out hit, Mathf.Infinity, colliderLayerMask);
+                //Debug.Log("GetMouseButton hit.point " + hit.point);
+                Vector3 vPickCurrent = hit.point - trCameraRoot.position;
+                inertiaSpeed = (Vector3)((0.3f * inertiaSpeed) + (0.7f * (vPickCurrent - vPickOld)));
+                Vector3 vCameraPanDir = vPickCurrent - vPickStart;
+                SetCameraPosition(vCamRootPosStart - vCameraPanDir);
+                vPickOld = vPickCurrent;
+            }
+        }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            if (inertiaSpeed.magnitude > 0.01f)
+                inertiaActive = true;
+        }
     }
+
+    //void LateUpdate()
+    //{
+    //    if (dragGesture != null)
+    //    {
+    //        float ma = dragGesture.DeltaMove.SqrMagnitude();
+    //        Debug.Log("ma " + dragGesture.DeltaMove);
+    //        if (dragGesture.DeltaMove.SqrMagnitude() > 0)
+    //        {
+    //            isMoving = true;
+    //            Vector2 screenSpaceMove = sensitivity * dragGesture.DeltaMove;
+    //            Vector3 worldSpaceMove = screenSpaceMove.x * cachedTransform.right + screenSpaceMove.y * cachedTransform.up;
+    //            idealPos -= worldSpaceMove;
+
+    //            if (OnPan != null)
+    //                OnPan(this, worldSpaceMove);
+    //        }
+    //    }
+    //    else
+    //        isMoving = false;
+
+    //    idealPos = ConstrainToMoveArea(idealPos);
+
+    //    if (smoothSpeed > 0)
+    //        cachedTransform.position = Vector3.LerpUnclamped(cachedTransform.position, idealPos, Time.deltaTime * smoothSpeed);
+    //    else
+    //        cachedTransform.position = idealPos;
+    //}
 
     // project point on panning plane
     public Vector3 ConstrainToPanningPlane( Vector3 p )
