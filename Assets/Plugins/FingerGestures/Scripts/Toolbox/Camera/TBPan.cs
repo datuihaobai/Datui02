@@ -3,14 +3,14 @@ using System.Collections;
 using UnityEngine.EventSystems;
 
 [AddComponentMenu( "FingerGestures/Toolbox/Camera/Pan" )]
-[RequireComponent( typeof( DragRecognizer ) )]
+//[RequireComponent( typeof( DragRecognizer ) )]
 public class TBPan : MonoBehaviour
 {
     public static bool isMoving = false;
 
     Transform cachedTransform;
 
-    public float sensitivity = 1.0f;
+    //public float sensitivity = 1.0f;
     public float smoothSpeed = 10;
     public BoxCollider moveArea;    // the area to constrain camera movement to
 
@@ -37,14 +37,19 @@ public class TBPan : MonoBehaviour
         }
     }
 
-    void OnDrag( DragGesture gesture )
-    {
-        dragGesture = ( gesture.State == GestureRecognitionState.Ended ) ? null : gesture;
-    }
+    //void OnDrag( DragGesture gesture )
+    //{
+    //    dragGesture = ( gesture.State == GestureRecognitionState.Ended ) ? null : gesture;
+    //}
 
     public void SetCameraPosition(Vector3 vPos)
     {
-        trCameraRoot.position = vPos;
+        vPos = ConstrainToMoveArea(vPos);
+        
+        if (smoothSpeed > 0)
+            trCameraRoot.position = Vector3.Lerp(trCameraRoot.position, vPos, Time.deltaTime * smoothSpeed);
+        else
+            trCameraRoot.position = vPos;
     }
 
     public Transform trCameraRoot;
