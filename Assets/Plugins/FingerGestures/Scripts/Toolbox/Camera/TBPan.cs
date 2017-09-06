@@ -15,7 +15,7 @@ public class TBPan : MonoBehaviour
     public BoxCollider moveArea;    // the area to constrain camera movement to
 
     Vector3 idealPos;
-    DragGesture dragGesture;
+    //DragGesture dragGesture;
 
     public delegate void PanEventHandler( TBPan source, Vector3 move );
     public event PanEventHandler OnPan;
@@ -30,11 +30,11 @@ public class TBPan : MonoBehaviour
         idealPos = cachedTransform.position;
 
         // sanity check
-        if( !GetComponent<DragRecognizer>() )
-        {
-            Debug.LogWarning( "No drag recognizer found on " + this.name + ". Disabling TBPan." );
-            enabled = false;
-        }
+        //if( !GetComponent<DragRecognizer>() )
+        //{
+        //    Debug.LogWarning( "No drag recognizer found on " + this.name + ". Disabling TBPan." );
+        //    enabled = false;
+        //}
     }
 
     //void OnDrag( DragGesture gesture )
@@ -105,7 +105,10 @@ public class TBPan : MonoBehaviour
                 Vector3 vCameraPanDir = vPickCurrent - vPickStart;
                 SetCameraPosition(vCamRootPosStart - vCameraPanDir);
                 vPickOld = vPickCurrent;
+                isMoving = true;
             }
+            else
+                isMoving = false;
         }
         else if(Input.GetMouseButtonUp(0))
         {
