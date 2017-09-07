@@ -20,10 +20,10 @@ public class MoveForword : Action
         var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
         if (currentGameObject != prevGameObject)
             prevGameObject = currentGameObject;
-        Timing.RunCoroutine(MoveByCurve());
+        Timing.RunCoroutine(MoveForward());
     }
 
-    IEnumerator<float> MoveByCurve()
+    IEnumerator<float> MoveForward()
     {
         moveComplete = false;
         yield return Timing.WaitForSeconds(delay.Value);
