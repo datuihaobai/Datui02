@@ -50,7 +50,6 @@ public class LocalNavMeshBuilder : SingletonAppMonoBehaviour<LocalNavMeshBuilder
 
     public void UpdateNavMesh(bool asyncUpdate = false)
     {
-
         NavMeshSourceTag.Collect(ref m_Sources);
         var defaultBuildSettings = NavMesh.GetSettingsByID(0);
         var bounds = QuantizedBounds();

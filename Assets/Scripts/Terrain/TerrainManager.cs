@@ -95,7 +95,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 if (crystalTile.leftBottomTile.shuijing == null)
                 {
                     Shuijing shuijing = CreateCrystal(crystalTile,selectLevel);
-                    PaintCrystalAndUpdateNavMesh(shuijing);
+                    PaintCrystal(shuijing);
                 }
                 SetSelectShuijing(crystalTile.leftBottomTile.shuijing);
             }
@@ -150,7 +150,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         RemoveSelectShuijing();
 
         Shuijing newShuijing = CreateCrystal(tile,newLevel);
-        PaintCrystalAndUpdateNavMesh(newShuijing);
+        PaintCrystal(newShuijing);
         SetSelectShuijing(newShuijing);
     }
 
@@ -159,69 +159,81 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         RemoveCrystal(selectShuijing);
     }
 
+    public void ClearTerrain()
+    {
+        tileTerrain.FillTerrain(defaultBrushType);
+        tileTerrain.ResetTileElement();
+        foreach (var crystal in tileTerrain.settings.crystals)
+        {
+            if (crystal.shuijing == null)
+                continue;
+            crystal.shuijing.RemoveBuildings();
+            PoolManager.Pools["Shuijing"].Despawn(crystal.shuijing.transform);
+            crystal.shuijing.tile.shuijing = null;
+        }
+
+        tileTerrain.settings.ClearCrystal();
+    }
+
     void RemoveCrystal(Shuijing shuijing)
     {
         if (shuijing == null)
             return;
-        shuijing.RemoveBuildings();
-        RepaintAllCrystals(false);
-        //PaintCrystal(shuijing, false);
+        //shuijing.RemoveBuildings();
+        //RepaintAllCrystals(false);
+        //PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
+        //tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
+        //shuijing.tile.shuijing = null;
+        //RepaintAllCrystals(true);
+
+        tileTerrain.FillTerrain(defaultBrushType);
+        tileTerrain.ResetTileElement();
+        foreach (var crystal in tileTerrain.settings.crystals)
+        {
+            if (crystal.shuijing == null)
+                continue;
+            crystal.shuijing.RemoveBuildings();
+        }
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
-        shuijing.tile.shuijing = null;
-        RepaintAllCrystals(true);
-        //LocalNavMeshBuilder.instance.UpdateNavMesh();
+        RepaintAllCrystals();
     }
 
-    void PaintCrystalAndUpdateNavMesh(Shuijing shuijing)
-    {
-        PaintCrystal(shuijing,true);
-        //LocalNavMeshBuilder.instance.UpdateNavMesh();
-    }
-
-    void PaintCrystal(Shuijing shuijing,bool isPaint)
+    void PaintCrystal(Shuijing shuijing)
     {
         if (shuijing == null)
             return;
         int brushType = shuijing.brushType;
-        if (!isPaint)
-            brushType = defaultBrushType;
-        else
-            RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(shuijing.tile.id).randomSeed);
+        
+        RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(shuijing.tile.id).randomSeed);
 
         if(shuijing.level == 1)
         {
             tileTerrain.PaintCrystalLevel1(shuijing.tile, brushType);
-            if (isPaint)
-                tileTerrain.PaintCrystalLevel_Specified(shuijing.tile,brushType);
-            tileTerrain.PaintTileElementLevel1(shuijing.tile,PATileTerrain.TileElementType.Fire,!isPaint);
+            tileTerrain.PaintCrystalLevel_Specified(shuijing.tile,brushType);
+            tileTerrain.PaintTileElementLevel1(shuijing.tile,PATileTerrain.TileElementType.Fire);
         }
         else if(shuijing.level == 2)
         {
             tileTerrain.PaintCrystalLevel2(shuijing.tile, brushType);
-            if(isPaint)
-                tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
-            tileTerrain.PaintTileElementLevel2(shuijing.tile,PATileTerrain.TileElementType.Fire,!isPaint);
+            tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
+            tileTerrain.PaintTileElementLevel2(shuijing.tile,PATileTerrain.TileElementType.Fire);
         }
         else if (shuijing.level == 3)
         {
             tileTerrain.PaintCrystalLevel3(shuijing.tile, brushType);
-            if(isPaint)
-            {
-                tileTerrain.PaintCrystalLevel3_B(shuijing.tile,brushType + 1);
-                tileTerrain.PaintCrystalLevel3_C(shuijing.tile, brushType + 2);
-            }
-            tileTerrain.PaintTileElementLevel3(shuijing.tile, PATileTerrain.TileElementType.Fire, !isPaint);
+            tileTerrain.PaintCrystalLevel3_B(shuijing.tile, brushType + 1);
+            tileTerrain.PaintCrystalLevel3_C(shuijing.tile, brushType + 2);
+            tileTerrain.PaintTileElementLevel3(shuijing.tile, PATileTerrain.TileElementType.Fire);
         }
 
-        if(isPaint)
-            shuijing.CreateBuildings(tileTerrain);
+        shuijing.CreateBuildings(tileTerrain);
     }
 
-    public void RepaintAllCrystals(bool isPaint)
+    public void RepaintAllCrystals()
     {
         foreach(var crystal in tileTerrain.settings.crystals)
-            PaintCrystal(crystal.shuijing, isPaint);
+            PaintCrystal(crystal.shuijing);
     }
 
     public string GetUpgradeTips()

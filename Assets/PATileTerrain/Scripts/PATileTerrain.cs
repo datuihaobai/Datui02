@@ -1295,7 +1295,7 @@ public partial class PATileTerrain: MonoBehaviour
         //tile.toType = tileNode["toType"].AsInt;
         //tile.bits = tileNode["bits"].AsByte;
         //tile.tilesetIndex = tileNode["tilesetIndex"].AsInt;
-        TerrainManager.instance.RepaintAllCrystals(true);
+        TerrainManager.instance.RepaintAllCrystals();
         //LocalNavMeshBuilder.instance.UpdateNavMesh();
 		UpdateMesh();
 	}

@@ -81,6 +81,12 @@ public partial class PATileTerrain
             Debug.Log(data.error);
     }
 
+    public void ResetTileElement()
+    {
+        foreach(var tile in tiles)
+            tile.element.Reset();
+    }
+
     public void ShowCrystal(bool isShow)
     {
         if (settings.chunks == null)

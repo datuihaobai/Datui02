@@ -362,8 +362,15 @@ public partial class PATileTerrain
                     crystal.shuijing = null;
                     crystals.Remove(crystal);
                     return;
-                } 
+                }
             }
+        }
+
+        public void ClearCrystal()
+        {
+            foreach (var crystal in crystals)
+                crystal.shuijing = null;
+            crystals.Clear();
         }
 
         public PACrystal GetCrystal(int id)
