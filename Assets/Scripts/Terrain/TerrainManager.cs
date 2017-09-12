@@ -16,15 +16,27 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     private bool isCrystalMode = false;
     private bool isOverUI = false;
+    private bool isStarted = false;
 
     void Start()
     {
-        tileTerrain.LoadTerrain();
+        StartCoroutine(ToStart());
+    }
+
+    IEnumerator ToStart()
+    {
         ConfigDataBase.instance.StartLoad();
+        if (!ConfigDataBase.instance.loadFinish)
+            yield return null;
+        tileTerrain.LoadTerrain();
+        isStarted = true;
     }
 
     void Update()
     {
+        if (!isStarted)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
@@ -215,9 +227,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         }
         else if(shuijing.level == 2)
         {
+            tileTerrain.PaintTileElementLevel2(shuijing.tile, PATileTerrain.TileElementType.Fire);
             tileTerrain.PaintCrystalLevel2(shuijing.tile, brushType);
-            tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
-            tileTerrain.PaintTileElementLevel2(shuijing.tile,PATileTerrain.TileElementType.Fire);
+            //tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
         }
         else if (shuijing.level == 3)
         {

@@ -10,6 +10,7 @@ public class UITerrainRoot : MonoBehaviour
     public GameObject saveButtonGo;
     public GameObject clearButtonGo;
     public Dropdown crystalLevelSelect;
+    public Dropdown crystalElementSelect;
     public UICrystalOption crystalOption;
     public UICommonConfirm commonConfirm;
 
@@ -32,6 +33,7 @@ public class UITerrainRoot : MonoBehaviour
         saveButtonGo.SetActive(true);
         clearButtonGo.SetActive(true);
         crystalLevelSelect.gameObject.SetActive(true);
+        crystalElementSelect.gameObject.SetActive(true);
     }
 
     public void OnClickCrystalOff()
@@ -42,6 +44,7 @@ public class UITerrainRoot : MonoBehaviour
         saveButtonGo.SetActive(false);
         clearButtonGo.SetActive(false);
         crystalLevelSelect.gameObject.SetActive(false);
+        crystalElementSelect.gameObject.SetActive(false);
         crystalOption.Hide();
     }
     
@@ -64,6 +67,11 @@ public class UITerrainRoot : MonoBehaviour
     public void OnSelectLevelChanged()
     {
         UpdateSelectLevel();
+    }
+
+    public void OnSelectElementChanged()
+    {
+
     }
 
     public void OnCrystalUpgrade()

@@ -128,10 +128,7 @@ public partial class PATileTerrain
             tile.element.Reset();
         else
         {
-            if (elementType == TileElementType.Fire)
-                tile.element.AddFire(value);
-            else if (elementType == TileElementType.Wood)
-                tile.element.AddWood(value);
+            tile.element.AddElement(elementType,value);
         }
     }
 
@@ -378,6 +375,11 @@ public partial class PATileTerrain
 
         specifiedTile = GetATile(tile, 1, 2);
         PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
+    }
+
+    void CalcTileBits(PATile tile,byte b)
+    {
+
     }
 
     public void PaintCrystalLevel2(PATile tile, int t)

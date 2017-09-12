@@ -21,7 +21,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	
 	IEnumerator LoadConfig ()
 	{
-        string path = Application.dataPath + "\\..\\AssetBundles\\" + GetPlatformName() + "\\configasset";
+		string path = Application.dataPath + "\\..\\AssetBundles\\" + GetPlatformName() + "\\configasset";
         WWW loadWWW = new WWW(path);
         yield return loadWWW;
         assetBundle = loadWWW.assetBundle;
@@ -42,27 +42,27 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	
 	private void InitConfig()
 	{
-		configFileNames.Add ("CdConfig");
+		configFileNames.Add ("TileBrushConfig");
 	}
-	private CdConfigAsset cdConfigAsset;
-	public CdConfigAsset CdConfigAsset
+	private TileBrushConfigAsset tileBrushConfigAsset;
+	public TileBrushConfigAsset TileBrushConfigAsset
 	{
 		get
 		{
-			if(cdConfigAsset == null)
+			if(tileBrushConfigAsset == null)
 			{
 				float startTime = Time.realtimeSinceStartup;
-				ConfigAssetBase asset = assetBundle.LoadAsset("CdConfig",typeof(ConfigAssetBase)) as ConfigAssetBase;
+				ConfigAssetBase asset = assetBundle.LoadAsset("TileBrushConfig",typeof(ConfigAssetBase)) as ConfigAssetBase;
 				asset.readList();
-				cdConfigAsset = asset as CdConfigAsset;
+				tileBrushConfigAsset = asset as TileBrushConfigAsset;
 				readCount ++;
 				if(readCount == configFileNames.Count)
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config CdConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				Debug.Log("Read Config TileBrushConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
-			return cdConfigAsset;
+			return tileBrushConfigAsset;
 		}
 	}
 }

@@ -692,11 +692,11 @@ public class PATileTerrainEditor : Editor
 						GUILayout.EndHorizontal();
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Fire : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
-                        GUILayout.Label(selectedTile.element.fireElement.ToString() + " (read only)");
+                        GUILayout.Label(selectedTile.element.GetElementValue(PATileTerrain.TileElementType.Fire).ToString() + " (read only)");
                         GUILayout.EndHorizontal();
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Wood : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
-                        GUILayout.Label(selectedTile.element.woodElement.ToString() + " (read only)");
+                        GUILayout.Label(selectedTile.element.GetElementValue(PATileTerrain.TileElementType.Wood).ToString() + " (read only)");
                         GUILayout.EndHorizontal();
 						GUILayout.BeginHorizontal(GUILayout.ExpandWidth(false));
 						GUILayout.Label("Id : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));

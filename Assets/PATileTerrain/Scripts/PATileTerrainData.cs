@@ -72,23 +72,55 @@ public partial class PATileTerrain
     [System.Serializable]
     public class PATileElement
     {
-        public int fireElement;
-        public int woodElement;
+        private Dictionary<TileElementType, int> elementsDic = new Dictionary<TileElementType, int>();
+
+        public PATileElement()
+        {
+            Reset();
+        }
+
+        public int GetElementValue(TileElementType elementType)
+        {
+            return elementsDic[elementType];
+        }
 
         public void Reset()
         {
-            fireElement = 0;
-            woodElement = 0;
+            elementsDic[TileElementType.Fire] = 0;
+            elementsDic[TileElementType.Wood] = 0;
         }
 
-        public void AddFire(int addValue)
+        public void AddElement(TileElementType elementType,int addValue)
         {
-            fireElement += addValue;
+            elementsDic[elementType] += addValue;
         }
 
-        public void AddWood(int addValue)
+        TileElementType GetMaxElement()
         {
-            woodElement += addValue;
+            TileElementType maxElementType = TileElementType.Fire;
+            foreach(var elementType in elementsDic.Keys)
+            {
+                if (elementsDic[elementType] >= elementsDic[maxElementType])
+                    maxElementType = elementType;
+            }
+            return maxElementType;
+        }
+
+        int GetBrushFromConfig(TileElementType elementType,int value)
+        {
+            foreach (var config in ConfigDataBase.instance.TileBrushConfigAsset.configs)
+            {
+                if (config.elementType == (int)elementType && config.level == value)
+                    return config.brush;  
+            }
+            return -1;
+        }
+
+        //根据属性值返回地表贴图
+        public int GetPaintBrushType()
+        {
+            TileElementType maxElementType = GetMaxElement();
+            return GetBrushFromConfig(maxElementType, elementsDic[maxElementType]);
         }
     }
 

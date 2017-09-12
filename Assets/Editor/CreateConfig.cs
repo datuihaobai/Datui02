@@ -39,6 +39,6 @@ public class CreateConfig
 	
 	private static void CreateConfigAssetList(){
 
-		CreateConfigAsset<CdConfigAsset> ();
+		CreateConfigAsset<TileBrushConfigAsset> ();
 	}
 }
