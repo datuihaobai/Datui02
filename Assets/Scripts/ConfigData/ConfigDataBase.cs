@@ -42,7 +42,29 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	
 	private void InitConfig()
 	{
+		configFileNames.Add ("CrystalRangeConfig");
 		configFileNames.Add ("TileBrushConfig");
+	}
+	private CrystalRangeConfigAsset crystalRangeConfigAsset;
+	public CrystalRangeConfigAsset CrystalRangeConfigAsset
+	{
+		get
+		{
+			if(crystalRangeConfigAsset == null)
+			{
+				float startTime = Time.realtimeSinceStartup;
+				ConfigAssetBase asset = assetBundle.LoadAsset("CrystalRangeConfig",typeof(ConfigAssetBase)) as ConfigAssetBase;
+				asset.readList();
+				crystalRangeConfigAsset = asset as CrystalRangeConfigAsset;
+				readCount ++;
+				if(readCount == configFileNames.Count)
+				{
+					assetBundle.Unload(false);
+				}
+				Debug.Log("Read Config CrystalRangeConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+			}
+			return crystalRangeConfigAsset;
+		}
 	}
 	private TileBrushConfigAsset tileBrushConfigAsset;
 	public TileBrushConfigAsset TileBrushConfigAsset

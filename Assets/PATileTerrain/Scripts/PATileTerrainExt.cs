@@ -120,7 +120,7 @@ public partial class PATileTerrain
             SetTileElement(tiles[i], elementType, value, isReset);
     }
 
-    void SetTileElement(PATile tile, TileElementType elementType, int value, bool isReset)
+    void SetTileElement(PATile tile, TileElementType elementType, int value, bool isReset = false)
     {
         if (tile == null)
             return;
@@ -136,6 +136,9 @@ public partial class PATileTerrain
     {
         if (tile == null)
             return;
+
+        t = tile.element.GetPaintBrushType();
+
         tile.type = t;
         tile.toType = t;
         tile.bits = 0;
@@ -283,71 +286,158 @@ public partial class PATileTerrain
             PaintNormalTilesSym(tiles, t, bits.Length, normalCount);
     }
 
+    void PaintATile(PATile tile,int t)
+    {
+        PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
+        int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0, 
+            rightTopValue = 0, rightValue = 0, rightBottomValue = 0, bottomValue = 0;
+        int elementValue = tile.element.GetPaintBrushType();
+        if (nTiles[0] != null)
+            leftBottomValue = nTiles[0].element.GetPaintBrushType();
+        if (nTiles[1] != null)
+            leftValue = nTiles[1].element.GetPaintBrushType();
+        if (nTiles[2] != null)
+            leftTopValue = nTiles[2].element.GetPaintBrushType();
+        if (nTiles[3] != null)
+            topValue = nTiles[3].element.GetPaintBrushType();
+        if (nTiles[4] != null)
+            rightTopValue = nTiles[4].element.GetPaintBrushType();
+        if (nTiles[5] != null)
+            rightValue = nTiles[5].element.GetPaintBrushType();
+        if (nTiles[6] != null)
+            rightBottomValue = nTiles[6].element.GetPaintBrushType();
+        if (nTiles[7] != null)
+            bottomValue = nTiles[7].element.GetPaintBrushType();
+
+        if (leftBottomValue < elementValue && leftValue < elementValue && bottomValue < elementValue)
+            CalcTileBits(t, tile, 2);//左下角
+        else if (leftValue < elementValue && leftTopValue < elementValue && topValue < elementValue)
+            CalcTileBits(t, tile, 1);//左上角
+        else if (rightValue < elementValue && rightBottomValue < elementValue && bottomValue < elementValue)
+            CalcTileBits(t, tile, 4);//右下角
+        else if (topValue < elementValue && rightTopValue < elementValue && rightValue < elementValue)
+            CalcTileBits(t, tile, 8);//右上角
+
+        else if (leftValue < elementValue)
+            CalcTileBits(t, tile, 3);
+        else if (topValue < elementValue)
+            CalcTileBits(t, tile, 9);
+        else if (rightValue < elementValue)
+            CalcTileBits(t, tile, 12);
+        else if (bottomValue < elementValue)
+            CalcTileBits(t, tile, 6);
+
+        else if (leftBottomValue < elementValue)
+            CalcTileBits(t, tile, 7);
+        else if (leftTopValue < elementValue)
+            CalcTileBits(t, tile, 11);
+        else if (rightTopValue < elementValue)
+            CalcTileBits(t, tile, 13);
+        else if (rightBottomValue < elementValue)
+            CalcTileBits(t, tile, 14);
+
+        else
+            PaintNormalTile(tile,t);
+    }
+
+    void PaintCollectTiles(ref Dictionary<int, List<PATile>> collectTiles)
+    {
+        List<int> collectBT = new List<int>();
+        foreach (var bt in collectTiles.Keys)
+            collectBT.Add(bt);
+        collectBT.Sort();
+
+        foreach (var bt in collectBT)
+            foreach (var t0 in collectTiles[bt])
+                PaintATile(t0, bt);
+    }
+
+    public void PaintTiles(ref List<PATile> tiles)
+    {
+        Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
+        PATile[] tilesArray = tiles.ToArray();
+        CollectTiles(ref tilesArray, ref collectTiles);
+        PaintCollectTiles(ref collectTiles);
+    }
+
     public void PaintCrystalLevel1(PATile tile, int t)
     {
-        PATile[] line1Tiles = GetLineTiles(tile.x,tile.y,-1,-4,4);
-        CalcTileBits(t, line1Tiles[0], 2);
-        CalcTileBits(t, line1Tiles[1], 6);
-        CalcTileBits(t, line1Tiles[2], 6);
-        CalcTileBits(t, line1Tiles[3], 4);
+        Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
+        PATile[] lineTiles = GetLineTiles(tile.x,tile.y,-1,-4,4);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, line1Tiles[0], 2);
+        //CalcTileBits(t, line1Tiles[1], 6);
+        //CalcTileBits(t, line1Tiles[2], 6);
+        //CalcTileBits(t, line1Tiles[3], 4);
 
-        PATile[] line2Tiles = GetLineTiles(tile.x,tile.y,-2,-3,6);
-        CalcTileBits(t, line2Tiles[0], 2);
-        CalcTileBits(t, line2Tiles[1], 7);
-        PaintNormalTiles(line2Tiles,t,2,2);
-        CalcTileBits(t, line2Tiles[4], 14);
-        CalcTileBits(t, line2Tiles[5], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -2, -3, 6);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 2);
+        //CalcTileBits(t, lineTiles[4], 14);
+        //CalcTileBits(t, lineTiles[5], 4);
 
-        PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -3, -2, 8);
-        CalcTileBits(t, line3Tiles[0], 2);
-        CalcTileBits(t, line3Tiles[1], 7);
-        PaintNormalTiles(line3Tiles,t,2,4);
-        CalcTileBits(t, line3Tiles[6], 14);
-        CalcTileBits(t, line3Tiles[7], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -3, -2, 8);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 4);
+        //CalcTileBits(t, lineTiles[6], 14);
+        //CalcTileBits(t, lineTiles[7], 4);
 
-        PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -4, -1, 10);
-        CalcTileBits(t, line4Tiles[0], 2);
-        CalcTileBits(t, line4Tiles[1], 7);
-        PaintNormalTiles(line4Tiles,t,2,6);
-        CalcTileBits(t, line4Tiles[8], 14);
-        CalcTileBits(t, line4Tiles[9], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, -1, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 6);
+        //CalcTileBits(t, lineTiles[8], 14);
+        //CalcTileBits(t, lineTiles[9], 4);
 
-        PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -4, 0, 10);
-        CalcTileBits(t, line5Tiles[0], 3);
-        PaintNormalTiles(line5Tiles,t,1,8);
-        CalcTileBits(t, line5Tiles[9], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, 0, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 8);
+        //CalcTileBits(t, lineTiles[9], 12);
 
-        PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -4, 1, 10);
-        CalcTileBits(t, line6Tiles[0], 3);
-        PaintNormalTiles(line6Tiles,t,1,8);
-        CalcTileBits(t, line6Tiles[9], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, 1, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 8);
+        //CalcTileBits(t, lineTiles[9], 12);
 
-        PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -4, 2, 10);
-        CalcTileBits(t, line7Tiles[0], 1);
-        CalcTileBits(t, line7Tiles[1], 11);
-        PaintNormalTiles(line7Tiles,t,2,6);
-        CalcTileBits(t, line7Tiles[8], 13);
-        CalcTileBits(t, line7Tiles[9], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, 2, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 6);
+        //CalcTileBits(t, lineTiles[8], 13);
+        //CalcTileBits(t, lineTiles[9], 8);
 
-        PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -3, 3, 8);
-        CalcTileBits(t, line8Tiles[0], 1);
-        CalcTileBits(t, line8Tiles[1], 11);
-        PaintNormalTiles(line8Tiles,t,2,4);
-        CalcTileBits(t, line8Tiles[6], 13);
-        CalcTileBits(t, line8Tiles[7], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -3, 3, 8);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 4);
+        //CalcTileBits(t, lineTiles[6], 13);
+        //CalcTileBits(t, lineTiles[7], 8);
 
-        PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -2, 4, 6);
-        CalcTileBits(t, line9Tiles[0], 1);
-        CalcTileBits(t, line9Tiles[1], 11);
-        PaintNormalTiles(line9Tiles,t,2,2);
-        CalcTileBits(t, line9Tiles[4], 13);
-        CalcTileBits(t, line9Tiles[5], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -2, 4, 6);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 2);
+        //CalcTileBits(t, lineTiles[4], 13);
+        //CalcTileBits(t, lineTiles[5], 8);
 
-        PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -1, 5, 4);
-        CalcTileBits(t, line10Tiles[0], 1);
-        CalcTileBits(t, line10Tiles[1], 9);
-        CalcTileBits(t, line10Tiles[2], 9);
-        CalcTileBits(t, line10Tiles[3], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -1, 5, 4);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 9);
+        //CalcTileBits(t, lineTiles[2], 9);
+        //CalcTileBits(t, lineTiles[3], 8);
+
+        PaintCollectTiles(ref collectTiles);
     }
 
     public void PaintCrystalLevel_Specified(PATile tile, int t)
@@ -377,134 +467,164 @@ public partial class PATileTerrain
         PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
     }
 
-    void CalcTileBits(PATile tile,byte b)
-    {
+    //void CalcTileBits(PATile tile,byte b)
+    //{
+    //    int t = tile.element.GetPaintBrushType();
+    //    CalcTileBits(t,tile,b);
+    //}
 
+    void CollectTiles(ref PATile[] tiles, ref Dictionary<int, List<PATile>> collectTiles)
+    {
+        foreach (var t0 in tiles)
+        {
+            int bt = t0.element.GetPaintBrushType();
+            if (!collectTiles.ContainsKey(bt))
+                collectTiles[bt] = new List<PATile>();
+            collectTiles[bt].Add(t0);
+        }
     }
 
     public void PaintCrystalLevel2(PATile tile, int t)
     {
-        PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -2, -8, 6);
-        CalcTileBits(t, line1Tiles[0], 2);
-        CalcTileBits(t, line1Tiles[1], 6);
-        CalcTileBits(t, line1Tiles[2], 6);
-        CalcTileBits(t, line1Tiles[3], 6);
-        CalcTileBits(t, line1Tiles[4], 6);
-        CalcTileBits(t, line1Tiles[5], 4);
+        Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
+        PATile[] lineTiles = GetLineTiles(tile.x, tile.y, -2, -8, 6);
+        CollectTiles(ref lineTiles,ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 6);
+        //CalcTileBits(t, lineTiles[2], 6);
+        //CalcTileBits(t, lineTiles[3], 6);
+        //CalcTileBits(t, lineTiles[4], 6);
+        //CalcTileBits(t, lineTiles[5], 4);
 
-        PATile[] line2Tiles = GetLineTiles(tile.x, tile.y, -4, -7, 10);
-        CalcTileBits(t, line2Tiles[0], 2);
-        CalcTileBits(t, line2Tiles[1], 6);
-        CalcTileBits(t, line2Tiles[2], 7);
-        PaintNormalTiles(line2Tiles, t, 3, 4);
-        CalcTileBits(t, line2Tiles[7], 14);
-        CalcTileBits(t, line2Tiles[8], 6);
-        CalcTileBits(t, line2Tiles[9], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, -7, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 6);
+        //CalcTileBits(t, lineTiles[2], 7);
+        //PaintNormalTiles(lineTiles, t, 3, 4);
+        //CalcTileBits(t, lineTiles[7], 14);
+        //CalcTileBits(t, lineTiles[8], 6);
+        //CalcTileBits(t, lineTiles[9], 4);
 
-        PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -5, -6, 12);
-        CalcTileBits(t, line3Tiles[0], 2);
-        CalcTileBits(t, line3Tiles[1], 7);
-        PaintNormalTiles(line3Tiles,t,2,8);
-        CalcTileBits(t, line3Tiles[10], 14);
-        CalcTileBits(t, line3Tiles[11], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -5, -6, 12);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 8);
+        //CalcTileBits(t, lineTiles[10], 14);
+        //CalcTileBits(t, lineTiles[11], 4);
 
-        PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -6, -5, 14);
-        CalcTileBits(t, line4Tiles[0], 2);
-        PaintNormalTiles(line4Tiles,t,1,12);
-        CalcTileBits(t, line4Tiles[13], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -6, -5, 14);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //PaintNormalTiles(lineTiles, t, 1, 12);
+        //CalcTileBits(t, lineTiles[13], 4);
 
-        PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -7, -4, 16);
-        CalcTileBits(t, line5Tiles[0], 2);
-        CalcTileBits(t, line5Tiles[1], 7);
-        PaintNormalTiles(line5Tiles,t,2,12);
-        CalcTileBits(t, line5Tiles[14], 14);
-        CalcTileBits(t, line5Tiles[15], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -7, -4, 16);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 12);
+        //CalcTileBits(t, lineTiles[14], 14);
+        //CalcTileBits(t, lineTiles[15], 4);
 
-        PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -7, -3, 16);
-        CalcTileBits(t, line6Tiles[0], 3);
-        PaintNormalTiles(line6Tiles,t,1,14);
-        CalcTileBits(t, line6Tiles[15], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -7, -3, 16);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 14);
+        //CalcTileBits(t, lineTiles[15], 12);
 
-        PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -8, -2, 18);
-        CalcTileBits(t, line7Tiles[0], 2);
-        CalcTileBits(t, line7Tiles[1], 7);
-        PaintNormalTiles(line7Tiles,t,2,14);
-        CalcTileBits(t, line7Tiles[16], 14);
-        CalcTileBits(t, line7Tiles[17], 4);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, -2, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 2);
+        //CalcTileBits(t, lineTiles[1], 7);
+        //PaintNormalTiles(lineTiles, t, 2, 14);
+        //CalcTileBits(t, lineTiles[16], 14);
+        //CalcTileBits(t, lineTiles[17], 4);
 
-        PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -8, -1, 18);
-        CalcTileBits(t, line8Tiles[0], 3);
-        PaintNormalTiles(line8Tiles,t,1,16);
-        CalcTileBits(t, line8Tiles[17], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, -1, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 16);
+        //CalcTileBits(t, lineTiles[17], 12);
 
-        PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -8, 0, 18);
-        CalcTileBits(t, line9Tiles[0], 3);
-        PaintNormalTiles(line9Tiles,t,1,16);
-        CalcTileBits(t, line9Tiles[17], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, 0, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 16);
+        //CalcTileBits(t, lineTiles[17], 12);
 
-        PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -8, 1, 18);
-        CalcTileBits(t, line10Tiles[0], 3);
-        PaintNormalTiles(line10Tiles,t,1,16);
-        CalcTileBits(t, line10Tiles[17], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, 1, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 16);
+        //CalcTileBits(t, lineTiles[17], 12);
 
-        PATile[] line11Tiles = GetLineTiles(tile.x, tile.y, -8, 2, 18);
-        CalcTileBits(t, line11Tiles[0], 3);
-        PaintNormalTiles(line11Tiles,t,1,16);
-        CalcTileBits(t, line11Tiles[17], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, 2, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 16);
+        //CalcTileBits(t, lineTiles[17], 12);
 
-        PATile[] line12Tiles = GetLineTiles(tile.x, tile.y, -8, 3, 18);
-        CalcTileBits(t, line12Tiles[0], 1);
-        CalcTileBits(t, line12Tiles[1], 11);
-        PaintNormalTiles(line12Tiles, t, 2, 14);
-        CalcTileBits(t, line12Tiles[16], 13);
-        CalcTileBits(t, line12Tiles[17], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -8, 3, 18);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 14);
+        //CalcTileBits(t, lineTiles[16], 13);
+        //CalcTileBits(t, lineTiles[17], 8);
 
-        PATile[] line13Tiles = GetLineTiles(tile.x, tile.y, -7, 4, 16);
-        CalcTileBits(t, line13Tiles[0], 3);
-        PaintNormalTiles(line13Tiles, t, 1, 14);
-        CalcTileBits(t, line13Tiles[15], 12);
+        lineTiles = GetLineTiles(tile.x, tile.y, -7, 4, 16);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 3);
+        //PaintNormalTiles(lineTiles, t, 1, 14);
+        //CalcTileBits(t, lineTiles[15], 12);
 
-        PATile[] line14Tiles = GetLineTiles(tile.x, tile.y, -7, 5, 16);
-        CalcTileBits(t, line14Tiles[0], 1);
-        CalcTileBits(t, line14Tiles[1], 11);
-        PaintNormalTiles(line14Tiles, t, 2, 12);
-        CalcTileBits(t, line14Tiles[14], 13);
-        CalcTileBits(t, line14Tiles[15], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -7, 5, 16);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 12);
+        //CalcTileBits(t, lineTiles[14], 13);
+        //CalcTileBits(t, lineTiles[15], 8);
 
-        PATile[] line15Tiles = GetLineTiles(tile.x, tile.y, -6, 6, 14);
-        CalcTileBits(t, line15Tiles[0], 1);
-        PaintNormalTiles(line15Tiles, t, 1, 12);
-        CalcTileBits(t, line15Tiles[13], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -6, 6, 14);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //PaintNormalTiles(lineTiles, t, 1, 12);
+        //CalcTileBits(t, lineTiles[13], 8);
 
-        PATile[] line16Tiles = GetLineTiles(tile.x, tile.y, -5, 7, 12);
-        CalcTileBits(t, line16Tiles[0], 1);
-        CalcTileBits(t, line16Tiles[1], 11);
-        PaintNormalTiles(line16Tiles, t, 2, 8);
-        CalcTileBits(t, line16Tiles[10], 13);
-        CalcTileBits(t, line16Tiles[11], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -5, 7, 12);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 11);
+        //PaintNormalTiles(lineTiles, t, 2, 8);
+        //CalcTileBits(t, lineTiles[10], 13);
+        //CalcTileBits(t, lineTiles[11], 8);
 
-        PATile[] line17Tiles = GetLineTiles(tile.x, tile.y, -4, 8, 10);
-        CalcTileBits(t, line17Tiles[0], 1);
-        CalcTileBits(t, line17Tiles[1], 9);
-        CalcTileBits(t, line17Tiles[2], 11);
-        PaintNormalTiles(line17Tiles, t, 3, 4);
-        CalcTileBits(t, line17Tiles[7], 13);
-        CalcTileBits(t, line17Tiles[8], 9);
-        CalcTileBits(t, line17Tiles[9], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -4, 8, 10);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 9);
+        //CalcTileBits(t, lineTiles[2], 11);
+        //PaintNormalTiles(lineTiles, t, 3, 4);
+        //CalcTileBits(t, lineTiles[7], 13);
+        //CalcTileBits(t, lineTiles[8], 9);
+        //CalcTileBits(t, lineTiles[9], 8);
 
-        PATile[] line18Tiles = GetLineTiles(tile.x, tile.y, -2, 9, 6);
-        CalcTileBits(t, line18Tiles[0], 1);
-        CalcTileBits(t, line18Tiles[1], 9);
-        CalcTileBits(t, line18Tiles[2], 9);
-        CalcTileBits(t, line18Tiles[3], 9);
-        CalcTileBits(t, line18Tiles[4], 9);
-        CalcTileBits(t, line18Tiles[5], 8);
+        lineTiles = GetLineTiles(tile.x, tile.y, -2, 9, 6);
+        CollectTiles(ref lineTiles, ref collectTiles);
+        //CalcTileBits(t, lineTiles[0], 1);
+        //CalcTileBits(t, lineTiles[1], 9);
+        //CalcTileBits(t, lineTiles[2], 9);
+        //CalcTileBits(t, lineTiles[3], 9);
+        //CalcTileBits(t, lineTiles[4], 9);
+        //CalcTileBits(t, lineTiles[5], 8);
+        PaintCollectTiles(ref collectTiles);
     }
 
-    public void PaintCrystalLevel2_B(PATile tile, int t)
+    public void PaintCrystalLevel2_B_Specified(PATile tile, int t)
     {
-        PaintCrystalLevel1(tile, t);
-
         PATile specifiedTile = GetATile(tile, 1, -3);
         PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
 
@@ -547,6 +667,11 @@ public partial class PATileTerrain
 
         specifiedTile = GetATile(tile, 1, 4);
         PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
+    }
+
+    public void PaintCrystalLevel2_B(PATile tile, int t)
+    {
+        PaintCrystalLevel1(tile, t);
     }
 
     public void PaintCrystalLevel3(PATile tile, int t)

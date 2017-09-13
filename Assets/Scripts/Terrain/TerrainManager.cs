@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Collections.Generic;
 using PathologicalGames;
 using Game.Messenger;
 
@@ -12,6 +13,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     public PATileTerrain tileTerrain;
     public int selectLevel;
+    public PATileTerrain.TileElementType selectElementType;
     public Shuijing selectShuijing;
 
     private bool isCrystalMode = false;
@@ -106,8 +108,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PACrystalTile crystalTile = PATileTerrain.PACrystalTile.GetByTile(tileTerrain,tile);
                 if (crystalTile.leftBottomTile.shuijing == null)
                 {
-                    Shuijing shuijing = CreateCrystal(crystalTile,selectLevel);
-                    PaintCrystal(shuijing);
+                    Shuijing shuijing = CreateCrystal(crystalTile,selectLevel,selectElementType);
+                    //PaintCrystal(shuijing);
+                    RepaintAllCrystals();
+                    shuijing.CreateBuildings(tileTerrain);
                 }
                 SetSelectShuijing(crystalTile.leftBottomTile.shuijing);
             }
@@ -118,15 +122,20 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         }
     }
 
-    Shuijing CreateCrystal(PATileTerrain.PATile tile, int level)
+    Shuijing CreateCrystal(PATileTerrain.PATile tile, int level, PATileTerrain.TileElementType elementType)
     {
         PATileTerrain.PACrystalTile crystalTile = PATileTerrain.PACrystalTile.GetByTile(tileTerrain, tile);
-        return CreateCrystal(crystalTile,level);
+        return CreateCrystal(crystalTile,level,elementType);
     }
 
-    Shuijing CreateCrystal(PATileTerrain.PACrystalTile crystalTile, int level)
+    Shuijing CreateCrystal(PATileTerrain.PACrystalTile crystalTile, int level,PATileTerrain.TileElementType elementType)
     {
-        string shuijingPrefabName = shuijingName + level.ToString();
+        string preShuijingName = "";
+        if (elementType == PATileTerrain.TileElementType.Fire)
+            preShuijingName = "v_";
+        else if (elementType == PATileTerrain.TileElementType.Wood)
+            preShuijingName = "w_";
+        string shuijingPrefabName = preShuijingName + shuijingName + level.ToString();
         GameObject shuijingGo = PoolManager.Pools["Shuijing"].Spawn(shuijingPrefabName).gameObject;
         //GameObject shuijingGo = Object.Instantiate<GameObject>(Resources.Load<GameObject>("Terrain/Shuijing/shuij"),Vector3.zero,Quaternion.identity);
         PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
@@ -135,11 +144,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
         Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
         shuijing.level = level;
+        shuijing.elementType = elementType;
         //shuijing.CreateBuildings(chunk.transform);
         crystalTile.leftBottomTile.shuijing = shuijing;
         shuijing.tile = crystalTile.leftBottomTile;
         PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
-            crystalTile.leftBottomTile.id, shuijing.level, shuijingPrefabName, RandomManager.NewSeed());
+            crystalTile.leftBottomTile.id, shuijing.level,elementType, shuijingPrefabName, RandomManager.NewSeed());
         crystalData.shuijing = shuijing;
         tileTerrain.settings.crystals.Add(crystalData);
 
@@ -158,11 +168,13 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             return;
         PATileTerrain.PATile tile = selectShuijing.tile;
         int newLevel = selectShuijing.level + 1;
-
+        PATileTerrain.TileElementType elementType = selectShuijing.elementType;
         RemoveSelectShuijing();
 
-        Shuijing newShuijing = CreateCrystal(tile,newLevel);
-        PaintCrystal(newShuijing);
+        Shuijing newShuijing = CreateCrystal(tile,newLevel,elementType);
+        //PaintCrystal(newShuijing);
+        RepaintAllCrystals();
+        newShuijing.CreateBuildings(tileTerrain);
         SetSelectShuijing(newShuijing);
     }
 
@@ -199,16 +211,77 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         //RepaintAllCrystals(true);
 
         tileTerrain.FillTerrain(defaultBrushType);
-        tileTerrain.ResetTileElement();
-        foreach (var crystal in tileTerrain.settings.crystals)
-        {
-            if (crystal.shuijing == null)
-                continue;
-            crystal.shuijing.RemoveBuildings();
-        }
+        //tileTerrain.ResetTileElement();
+        //foreach (var crystal in tileTerrain.settings.crystals)
+        //{
+        //    if (crystal.shuijing == null)
+        //        continue;
+        //    crystal.shuijing.RemoveBuildings();
+        //}
+        shuijing.RemoveBuildings();
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
+        shuijing.tile.shuijing = null;
         RepaintAllCrystals();
+    }
+
+    bool CalTileElement(PATileTerrain.PATile tile, Vector2 crystalPos, float centerValue, float atten,PATileTerrain.TileElementType elementType)
+    {
+        Vector2 tilePos = new Vector2(tile.x + 0.5f, tile.y + 0.5f);
+        float distance = Vector2.Distance(crystalPos, tilePos);
+        float tileElementValue = Mathf.Max(centerValue - atten * distance, 0);
+        if (tileElementValue > 0f)
+        {
+            tile.element.AddElement(elementType, tileElementValue);
+            return true;
+        }
+        return false;
+    }
+
+    void PaintElement(Shuijing shuijing,ref List<PATileTerrain.PATile> collectTiles)
+    {
+        //if (shuijing.level == 1)
+        //    tileTerrain.PaintTileElementLevel1(shuijing.tile, shuijing.elementType);
+        //else if (shuijing.level == 2)
+        //    tileTerrain.PaintTileElementLevel2(shuijing.tile, shuijing.elementType);
+        //else if (shuijing.level == 3)
+        //    tileTerrain.PaintTileElementLevel3(shuijing.tile, shuijing.elementType);
+    
+        CrystalRangeConfigAsset.CrystalRangeConfig configData = null;
+        foreach(var config in ConfigDataBase.instance.CrystalRangeConfigAsset.configs)
+        {
+            if (config.level == shuijing.level)
+                configData = config;
+        }
+
+        if (configData == null)
+            return;
+
+        float centerValue = configData.centerValue / 100f;
+        float atten = configData.atten / 100f;
+        int rang = 1;
+        bool outOfRange = false;
+        Vector2 crystalPos = new Vector2(shuijing.tile.x + 1,shuijing.tile.y + 1);
+        CalTileElement(shuijing.tile, crystalPos, centerValue, atten, shuijing.elementType);
+        collectTiles.Add(shuijing.tile);
+        while(true)
+        {
+            outOfRange = true;
+            PATileTerrain.PATile[] tiles = tileTerrain.GetNeighboringTilesNxN(shuijing.tile,rang);
+            rang += 2;
+            foreach(var tile in tiles)
+            {
+                if (tile == null)
+                    continue;
+                if (CalTileElement(tile, crystalPos, centerValue, atten, shuijing.elementType))
+                {
+                    collectTiles.Add(tile);
+                    outOfRange = false;
+                } 
+            }
+            if (outOfRange)
+                break;
+        }
     }
 
     void PaintCrystal(Shuijing shuijing)
@@ -221,31 +294,40 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         if(shuijing.level == 1)
         {
+            //tileTerrain.PaintTileElementLevel1(shuijing.tile,shuijing.elementType);
             tileTerrain.PaintCrystalLevel1(shuijing.tile, brushType);
-            tileTerrain.PaintCrystalLevel_Specified(shuijing.tile,brushType);
-            tileTerrain.PaintTileElementLevel1(shuijing.tile,PATileTerrain.TileElementType.Fire);
+            //if(shuijing.elementType == PATileTerrain.TileElementType.Fire)
+            //    tileTerrain.PaintCrystalLevel_Specified(shuijing.tile, brushType);
         }
         else if(shuijing.level == 2)
         {
-            tileTerrain.PaintTileElementLevel2(shuijing.tile, PATileTerrain.TileElementType.Fire);
+            //tileTerrain.PaintTileElementLevel2(shuijing.tile, shuijing.elementType);
             tileTerrain.PaintCrystalLevel2(shuijing.tile, brushType);
             //tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
+            //if (shuijing.elementType == PATileTerrain.TileElementType.Fire)
+            //    tileTerrain.PaintCrystalLevel2_B_Specified(shuijing.tile,0);
         }
         else if (shuijing.level == 3)
         {
+            //tileTerrain.PaintTileElementLevel3(shuijing.tile, shuijing.elementType);
             tileTerrain.PaintCrystalLevel3(shuijing.tile, brushType);
             tileTerrain.PaintCrystalLevel3_B(shuijing.tile, brushType + 1);
             tileTerrain.PaintCrystalLevel3_C(shuijing.tile, brushType + 2);
-            tileTerrain.PaintTileElementLevel3(shuijing.tile, PATileTerrain.TileElementType.Fire);
         }
 
-        shuijing.CreateBuildings(tileTerrain);
+        //shuijing.CreateBuildings(tileTerrain);
     }
 
     public void RepaintAllCrystals()
     {
-        foreach(var crystal in tileTerrain.settings.crystals)
-            PaintCrystal(crystal.shuijing);
+        tileTerrain.ResetTileElement();
+        List<PATileTerrain.PATile> collectTiles = new List<PATileTerrain.PATile>();
+        foreach (var crystal in tileTerrain.settings.crystals)
+            PaintElement(crystal.shuijing,ref collectTiles);
+
+        //foreach(var crystal in tileTerrain.settings.crystals)
+        //    PaintCrystal(crystal.shuijing);
+        tileTerrain.PaintTiles(ref collectTiles);
     }
 
     public string GetUpgradeTips()

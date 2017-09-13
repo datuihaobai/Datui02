@@ -69,38 +69,66 @@ public partial class PATileTerrain
         Wood = 2,
     }
 
+    public class TileElementValue
+    {
+        public float value;
+
+        public void ResetValue()
+        {
+            value = 0f;
+        }
+
+        public void AddValue(float addValue)
+        {
+            value += addValue;
+        }
+
+        public int GetIntValue()
+        {
+            return Mathf.CeilToInt(value);
+        }
+    }
+
     [System.Serializable]
     public class PATileElement
     {
-        private Dictionary<TileElementType, int> elementsDic = new Dictionary<TileElementType, int>();
+        private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
 
         public PATileElement()
         {
+            elementsDic[TileElementType.Fire] = new TileElementValue();
+            elementsDic[TileElementType.Wood] = new TileElementValue();
             Reset();
         }
 
         public int GetElementValue(TileElementType elementType)
         {
-            return elementsDic[elementType];
+            return elementsDic[elementType].GetIntValue();
         }
 
         public void Reset()
         {
-            elementsDic[TileElementType.Fire] = 0;
-            elementsDic[TileElementType.Wood] = 0;
+            foreach(var element in elementsDic.Values)
+                element.ResetValue();
         }
 
-        public void AddElement(TileElementType elementType,int addValue)
+        public void AddElement(TileElementType elementType,float addValue)
         {
-            elementsDic[elementType] += addValue;
+            elementsDic[elementType].AddValue(addValue);
         }
 
-        TileElementType GetMaxElement()
+        public int GetMaxElementValue()
+        {
+            TileElementType maxElementType = GetMaxElementType();
+            return elementsDic[maxElementType].GetIntValue();
+        }
+
+        TileElementType GetMaxElementType()
         {
             TileElementType maxElementType = TileElementType.Fire;
             foreach(var elementType in elementsDic.Keys)
             {
-                if (elementsDic[elementType] >= elementsDic[maxElementType])
+                if (elementsDic[elementType].GetIntValue() >= elementsDic[maxElementType].GetIntValue())
                     maxElementType = elementType;
             }
             return maxElementType;
@@ -119,8 +147,8 @@ public partial class PATileTerrain
         //根据属性值返回地表贴图
         public int GetPaintBrushType()
         {
-            TileElementType maxElementType = GetMaxElement();
-            return GetBrushFromConfig(maxElementType, elementsDic[maxElementType]);
+            TileElementType maxElementType = GetMaxElementType();
+            return GetBrushFromConfig(maxElementType, elementsDic[maxElementType].GetIntValue());
         }
     }
 
@@ -309,6 +337,7 @@ public partial class PATileTerrain
     {
         public int id;
         public int level;
+        public TileElementType elementType;
         public string prefabName;
         public int randomSeed;
         public Shuijing shuijing = null;
@@ -317,10 +346,11 @@ public partial class PATileTerrain
         {
         }
 
-        public PACrystal(int id ,int level,string prefabName,int randomSeed)
+        public PACrystal(int id ,int level,TileElementType elementType, string prefabName,int randomSeed)
         {
             this.id = id;
             this.level = level;
+            this.elementType = elementType;
             this.prefabName = prefabName;
             this.randomSeed = randomSeed;
         }
@@ -330,6 +360,7 @@ public partial class PATileTerrain
             JSONNode jsnode = new JSONClass();
             jsnode["id"] = id.ToString();
             jsnode["level"] = level.ToString();
+            jsnode["elementType"] = ((int)elementType).ToString();
             jsnode["prefabName"] = prefabName;
             jsnode["randomSeed"] = randomSeed.ToString();
             return jsnode;
@@ -339,6 +370,7 @@ public partial class PATileTerrain
         {
             id = jsnode["id"].AsInt;
             level = jsnode["level"].AsInt;
+            elementType = (TileElementType)(jsnode["elementType"].AsInt);
             prefabName = jsnode["prefabName"];
             randomSeed = jsnode["randomSeed"].AsInt;
         }

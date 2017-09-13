@@ -18,6 +18,7 @@ public class UITerrainRoot : MonoBehaviour
     {
         Messenger.AddListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
         UpdateSelectLevel();
+        UpdateSelectElement();
     }
 
     void OnDestroy()
@@ -71,7 +72,7 @@ public class UITerrainRoot : MonoBehaviour
 
     public void OnSelectElementChanged()
     {
-
+        UpdateSelectElement();
     }
 
     public void OnCrystalUpgrade()
@@ -96,6 +97,11 @@ public class UITerrainRoot : MonoBehaviour
     void UpdateSelectLevel()
     {
         TerrainManager.instance.selectLevel = crystalLevelSelect.value + 1;
+    }
+
+    void UpdateSelectElement()
+    {
+        TerrainManager.instance.selectElementType = (PATileTerrain.TileElementType)(crystalElementSelect.value + 1);
     }
 
     void OnShowCrystalOption()

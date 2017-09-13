@@ -748,6 +748,8 @@ public partial class PATileTerrain: MonoBehaviour
     {
         if (tile == null)
             return;
+
+        //t = tile.element.GetPaintBrushType();
         IntermediateInfo imInfo;
         CalcTileBits(t,tile,b,out imInfo);
     }
@@ -1269,6 +1271,7 @@ public partial class PATileTerrain: MonoBehaviour
                 shuijingGo.transform.position = theCrystalTile.GetShuijingPos(this);
                 Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
                 shuijing.level = crystal.level;
+                shuijing.elementType = crystal.elementType;
                 //shuijing.CreateBuildings(theChunk.transform);
                 theTile.shuijing = shuijing;
                 shuijing.tile = theTile;

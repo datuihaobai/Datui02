@@ -13,6 +13,8 @@ public class Shuijing : MonoBehaviour
     [HideInInspector]
     public int level;
     [HideInInspector]
+    public PATileTerrain.TileElementType elementType;
+    [HideInInspector]
     public List<Transform> buildings = new List<Transform>();
     [HideInInspector]
     public List<VirtualPoint> vPoints = new List<VirtualPoint>();
