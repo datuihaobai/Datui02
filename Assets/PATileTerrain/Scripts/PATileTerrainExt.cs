@@ -361,6 +361,8 @@ public partial class PATileTerrain
         PATile bottomTile = nTiles[7];
         foreach (var config in ConfigDataBase.instance.DecalConfigAsset.configs)
         {
+            if (tile.decalTilesetIndex != -1)
+                return;
             if (config.elementType != (int)tile.element.GetMaxElementType())
                 continue;
             if (!config.elementValue.Contains(tile.element.GetMaxElementValue()))
@@ -390,7 +392,7 @@ public partial class PATileTerrain
 
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     rightTile.decalTilesetIndex = config.tileSetIndex[1];
-                    PaintTileDecal(rightTile);
+                    PaintTileDecal(rightTile,rotateType);
                 }
                 else if (rotateType == UVRotateType.None)
                 {
@@ -400,7 +402,7 @@ public partial class PATileTerrain
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     topTile.decalTilesetIndex = config.tileSetIndex[1];
-                    PaintTileDecal(topTile);
+                    PaintTileDecal(topTile,rotateType);
                 }
                 else if (rotateType == UVRotateType._180)
                 {
@@ -410,7 +412,7 @@ public partial class PATileTerrain
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     bottomTile.decalTilesetIndex = config.tileSetIndex[1];
-                    PaintTileDecal(bottomTile);
+                    PaintTileDecal(bottomTile,rotateType);
                 }
                 else if (rotateType == UVRotateType._270)
                 {
@@ -420,9 +422,9 @@ public partial class PATileTerrain
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     leftTile.decalTilesetIndex = config.tileSetIndex[1];
-                    PaintTileDecal(leftTile);
+                    PaintTileDecal(leftTile,rotateType);
                 }
-                PaintTileDecal(tile);
+                PaintTileDecal(tile,rotateType);
             }
             else if (config.decalType == (int)TileDecalType.Decal_4)
             {

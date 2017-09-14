@@ -36,7 +36,7 @@ public class Shuijing : MonoBehaviour
 
     public void CreateBuildings(PATileTerrain tileTerrain)
     {
-        return;
+        //return;
         RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(tile.id).randomSeed);
         PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
 
