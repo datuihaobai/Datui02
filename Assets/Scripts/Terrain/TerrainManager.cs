@@ -186,7 +186,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public void ClearTerrain()
     {
         tileTerrain.FillTerrain(defaultBrushType);
-        tileTerrain.ResetTileElement();
+        tileTerrain.ResetTile();
         foreach (var crystal in tileTerrain.settings.crystals)
         {
             if (crystal.shuijing == null)
@@ -203,21 +203,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     {
         if (shuijing == null)
             return;
-        //shuijing.RemoveBuildings();
-        //RepaintAllCrystals(false);
-        //PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
-        //tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
-        //shuijing.tile.shuijing = null;
-        //RepaintAllCrystals(true);
 
         tileTerrain.FillTerrain(defaultBrushType);
-        //tileTerrain.ResetTileElement();
-        //foreach (var crystal in tileTerrain.settings.crystals)
-        //{
-        //    if (crystal.shuijing == null)
-        //        continue;
-        //    crystal.shuijing.RemoveBuildings();
-        //}
         shuijing.RemoveBuildings();
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
@@ -244,13 +231,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     void PaintElement(Shuijing shuijing,ref List<PATileTerrain.PATile> collectTiles)
     {
-        //if (shuijing.level == 1)
-        //    tileTerrain.PaintTileElementLevel1(shuijing.tile, shuijing.elementType);
-        //else if (shuijing.level == 2)
-        //    tileTerrain.PaintTileElementLevel2(shuijing.tile, shuijing.elementType);
-        //else if (shuijing.level == 3)
-        //    tileTerrain.PaintTileElementLevel3(shuijing.tile, shuijing.elementType);
-    
+        shuijing.affectTiles.Clear();
         CrystalRangeConfigAsset.CrystalRangeConfig configData = null;
         foreach(var config in ConfigDataBase.instance.CrystalRangeConfigAsset.configs)
         {
@@ -268,6 +249,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         Vector2 crystalPos = new Vector2(shuijing.tile.x + 1,shuijing.tile.y + 1);
         CalTileElement(shuijing.tile, crystalPos, centerValue, atten, shuijing.elementType);
         collectTiles.Add(shuijing.tile);
+        shuijing.affectTiles.Add(shuijing.tile);
+        shuijing.tile.affectShuijing = shuijing;
         while(true)
         {
             outOfRange = true;
@@ -280,6 +263,11 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 if (CalTileElement(tile, crystalPos, centerValue, atten, shuijing.elementType))
                 {
                     collectTiles.Add(tile);
+                    if (tile.affectShuijing == null)
+                    {
+                        shuijing.affectTiles.Add(tile);
+                        tile.affectShuijing = shuijing;
+                    }
                     outOfRange = false;
                 } 
             }
@@ -288,43 +276,43 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         }
     }
 
-    void PaintCrystal(Shuijing shuijing)
-    {
-        if (shuijing == null)
-            return;
-        int brushType = shuijing.brushType;
+    //void PaintCrystal(Shuijing shuijing)
+    //{
+    //    if (shuijing == null)
+    //        return;
+    //    int brushType = shuijing.brushType;
         
-        RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(shuijing.tile.id).randomSeed);
+    //    RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(shuijing.tile.id).randomSeed);
 
-        if(shuijing.level == 1)
-        {
-            //tileTerrain.PaintTileElementLevel1(shuijing.tile,shuijing.elementType);
-            tileTerrain.PaintCrystalLevel1(shuijing.tile, brushType);
-            //if(shuijing.elementType == PATileTerrain.TileElementType.Fire)
-            //    tileTerrain.PaintCrystalLevel_Specified(shuijing.tile, brushType);
-        }
-        else if(shuijing.level == 2)
-        {
-            //tileTerrain.PaintTileElementLevel2(shuijing.tile, shuijing.elementType);
-            tileTerrain.PaintCrystalLevel2(shuijing.tile, brushType);
-            //tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
-            //if (shuijing.elementType == PATileTerrain.TileElementType.Fire)
-            //    tileTerrain.PaintCrystalLevel2_B_Specified(shuijing.tile,0);
-        }
-        else if (shuijing.level == 3)
-        {
-            //tileTerrain.PaintTileElementLevel3(shuijing.tile, shuijing.elementType);
-            tileTerrain.PaintCrystalLevel3(shuijing.tile, brushType);
-            tileTerrain.PaintCrystalLevel3_B(shuijing.tile, brushType + 1);
-            tileTerrain.PaintCrystalLevel3_C(shuijing.tile, brushType + 2);
-        }
+    //    if(shuijing.level == 1)
+    //    {
+    //        //tileTerrain.PaintTileElementLevel1(shuijing.tile,shuijing.elementType);
+    //        tileTerrain.PaintCrystalLevel1(shuijing.tile, brushType);
+    //        //if(shuijing.elementType == PATileTerrain.TileElementType.Fire)
+    //        //    tileTerrain.PaintCrystalLevel_Specified(shuijing.tile, brushType);
+    //    }
+    //    else if(shuijing.level == 2)
+    //    {
+    //        //tileTerrain.PaintTileElementLevel2(shuijing.tile, shuijing.elementType);
+    //        tileTerrain.PaintCrystalLevel2(shuijing.tile, brushType);
+    //        //tileTerrain.PaintCrystalLevel2_B(shuijing.tile, brushType + 1);
+    //        //if (shuijing.elementType == PATileTerrain.TileElementType.Fire)
+    //        //    tileTerrain.PaintCrystalLevel2_B_Specified(shuijing.tile,0);
+    //    }
+    //    else if (shuijing.level == 3)
+    //    {
+    //        //tileTerrain.PaintTileElementLevel3(shuijing.tile, shuijing.elementType);
+    //        tileTerrain.PaintCrystalLevel3(shuijing.tile, brushType);
+    //        tileTerrain.PaintCrystalLevel3_B(shuijing.tile, brushType + 1);
+    //        tileTerrain.PaintCrystalLevel3_C(shuijing.tile, brushType + 2);
+    //    }
 
-        //shuijing.CreateBuildings(tileTerrain);
-    }
+    //    //shuijing.CreateBuildings(tileTerrain);
+    //}
 
     public void RepaintAllCrystals()
     {
-        tileTerrain.ResetTileElement();
+        tileTerrain.ResetTile();
         List<PATileTerrain.PATile> collectTiles = new List<PATileTerrain.PATile>();
         foreach (var crystal in tileTerrain.settings.crystals)
             PaintElement(crystal.shuijing,ref collectTiles);
@@ -332,6 +320,13 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         //foreach(var crystal in tileTerrain.settings.crystals)
         //    PaintCrystal(crystal.shuijing);
         tileTerrain.PaintTiles(ref collectTiles);
+
+        foreach (var crystal in tileTerrain.settings.crystals)
+        {
+            RandomManager.instance.SetSeed(crystal.randomSeed);
+            foreach (var tile in crystal.shuijing.affectTiles)
+                tileTerrain.PaintATileDecal(tile);
+        }
     }
 
     public string GetUpgradeTips()

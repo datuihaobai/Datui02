@@ -712,7 +712,7 @@ public partial class PATileTerrain: MonoBehaviour
         // 24 23 22 21 20 19 18 17 16
 
         PATile[] nTiles = GetNeighboringTilesNxN(tile, range);
-        PATile[] ncTiles = GetCrystalTileNeighbor(tile.x,tile.y, range);
+        //PATile[] ncTiles = GetCrystalTileNeighbor(tile.x,tile.y, range);
         int k = 0;
         //×óÏÂ½Ç
         CalcTileBits(t, nTiles[k], 2, out imInfo[k++]);
@@ -1267,10 +1267,10 @@ public partial class PATileTerrain: MonoBehaviour
                 Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
                 shuijing.level = crystal.level;
                 shuijing.elementType = crystal.elementType;
-                //shuijing.CreateBuildings(theChunk.transform);
                 theTile.shuijing = shuijing;
                 shuijing.tile = theTile;
                 crystal.shuijing = shuijing;
+                shuijing.CreateBuildings(this);
             }
         }
 		

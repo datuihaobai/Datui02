@@ -62,6 +62,13 @@ public partial class PATileTerrain
         }
     }
 
+    public enum TileDecalType
+    {
+        Decal_1=1,//占1个实心格子
+        Decal_2=2,//占横向2个实心格子
+        Decal_4=4,//占2*2=4个实心格子
+    }
+
     public enum TileElementType
     {
         None = 0,
@@ -123,7 +130,7 @@ public partial class PATileTerrain
             return elementsDic[maxElementType].GetIntValue();
         }
 
-        TileElementType GetMaxElementType()
+        public TileElementType GetMaxElementType()
         {
             TileElementType maxElementType = TileElementType.Fire;
             foreach(var elementType in elementsDic.Keys)
@@ -169,7 +176,7 @@ public partial class PATileTerrain
 		public int type = -1;
 		public int toType = -1;
 		public byte bits = 0;
-        public int tilesetIndex = -1;
+        //public int tilesetIndex = -1;
 
         //Game data
 		public bool walkability = true; //for PathFinder
@@ -179,6 +186,17 @@ public partial class PATileTerrain
 
         public float distance = -1f;//距离水晶中心的距离
         public int decalTilesetIndex = -1;//贴花地格图index
+        public bool isFull;//true贴图全格，false贴图边角
+        public Shuijing affectShuijing = null;//受影响的水晶，一个tile只保存第一个影响它的水晶
+
+        public void Reset()
+        {
+            element.Reset();
+            decalTilesetIndex = -1;
+            distance = -1;
+            isFull = false;
+            affectShuijing = null;
+        }
 
         //public JSONNode ToJson()
         //{
