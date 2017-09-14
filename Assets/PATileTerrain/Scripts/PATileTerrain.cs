@@ -906,7 +906,7 @@ public partial class PATileTerrain: MonoBehaviour
         if (specifiedIndex != -1)
             index = specifiedIndex;
 
-        tile.tilesetIndex = index;
+        //tile.tilesetIndex = index;
 
         PATileUV uv = GetIndexUV(index);
 
@@ -973,13 +973,8 @@ public partial class PATileTerrain: MonoBehaviour
 			tile.type = t;
 			tile.toType = t;
 			tile.bits = 0;	
-			
-			//tile.uvs[0] = uv.p0;
-			//tile.uvs[1] = uv.p1;
-			//tile.uvs[2] = uv.p2;
-			//tile.uvs[3] = uv.p3;	
             int index = type.GetRandomBaseIndex();
-            tile.tilesetIndex = index;
+            //tile.tilesetIndex = index;
             PATileUV uv = GetIndexUV(index);
 			uvs[tile.cId * 4 + 0] = uv.p0;//tile.uvs[0];
 			uvs[tile.cId * 4 + 1] = uv.p1;//tile.uvs[1];

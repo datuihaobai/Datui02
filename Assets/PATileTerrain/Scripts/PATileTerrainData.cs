@@ -174,55 +174,48 @@ public partial class PATileTerrain
         //Game data
 		public bool walkability = true; //for PathFinder
 		public Object customData; //User data, you can assign your object
-        public Shuijing shuijing = null;
+        public Shuijing shuijing = null;//tile内放置的水晶
         public PATileElement element = new PATileElement();
 
-        public JSONNode ToJson()
-        {
-            JSONNode jsnode = new JSONClass();
-            //jsnode["id"] = id.ToString();
-            //jsnode["type"] = type.ToString();
-            //jsnode["toType"] = toType.ToString();
-            //jsnode["bits"] = bits.ToString();
-            //jsnode["tilesetIndex"] = tilesetIndex.ToString();
+        public float distance = -1f;//距离水晶中心的距离
+        public int decalTilesetIndex = -1;//贴花地格图index
 
-            int int32Data = ToInt32Data();
-            jsnode["data"] = int32Data.ToString();
+        //public JSONNode ToJson()
+        //{
+        //    JSONNode jsnode = new JSONClass();
 
-            return jsnode;
-        }
+        //    int int32Data = ToInt32Data();
+        //    jsnode["data"] = int32Data.ToString();
 
-        int ToInt32Data()
-        {
-            byte[] byteDatas = new byte[4];
-            byteDatas[0] = (byte)(type & 0xFF);
-            byteDatas[1] = (byte)(toType & 0xFF);
-            byteDatas[2] = bits;
-            byteDatas[3] = (byte)(tilesetIndex & 0xFF);
+        //    return jsnode;
+        //}
 
-            int data = System.BitConverter.ToInt32(byteDatas,0);
-            return data; 
-        }
+        //int ToInt32Data()
+        //{
+        //    byte[] byteDatas = new byte[4];
+        //    byteDatas[0] = (byte)(type & 0xFF);
+        //    byteDatas[1] = (byte)(toType & 0xFF);
+        //    byteDatas[2] = bits;
+        //    byteDatas[3] = (byte)(tilesetIndex & 0xFF);
 
-        void FromInt32Data(int data)
-        {
-            byte[] byteDatas = System.BitConverter.GetBytes(data);
-            type = byteDatas[0];
-            toType = byteDatas[1];
-            bits = byteDatas[2];
-            tilesetIndex = byteDatas[3];
-        }
+        //    int data = System.BitConverter.ToInt32(byteDatas,0);
+        //    return data; 
+        //}
 
-        public void FromJson(JSONNode jsnode)
-        {
-            //id = jsnode["id"].AsInt;
-            //type = jsnode["type"].AsInt;
-            //toType = jsnode["toType"].AsInt;
-            //bits = jsnode["bits"].AsByte;
-            //tilesetIndex = jsnode["tilesetIndex"].AsInt;
-            int int32Data = jsnode["data"].AsInt;
-            FromInt32Data(int32Data);
-        }
+        //void FromInt32Data(int data)
+        //{
+        //    byte[] byteDatas = System.BitConverter.GetBytes(data);
+        //    type = byteDatas[0];
+        //    toType = byteDatas[1];
+        //    bits = byteDatas[2];
+        //    tilesetIndex = byteDatas[3];
+        //}
+
+        //public void FromJson(JSONNode jsnode)
+        //{
+        //    int int32Data = jsnode["data"].AsInt;
+        //    FromInt32Data(int32Data);
+        //}
     }
 	
 	[System.Serializable]

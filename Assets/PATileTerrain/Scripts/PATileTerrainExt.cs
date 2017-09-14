@@ -337,7 +337,9 @@ public partial class PATileTerrain
             CalcTileBits(t, tile, 14);
 
         else
-            PaintNormalTile(tile,t);
+        {
+            PaintNormalTile(tile, t);
+        } 
     }
 
     void PaintCollectTiles(ref Dictionary<int, List<PATile>> collectTiles)

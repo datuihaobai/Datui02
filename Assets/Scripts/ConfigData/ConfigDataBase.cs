@@ -42,8 +42,30 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	
 	private void InitConfig()
 	{
+		configFileNames.Add ("DecalConfig");
 		configFileNames.Add ("CrystalRangeConfig");
 		configFileNames.Add ("TileBrushConfig");
+	}
+	private DecalConfigAsset decalConfigAsset;
+	public DecalConfigAsset DecalConfigAsset
+	{
+		get
+		{
+			if(decalConfigAsset == null)
+			{
+				float startTime = Time.realtimeSinceStartup;
+				ConfigAssetBase asset = assetBundle.LoadAsset("DecalConfig",typeof(ConfigAssetBase)) as ConfigAssetBase;
+				asset.readList();
+				decalConfigAsset = asset as DecalConfigAsset;
+				readCount ++;
+				if(readCount == configFileNames.Count)
+				{
+					assetBundle.Unload(false);
+				}
+				Debug.Log("Read Config DecalConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+			}
+			return decalConfigAsset;
+		}
 	}
 	private CrystalRangeConfigAsset crystalRangeConfigAsset;
 	public CrystalRangeConfigAsset CrystalRangeConfigAsset

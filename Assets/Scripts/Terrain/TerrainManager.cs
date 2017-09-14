@@ -229,6 +229,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     {
         Vector2 tilePos = new Vector2(tile.x + 0.5f, tile.y + 0.5f);
         float distance = Vector2.Distance(crystalPos, tilePos);
+        if (tile.distance.Equals(-1))
+            tile.distance = distance;
+        else
+            tile.distance = Mathf.Min(tile.distance, distance);
         float tileElementValue = Mathf.Max(centerValue - atten * distance, 0);
         if (tileElementValue > 0f)
         {
