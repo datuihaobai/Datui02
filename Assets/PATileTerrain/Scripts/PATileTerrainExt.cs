@@ -293,7 +293,6 @@ public partial class PATileTerrain
     void PaintATile(PATile tile,int t)
     {
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
-        tile.isFull = false;
         int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0, 
             rightTopValue = 0, rightValue = 0, rightBottomValue = 0, bottomValue = 0;
         int elementValue = tile.element.GetPaintBrushType();
@@ -315,36 +314,72 @@ public partial class PATileTerrain
             bottomValue = nTiles[7].element.GetPaintBrushType();
 
         if (leftValue < elementValue && bottomValue < elementValue)
+        {
             CalcTileBits(t, tile, 2);//左下角
+            tile.tileSetType = TileSetType.Corner;
+        }
         else if (leftValue < elementValue && topValue < elementValue)
+        {
             CalcTileBits(t, tile, 1);//左上角
+            tile.tileSetType = TileSetType.Corner;
+        }
         else if (rightValue < elementValue && bottomValue < elementValue)
+        {
             CalcTileBits(t, tile, 4);//右下角
+            tile.tileSetType = TileSetType.Corner;
+        }
         else if (topValue < elementValue && rightValue < elementValue)
+        {
             CalcTileBits(t, tile, 8);//右上角
+            tile.tileSetType = TileSetType.Corner;
+        }
 
         else if (leftValue < elementValue)
+        {
             CalcTileBits(t, tile, 3);
+            tile.tileSetType = TileSetType.Edge;
+        }
         else if (topValue < elementValue)
+        {
             CalcTileBits(t, tile, 9);
+            tile.tileSetType = TileSetType.Edge;
+        }
         else if (rightValue < elementValue)
+        {
             CalcTileBits(t, tile, 12);
+            tile.tileSetType = TileSetType.Edge;
+        }
         else if (bottomValue < elementValue)
+        {
             CalcTileBits(t, tile, 6);
+            tile.tileSetType = TileSetType.Edge;
+        }
 
         else if (leftBottomValue < elementValue)
+        {
             CalcTileBits(t, tile, 7);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
         else if (leftTopValue < elementValue)
+        {
             CalcTileBits(t, tile, 11);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
         else if (rightTopValue < elementValue)
+        {
             CalcTileBits(t, tile, 13);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
         else if (rightBottomValue < elementValue)
+        {
             CalcTileBits(t, tile, 14);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
 
         else
         {
             PaintNormalTile(tile, t);
-            tile.isFull = true;
+            tile.tileSetType = TileSetType.Full;
         } 
     }
 
@@ -367,10 +402,11 @@ public partial class PATileTerrain
                 continue;
             if (!config.elementValue.Contains(tile.element.GetMaxElementValue()))
                 continue;
-            bool isCorver = config.isCorner == 1 ? true : false;
-            if ((isCorver && tile.isFull) || (!tile.isFull && !isCorver))
+            TileSetType tileSetType = (TileSetType)config.tileSetType;
+            if (tile.tileSetType != tileSetType)
                 continue;
-            float rate = (config.maxRate - tile.distance * config.atten);
+            //float rate = (config.maxRate - tile.distance * config.atten);
+            int rate = config.rate;
             int randomValue =  RandomManager.instance.Range(0,100);
             if (rate < randomValue)
                 continue;
@@ -387,7 +423,7 @@ public partial class PATileTerrain
                 {
                     if (rightTile == null || rightTile.decalTilesetIndex != -1)
                         continue;
-                    if ((isCorver && rightTile.isFull) || (!rightTile.isFull && !isCorver))
+                    if (rightTile.tileSetType != tileSetType)
                         continue;
 
                     tile.decalTilesetIndex = config.tileSetIndex[0];
@@ -398,7 +434,7 @@ public partial class PATileTerrain
                 {
                     if (topTile == null || topTile.decalTilesetIndex != -1)
                         continue;
-                    if ((isCorver && topTile.isFull) || (!topTile.isFull && !isCorver))
+                    if (topTile.tileSetType != tileSetType)
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     topTile.decalTilesetIndex = config.tileSetIndex[1];
@@ -408,7 +444,7 @@ public partial class PATileTerrain
                 {
                     if (bottomTile == null || bottomTile.decalTilesetIndex != -1)
                         continue;
-                    if ((isCorver && bottomTile.isFull) || (!bottomTile.isFull && !isCorver))
+                    if (bottomTile.tileSetType != tileSetType)
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     bottomTile.decalTilesetIndex = config.tileSetIndex[1];
@@ -418,7 +454,7 @@ public partial class PATileTerrain
                 {
                     if (leftTile == null || leftTile.decalTilesetIndex != -1)
                         continue;
-                    if ((isCorver && leftTile.isFull) || (!leftTile.isFull && !isCorver))
+                    if (leftTile.tileSetType != tileSetType)
                         continue;
                     tile.decalTilesetIndex = config.tileSetIndex[0];
                     leftTile.decalTilesetIndex = config.tileSetIndex[1];
@@ -432,11 +468,11 @@ public partial class PATileTerrain
                     rightBottomTile == null || rightBottomTile.decalTilesetIndex != -1 ||
                     bottomTile == null || bottomTile.decalTilesetIndex != -1)
                     continue;
-                if ((isCorver && rightTile.isFull) || (!rightTile.isFull && !isCorver))
+                if (rightTile.tileSetType != tileSetType)
                     continue;
-                if ((isCorver && rightBottomTile.isFull) || (!rightBottomTile.isFull && !isCorver))
+                if (rightBottomTile.tileSetType != tileSetType)
                     continue;
-                if ((isCorver && bottomTile.isFull) || (!bottomTile.isFull && !isCorver))
+                if (bottomTile.tileSetType != tileSetType)
                     continue;
 
                 if (config.tileSetIndex.Count != 4)

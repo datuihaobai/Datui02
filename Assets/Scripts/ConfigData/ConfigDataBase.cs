@@ -21,7 +21,14 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	
 	IEnumerator LoadConfig ()
 	{
-		string path = Application.dataPath + "\\..\\AssetBundles\\" + GetPlatformName() + "\\configasset";
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        string path = Application.dataPath + "\\..\\AssetBundles\\" + GetPlatformName() + "\\configasset";
+#elif UNITY_IPHONE  
+        string path = Application.dataPath +"/Raw"+"/AssetBundles/" + GetPlatformName() + "/configasset";  
+#elif UNITY_ANDROID  
+        string path = "jar:file://" + Application.dataPath + "!/assets/"+"AssetBundles/" + GetPlatformName() + "/configasset";  
+#endif
+
         WWW loadWWW = new WWW(path);
         yield return loadWWW;
         assetBundle = loadWWW.assetBundle;

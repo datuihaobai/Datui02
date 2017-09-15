@@ -16,7 +16,8 @@ public class DecalConfigAsset : ConfigAssetBase
 		public List<int> tileSetIndex;
 		public int maxRate;
 		public int atten;
-		public int isCorner;
+		public int tileSetType;
+		public int rate;
 
 		public override void parse(ArrayList cells)
 		{
@@ -37,7 +38,8 @@ public class DecalConfigAsset : ConfigAssetBase
 				tileSetIndex = new List<int> (tileSetIndex_args);
 			maxRate = Int32.Parse(GameUtility.toNumber(cells[5] as string));
 			atten = Int32.Parse(GameUtility.toNumber(cells[6] as string));
-			isCorner = Int32.Parse(GameUtility.toNumber(cells[7] as string));
+			tileSetType = Int32.Parse(GameUtility.toNumber(cells[7] as string));
+			rate = Int32.Parse(GameUtility.toNumber(cells[8] as string));
 		}
 	}
 

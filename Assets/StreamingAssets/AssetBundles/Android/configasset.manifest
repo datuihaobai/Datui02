@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 731509027
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: dc526e3988c581ada1460f81b8b14a0b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a714aeb7ebadd583d1e071502ca31127
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: e5f2f1df55add9b4ea4e6d00fa4ce55c, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ad45ead06aa8cb94f84ecc6c6c8b2173, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8eeea8f11eb128841a8f64843ef854f9, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+Assets:
+- Assets/WorkAssets/ConfigAsset/DecalConfig.asset
+- Assets/WorkAssets/ConfigAsset/TileBrushConfig.asset
+- Assets/WorkAssets/ConfigAsset/CrystalRangeConfig.asset
+Dependencies: []

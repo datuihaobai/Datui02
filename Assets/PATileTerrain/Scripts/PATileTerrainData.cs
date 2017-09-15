@@ -159,6 +159,15 @@ public partial class PATileTerrain
         }
     }
 
+    //地格贴图类型
+    public enum TileSetType
+    {
+        Full = 0,//实心
+        Corner = 1,//角1:3
+        BigCorner = 2,//大角3:1
+        Edge = 3,//边
+    }
+
 	[System.Serializable]
 	public class PATile
 	{	
@@ -186,7 +195,8 @@ public partial class PATileTerrain
 
         public float distance = -1f;//距离水晶中心的距离
         public int decalTilesetIndex = -1;//贴花地格图index
-        public bool isFull;//true贴图全格，false贴图边角
+        //public bool isFull;//true贴图全格，false贴图边角
+        public TileSetType tileSetType;
         public Shuijing affectShuijing = null;//受影响的水晶，一个tile只保存第一个影响它的水晶
 
         public void Reset()
@@ -194,7 +204,6 @@ public partial class PATileTerrain
             element.Reset();
             decalTilesetIndex = -1;
             distance = -1;
-            isFull = false;
             affectShuijing = null;
         }
 
