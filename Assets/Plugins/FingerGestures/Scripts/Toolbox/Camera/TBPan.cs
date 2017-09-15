@@ -46,9 +46,9 @@ public class TBPan : MonoBehaviour
     {
         vPos = ConstrainToMoveArea(vPos);
         
-        if (smoothSpeed > 0)
-            trCameraRoot.position = Vector3.Lerp(trCameraRoot.position, vPos, Time.deltaTime * smoothSpeed);
-        else
+        //if (smoothSpeed > 0)
+        //    trCameraRoot.position = Vector3.Lerp(trCameraRoot.position, vPos, Time.deltaTime * smoothSpeed);
+        //else
             trCameraRoot.position = vPos;
     }
 

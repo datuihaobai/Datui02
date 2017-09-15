@@ -6,8 +6,8 @@ using System.Collections;
 /// NOTE: this script does NOT require a TBInputManager instance to be present in the scene.
 /// </summary>
 [AddComponentMenu( "FingerGestures/Toolbox/Camera/Pinch-Zoom" )]
-[RequireComponent( typeof( Camera ) )]
-[RequireComponent( typeof( PinchRecognizer ) )]
+//[RequireComponent( typeof( Camera ) )]
+//[RequireComponent( typeof( PinchRecognizer ) )]
 public class TBPinchZoom : MonoBehaviour
 {
     public enum ZoomMethod
@@ -16,7 +16,7 @@ public class TBPinchZoom : MonoBehaviour
         Position,
 
         // change the field of view of the camera, or projection size for orthographic cameras
-        FOV,
+        //FOV,
     }
 
     public ZoomMethod zoomMethod = ZoomMethod.Position;
@@ -26,8 +26,8 @@ public class TBPinchZoom : MonoBehaviour
     public float SmoothSpeed = 4.0f;
 
     Vector3 defaultPos = Vector3.zero;
-    float defaultFov = 0;
-    float defaultOrthoSize = 0;
+    //float defaultFov = 0;
+    //float defaultOrthoSize = 0;
     float idealZoomAmount = 0;
     float zoomAmount = 0;
 
@@ -37,17 +37,17 @@ public class TBPinchZoom : MonoBehaviour
         set { defaultPos = value; }
     }
 
-    public float DefaultFov
-    {
-        get { return defaultFov; }
-        set { defaultFov = value; }
-    }
+    //public float DefaultFov
+    //{
+    //    get { return defaultFov; }
+    //    set { defaultFov = value; }
+    //}
 
-    public float DefaultOrthoSize
-    {
-        get { return defaultOrthoSize; }
-        set { defaultOrthoSize = value; }
-    }
+    //public float DefaultOrthoSize
+    //{
+    //    get { return defaultOrthoSize; }
+    //    set { defaultOrthoSize = value; }
+    //}
 
     public float IdealZoomAmount
     {
@@ -65,33 +65,34 @@ public class TBPinchZoom : MonoBehaviour
             switch( zoomMethod )
             {
                 case ZoomMethod.Position:
-                    transform.position = defaultPos + zoomAmount * transform.forward;
+                    //transform.position = defaultPos + zoomAmount * transform.forward;
+                    transform.localPosition = new Vector3(transform.localPosition.x,transform.localPosition.y,zoomAmount);
                     break;
 
-                case ZoomMethod.FOV:
-                    if( GetComponent<Camera>().orthographic )
-                    {
-                        GetComponent<Camera>().orthographicSize = Mathf.Max( defaultOrthoSize - zoomAmount, 0.1f );
-                    }
-                    else
-                    {
-                        CameraFov = Mathf.Max( defaultFov - zoomAmount, 0.1f );
-                    }
-                    break;
+                //case ZoomMethod.FOV:
+                //    if( GetComponent<Camera>().orthographic )
+                //    {
+                //        GetComponent<Camera>().orthographicSize = Mathf.Max( defaultOrthoSize - zoomAmount, 0.1f );
+                //    }
+                //    else
+                //    {
+                //        CameraFov = Mathf.Max( defaultFov - zoomAmount, 0.1f );
+                //    }
+                //    break;
             }
         }
     }
 
-    float CameraFov
-    {
-#if UNITY_3_5
-        get { return camera.fov; }
-        set { camera.fov = value; }
-#else
-        get { return GetComponent<Camera>().fieldOfView; }
-        set { GetComponent<Camera>().fieldOfView = value; }
-#endif
-    }
+//    float CameraFov
+//    {
+//#if UNITY_3_5
+//        get { return camera.fov; }
+//        set { camera.fov = value; }
+//#else
+//        get { return GetComponent<Camera>().fieldOfView; }
+//        set { GetComponent<Camera>().fieldOfView = value; }
+//#endif
+//    }
 
     public float ZoomPercent
     {
@@ -100,11 +101,11 @@ public class TBPinchZoom : MonoBehaviour
 
     void Start()
     {
-        if( !GetComponent<PinchRecognizer>() )
-        {
-            Debug.LogWarning( "No pinch recognizer found on " + this.name + ". Disabling TBPinchZoom." );
-            enabled = false;
-        }
+        //if( !GetComponent<PinchRecognizer>() )
+        //{
+        //    Debug.LogWarning( "No pinch recognizer found on " + this.name + ". Disabling TBPinchZoom." );
+        //    enabled = false;
+        //}
 
         SetDefaults();
     }
@@ -117,12 +118,12 @@ public class TBPinchZoom : MonoBehaviour
     public void SetDefaults()
     {
         DefaultPos = transform.position;
-        DefaultFov = CameraFov;
-        DefaultOrthoSize = GetComponent<Camera>().orthographicSize;
+        //DefaultFov = CameraFov;
+        //DefaultOrthoSize = GetComponent<Camera>().orthographicSize;
     }
 
     // Handle the pinch event
-    void OnPinch( PinchGesture gesture )
+    public void OnPinch( PinchGesture gesture )
     {
         IdealZoomAmount += zoomSpeed * gesture.Delta.Centimeters();
     }
