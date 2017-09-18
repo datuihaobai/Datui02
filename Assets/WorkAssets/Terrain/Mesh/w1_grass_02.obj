@@ -1,0 +1,24 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 18.09.2017 14:35:18
+
+#
+# object w1_grass_02
+#
+
+v  0.2506 0.6269 0.0008
+v  0.2506 -0.0078 0.0008
+v  -0.2506 -0.0078 -0.0008
+v  -0.2506 0.6269 -0.0008
+# 4 vertices
+
+vt 0.5690 0.6469 0.0000
+vt 0.5690 0.0000 0.0000
+vt 0.0056 0.0000 0.0000
+vt 0.0056 0.6469 0.0000
+# 4 texture coords
+
+g w1_grass_02
+s 1
+f 1/4 2/3 3/2 4/1 
+# 1 polygons
+
