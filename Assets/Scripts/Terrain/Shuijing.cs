@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PathologicalGames;
 
-public class Shuijing : MonoBehaviour
+public class Shuijing : Building
 {
     public int brushType;
     public Transform vPointRoot;
@@ -14,6 +14,8 @@ public class Shuijing : MonoBehaviour
     public int level;
     [HideInInspector]
     public PATileTerrain.TileElementType elementType;
+    [HideInInspector]
+    public string prefabName;
     [HideInInspector]
     public List<Transform> buildings = new List<Transform>();
     [HideInInspector]

@@ -137,19 +137,34 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             preShuijingName = "w_";
         string shuijingPrefabName = preShuijingName + shuijingName + level.ToString();
         GameObject shuijingGo = PoolManager.Pools["Shuijing"].Spawn(shuijingPrefabName).gameObject;
-        //GameObject shuijingGo = Object.Instantiate<GameObject>(Resources.Load<GameObject>("Terrain/Shuijing/shuij"),Vector3.zero,Quaternion.identity);
-        PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
-        shuijingGo.transform.SetParent(chunk.settings.crystalGo.transform);
-        //shuijingGo.transform.position = tileTerrain.transform.TransformPoint(tile.position);
-        shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
         Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
         shuijing.level = level;
         shuijing.elementType = elementType;
-        //shuijing.CreateBuildings(chunk.transform);
+        shuijing.prefabName = shuijingPrefabName;
+        
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
+        shuijingGo.transform.SetParent(chunk.settings.crystalGo.transform);
+        shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
+
         crystalTile.leftBottomTile.shuijing = shuijing;
         shuijing.tile = crystalTile.leftBottomTile;
         PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
             crystalTile.leftBottomTile.id, shuijing.level,elementType, shuijingPrefabName, RandomManager.NewSeed());
+        crystalData.shuijing = shuijing;
+        tileTerrain.settings.crystals.Add(crystalData);
+
+        return shuijing;
+    }
+
+    public Shuijing PlaceCrystal(Shuijing shuijing, PATileTerrain.PACrystalTile crystalTile)
+    {
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
+        shuijing.gameObject.transform.SetParent(chunk.settings.crystalGo.transform);
+        shuijing.gameObject.transform.position = crystalTile.GetShuijingPos(tileTerrain);
+        crystalTile.leftBottomTile.shuijing = shuijing;
+        shuijing.tile = crystalTile.leftBottomTile;
+        PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
+            crystalTile.leftBottomTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
         crystalData.shuijing = shuijing;
         tileTerrain.settings.crystals.Add(crystalData);
 
