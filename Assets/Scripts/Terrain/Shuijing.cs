@@ -7,6 +7,7 @@ public class Shuijing : Building
 {
     public int brushType;
     public Transform vPointRoot;
+    public GameObject selectTag;
 
     [HideInInspector]
     public PATileTerrain.PATile tile = null;
@@ -67,5 +68,10 @@ public class Shuijing : Building
         foreach(var building in buildings)
             PoolManager.Pools["Shuijing"].Despawn(building);
         buildings.Clear();
+    }
+
+    public void SetSelectTag(bool isSelect)
+    {
+        selectTag.SetActive(isSelect);
     }
 }

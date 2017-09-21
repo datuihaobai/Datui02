@@ -10,7 +10,10 @@ public class UICrystalOption : MonoBehaviour
     public void Show()
     {
         if (TerrainManager.instance.selectShuijing == null)
+        {
+            Hide();
             return;
+        } 
 
         if (TerrainManager.instance.selectShuijing.level < TerrainManager.crystalLevelMax)
             upgradeButton.SetActive(true);

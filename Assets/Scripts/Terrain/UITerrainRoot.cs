@@ -5,18 +5,19 @@ using Game.Messenger;
 
 public class UITerrainRoot : MonoBehaviour 
 {
+    public GameObject crystalRoot;
     public GameObject crystalOnGo;
-    public GameObject crystalOffGo;
-    public GameObject saveButtonGo;
-    public GameObject clearButtonGo;
     public Dropdown crystalLevelSelect;
     public Dropdown crystalElementSelect;
+    public Dropdown buildingTypeSelect;
+
     public UICrystalOption crystalOption;
     public UICommonConfirm commonConfirm;
 
     void Awake()
     {
         Messenger.AddListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
+        Messenger.AddListener(TerrainManager.TerrainManagerEvent_PlaceBuilding,OnPlaceBuilding);
         UpdateSelectLevel();
         UpdateSelectElement();
     }
@@ -30,23 +31,16 @@ public class UITerrainRoot : MonoBehaviour
     {
         TerrainManager.instance.ShowCrystal(true);
         crystalOnGo.SetActive(false);
-        crystalOffGo.SetActive(true);
-        saveButtonGo.SetActive(true);
-        clearButtonGo.SetActive(true);
-        crystalLevelSelect.gameObject.SetActive(true);
-        crystalElementSelect.gameObject.SetActive(true);
+        crystalRoot.SetActive(true);
     }
 
     public void OnClickCrystalOff()
     {
         TerrainManager.instance.ShowCrystal(false);
         crystalOnGo.SetActive(true);
-        crystalOffGo.SetActive(false);
-        saveButtonGo.SetActive(false);
-        clearButtonGo.SetActive(false);
-        crystalLevelSelect.gameObject.SetActive(false);
-        crystalElementSelect.gameObject.SetActive(false);
+        crystalRoot.SetActive(false);
         crystalOption.Hide();
+        buildingTypeSelect.value = 0;
     }
     
     public void OnClickSave()
@@ -59,12 +53,6 @@ public class UITerrainRoot : MonoBehaviour
         TerrainManager.instance.ClearTerrain();
     }
 
-    public void OnClickCreate()
-    {
-        TerrainManager.instance.NewTerrain();
-        OnClickSave();
-    }
-
     public void OnSelectLevelChanged()
     {
         UpdateSelectLevel();
@@ -73,6 +61,11 @@ public class UITerrainRoot : MonoBehaviour
     public void OnSelectElementChanged()
     {
         UpdateSelectElement();
+    }
+
+    public void OnSelectBuildingTypeChanged()
+    {
+        UpdateSelectBuildingType();
     }
 
     public void OnCrystalUpgrade()
@@ -104,8 +97,19 @@ public class UITerrainRoot : MonoBehaviour
         TerrainManager.instance.selectElementType = (PATileTerrain.TileElementType)(crystalElementSelect.value + 1);
     }
 
+    void UpdateSelectBuildingType()
+    {
+        TerrainManager.instance.selectBuildingType = (Building.BuildingType)buildingTypeSelect.value;
+        TerrainManager.instance.CreateToPlaceBuilding();
+    }
+
     void OnShowCrystalOption()
     {
         crystalOption.Show();
+    }
+
+    void OnPlaceBuilding()
+    {
+        buildingTypeSelect.value = 0;
     }
 }
