@@ -14,6 +14,7 @@ public class PATileTerrainChunk: MonoBehaviour
 		public int x, y, id;
 		public Mesh mesh;
         public GameObject crystalGo;
+        public Transform decoratesRoot;
         public Transform buildingsRoot;
     }
 	public Settings settings = new Settings();

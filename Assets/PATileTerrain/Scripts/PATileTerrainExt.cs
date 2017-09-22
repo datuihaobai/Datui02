@@ -95,7 +95,7 @@ public partial class PATileTerrain
         foreach (PATileTerrainChunk c in settings.chunks)
         {
             c.settings.crystalGo.SetActive(isShow);
-            c.settings.buildingsRoot.gameObject.SetActive(!isShow);
+            c.settings.decoratesRoot.gameObject.SetActive(!isShow);
         }
     }
 

@@ -462,6 +462,8 @@ public partial class PATileTerrain
 
         public List<PACrystalBuilding> crystals = new List<PACrystalBuilding>();
 
+        public List<PABuilding> buildings = new List<PABuilding>();
+
         public void RemoveCrystal(int id)
         {
             foreach(var crystal in crystals)
@@ -531,6 +533,11 @@ public partial class PATileTerrain
                 crystalsNodeArray.Add(crystal.ToJson());
             jsnode["crystals"] = crystalsNodeArray;
 
+            JSONNode buildingsNodeArray = new JSONArray();
+            foreach (var building in buildings)
+                buildingsNodeArray.Add(building.ToJson());
+            jsnode["buildings"] = buildingsNodeArray;
+
             return jsnode;
         }
 
@@ -569,6 +576,14 @@ public partial class PATileTerrain
                 PACrystalBuilding crystalBuilding = new PACrystalBuilding();
                 crystalBuilding.FromJson(crystalNode);
                 crystals.Add(crystalBuilding);
+            }
+
+            buildings.Clear();
+            foreach (var buildingNode in jsnode["buildings"].Childs)
+            {
+                PABuilding building = new PABuilding();
+                building.FromJson(buildingNode);
+                buildings.Add(building);
             }
         }
 	}

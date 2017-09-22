@@ -13,6 +13,8 @@ public class UITerrainRoot : MonoBehaviour
 
     public UICrystalOption crystalOption;
     public UICommonConfirm commonConfirm;
+    public UIBuildingSelectButton crystalButton;
+    public UIBuildingSelectButton nestButton;
 
     void Awake()
     {
@@ -69,6 +71,22 @@ public class UITerrainRoot : MonoBehaviour
         UpdateSelectBuildingType();
     }
 
+    public void OnSelectBuildingCrystal()
+    {
+        crystalButton.SetSelect(true);
+        nestButton.SetSelect(false);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
+        TerrainManager.instance.CreateToPlaceBuilding();
+    }
+
+    public void OnSelectBuildingNest()
+    {
+        crystalButton.SetSelect(false);
+        nestButton.SetSelect(true);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
+        TerrainManager.instance.CreateToPlaceBuilding();
+    }
+
     public void OnCrystalUpgrade()
     {
         commonConfirm.gameObject.SetActive(true);
@@ -113,6 +131,10 @@ public class UITerrainRoot : MonoBehaviour
 
     void OnPlaceBuilding()
     {
-        buildingTypeSelect.value = 0;
+        //buildingTypeSelect.value = 0;
+        crystalButton.SetSelect(false);
+        nestButton.SetSelect(false);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.None;
+        TerrainManager.instance.CreateToPlaceBuilding();
     }
 }

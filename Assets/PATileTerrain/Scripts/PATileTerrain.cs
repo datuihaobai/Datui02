@@ -1080,8 +1080,10 @@ public partial class PATileTerrain: MonoBehaviour
                 crystalGo.transform.localPosition = new Vector3(0f,0.1f,0f);
                 crystalGo.SetActive(false);
 
+                GameObject decoratesRootGo = new GameObject("decoratesRoot");
+                decoratesRootGo.transform.SetParent(go.transform,false);
                 GameObject buildingsRootGo = new GameObject("buildingsRoot");
-                buildingsRootGo.transform.SetParent(go.transform,false);
+                buildingsRootGo.transform.SetParent(go.transform, false);
 				//go.hideFlags = HideFlags.HideInHierarchy | HideFlags.NotEditable;
 				//go.isStatic = true;
 			 
@@ -1245,6 +1247,7 @@ public partial class PATileTerrain: MonoBehaviour
 
 				chunk.settings.mesh = mesh;
                 chunk.settings.crystalGo = crystalGo;
+                chunk.settings.decoratesRoot = decoratesRootGo.transform;
                 chunk.settings.buildingsRoot = buildingsRootGo.transform;
 			}
 
@@ -1273,6 +1276,26 @@ public partial class PATileTerrain: MonoBehaviour
                 crystal.shuijing = shuijing;
                 shuijing.CreateBuildings(this);
             }
+
+            foreach (var buildingData in settings.buildings)
+            {
+                PATile theTile = GetTile(buildingData.id);
+                PABuildingTile buildingTile = PABuildingTile.GetByTile(this, theTile);
+                PATileTerrainChunk theChunk = GetChunk(theTile.chunkId);
+
+                GameObject buildingGo = null;
+                if (Application.isPlaying)
+                    buildingGo = PoolManager.Pools["Shuijing"].Spawn(buildingData.prefabName).gameObject;
+                else
+                    buildingGo = Object.Instantiate(Resources.Load<GameObject>("Terrain\\Buildings\\" + buildingData.prefabName)) as GameObject;
+
+                buildingGo.transform.SetParent(theChunk.settings.buildingsRoot.transform);
+                buildingGo.transform.position = buildingTile.GetBuildingPos(this);
+                GameUtility.SetLayerRecursive(buildingGo.transform, LayerMask.NameToLayer("Building"));
+                Building building = buildingGo.GetComponent<Building>();
+                building.elementType = buildingData.elementType;
+                building.tile = theTile;
+            }
         }
 		
 		for (y = 0; y <= h; ++y)	
@@ -1282,20 +1305,14 @@ public partial class PATileTerrain: MonoBehaviour
 				i = (w + 1) * y + x;
 				settings.points[i] = new PAPoint();
 				point = settings.points[i];
-				PrepareHelperPoint(point, x, y, w, h);		
+				PrepareHelperPoint(point, x, y, w, h);
 			}
 		
 		SetTileSet(settings.tilesetMaterial);
 		
 		settings.created = true;	
 		settings.finalized = false;
-		//gameObject.isStatic = true; //Not for InGame use
-        //tile.type = tileNode["type"].AsInt;
-        //tile.toType = tileNode["toType"].AsInt;
-        //tile.bits = tileNode["bits"].AsByte;
-        //tile.tilesetIndex = tileNode["tilesetIndex"].AsInt;
         TerrainManager.instance.RepaintAllCrystals();
-        //LocalNavMeshBuilder.instance.UpdateNavMesh();
 		UpdateMesh();
 	}
 	

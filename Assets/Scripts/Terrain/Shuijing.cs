@@ -41,7 +41,7 @@ public class Shuijing : Building
         {
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
                 continue;
-            buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
+            buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }
 
         LocalNavMeshBuilder.instance.UpdateNavMesh();
@@ -50,7 +50,7 @@ public class Shuijing : Building
         {
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
                 continue;
-            buildings.Add(point.CreateBuilding(chunk.settings.buildingsRoot));
+            buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }
     }
 

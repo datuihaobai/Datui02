@@ -174,6 +174,13 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                         toPlaceBuilding = null;
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
+                    else if(toPlaceBuilding is NestBuilding)
+                    {
+                        NestBuilding nest = toPlaceBuilding as NestBuilding;
+                        PlaceNest(nest,buildingTile);
+                        toPlaceBuilding = null;
+                        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
+                    }
                 }
                 SetSelectShuijing(buildingTile.leftBottomTile.shuijing);
             }
@@ -247,14 +254,13 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     void PlaceNest(NestBuilding nest, PATileTerrain.PABuildingTile buildingTile)
     {
         PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
-        nest.gameObject.transform.SetParent(chunk.settings.crystalGo.transform);
+        nest.gameObject.transform.SetParent(chunk.settings.buildingsRoot.transform);
         nest.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
         nest.tile = buildingTile.leftBottomTile;
         GameUtility.SetLayerRecursive(nest.transform, buildingLayer);
         PATileTerrain.PABuilding buildingData = new PATileTerrain.PABuilding(
             buildingTile.leftBottomTile.id, nest.elementType, nest.prefabName);
-        //crystalData.shuijing = shuijing;
-        //tileTerrain.settings.crystals.Add(crystalData);
+        tileTerrain.settings.buildings.Add(buildingData);
     }
 
     void SetSelectShuijing(Shuijing shuijing)
