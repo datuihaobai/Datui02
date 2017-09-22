@@ -161,21 +161,21 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 x = (int)Mathf.Abs(pos.x / tileTerrain.tileSize);
                 y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
-                PATileTerrain.PACrystalTile crystalTile = PATileTerrain.PACrystalTile.GetByTile(tileTerrain, tile);
+                PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                if (toPlaceBuilding != null && crystalTile.leftBottomTile.shuijing == null)
+                if (toPlaceBuilding != null && buildingTile.leftBottomTile.shuijing == null)
                 {
                     if (toPlaceBuilding is Shuijing)
                     {
                         Shuijing shuijing = toPlaceBuilding as Shuijing;
-                        PlaceCrystal(shuijing, crystalTile);
+                        PlaceCrystal(shuijing, buildingTile);
                         RepaintAllCrystals();
                         shuijing.CreateBuildings(tileTerrain);
                         toPlaceBuilding = null;
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
                 }
-                SetSelectShuijing(crystalTile.leftBottomTile.shuijing);
+                SetSelectShuijing(buildingTile.leftBottomTile.shuijing);
             }
             else if (hitShuijing != null)
             {
@@ -188,9 +188,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     Shuijing CreateCrystal(PATileTerrain.PATile tile, int level, PATileTerrain.TileElementType elementType)
     {
-        PATileTerrain.PACrystalTile crystalTile = PATileTerrain.PACrystalTile.GetByTile(tileTerrain, tile);
+        PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
         Shuijing shuijing = CreateCrystal(level, elementType);
-        return PlaceCrystal(shuijing, crystalTile);
+        return PlaceCrystal(shuijing, buildingTile);
     }
 
     //Shuijing CreateCrystal(PATileTerrain.PACrystalTile crystalTile, int level,PATileTerrain.TileElementType elementType)
@@ -209,31 +209,21 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         shuijing.elementType = elementType;
         shuijing.prefabName = shuijingPrefabName;
         shuijing.SetSelectTag(true);
-        //PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
-        //shuijingGo.transform.SetParent(chunk.settings.crystalGo.transform);
-        //shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
-
-        //crystalTile.leftBottomTile.shuijing = shuijing;
-        //shuijing.tile = crystalTile.leftBottomTile;
-        //PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
-        //    crystalTile.leftBottomTile.id, shuijing.level,elementType, shuijingPrefabName, RandomManager.NewSeed());
-        //crystalData.shuijing = shuijing;
-        //tileTerrain.settings.crystals.Add(crystalData);
-
         return shuijing;
     }
 
-    public Shuijing PlaceCrystal(Shuijing shuijing, PATileTerrain.PACrystalTile crystalTile)
+    public Shuijing PlaceCrystal(Shuijing shuijing, PATileTerrain.PABuildingTile buildingTile)
     {
-        PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
         shuijing.gameObject.transform.SetParent(chunk.settings.crystalGo.transform);
-        shuijing.gameObject.transform.position = crystalTile.GetShuijingPos(tileTerrain);
-        crystalTile.leftBottomTile.shuijing = shuijing;
-        shuijing.tile = crystalTile.leftBottomTile;
-        PATileTerrain.PACrystal crystalData = new PATileTerrain.PACrystal(
-            crystalTile.leftBottomTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
-        crystalData.shuijing = shuijing;
-        tileTerrain.settings.crystals.Add(crystalData);
+        shuijing.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
+        buildingTile.leftBottomTile.shuijing = shuijing;
+        shuijing.tile = buildingTile.leftBottomTile;
+        GameUtility.SetLayerRecursive(shuijing.transform,buildingLayer);
+        PATileTerrain.PACrystalBuilding crystalBuildingData = new PATileTerrain.PACrystalBuilding(
+            buildingTile.leftBottomTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
+        crystalBuildingData.shuijing = shuijing;
+        tileTerrain.settings.crystals.Add(crystalBuildingData);
 
         return shuijing;
     }
@@ -247,10 +237,24 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             preName = "w_";
         string nestPrefabName = preName + nestName;
         GameObject nestGo = PoolManager.Pools["Shuijing"].Spawn(nestPrefabName).gameObject;
+        GameUtility.SetLayerRecursive(nestGo.transform,toPlaceBuildingLayer);
         NestBuilding nest = nestGo.GetComponent<NestBuilding>();
         nest.elementType = elementType;
         nest.prefabName = nestPrefabName;
         return nest;
+    }
+
+    void PlaceNest(NestBuilding nest, PATileTerrain.PABuildingTile buildingTile)
+    {
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
+        nest.gameObject.transform.SetParent(chunk.settings.crystalGo.transform);
+        nest.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
+        nest.tile = buildingTile.leftBottomTile;
+        GameUtility.SetLayerRecursive(nest.transform, buildingLayer);
+        PATileTerrain.PABuilding buildingData = new PATileTerrain.PABuilding(
+            buildingTile.leftBottomTile.id, nest.elementType, nest.prefabName);
+        //crystalData.shuijing = shuijing;
+        //tileTerrain.settings.crystals.Add(crystalData);
     }
 
     void SetSelectShuijing(Shuijing shuijing)

@@ -28,12 +28,12 @@ public partial class PATileTerrain
     /// 四个小格子组成一个水晶格子
     /// </summary>
     [System.Serializable]
-    public class PACrystalTile
+    public class PABuildingTile
     {
         //水晶格子内部左下角的小格子
         public PATile leftBottomTile = null;
 
-        public Vector3 GetShuijingPos(PATileTerrain tileTerrain)
+        public Vector3 GetBuildingPos(PATileTerrain tileTerrain)
         {
             if (leftBottomTile == null)
                 return Vector3.zero;
@@ -52,13 +52,13 @@ public partial class PATileTerrain
             return otherTiles;
         }
 
-        public static PACrystalTile GetByTile(PATileTerrain tileTerrain,PATile tile)
+        public static PABuildingTile GetByTile(PATileTerrain tileTerrain,PATile tile)
         {
-            PACrystalTile crystalTile = new PACrystalTile();
+            PABuildingTile buildingTile = new PABuildingTile();
             int x = tile.x / 2;
             int y = tile.y / 2;
-            crystalTile.leftBottomTile = tileTerrain.GetTile(x * 2,y * 2);
-            return crystalTile;
+            buildingTile.leftBottomTile = tileTerrain.GetTile(x * 2,y * 2);
+            return buildingTile;
         }
     }
 
@@ -353,45 +353,70 @@ public partial class PATileTerrain
 	}
 
     [System.Serializable]
-	public class PACrystal
+    public class PABuilding
     {
         public int id;
-        public int level;
         public TileElementType elementType;
         public string prefabName;
-        public int randomSeed;
-        public Shuijing shuijing = null;
 
-        public PACrystal()
+        public PABuilding()
         {
         }
 
-        public PACrystal(int id ,int level,TileElementType elementType, string prefabName,int randomSeed)
+        public PABuilding(int id, TileElementType elementType, string prefabName)
         {
             this.id = id;
-            this.level = level;
             this.elementType = elementType;
             this.prefabName = prefabName;
-            this.randomSeed = randomSeed;
         }
 
-        public JSONNode ToJson()
+        public virtual JSONNode ToJson()
         {
             JSONNode jsnode = new JSONClass();
             jsnode["id"] = id.ToString();
-            jsnode["level"] = level.ToString();
             jsnode["elementType"] = ((int)elementType).ToString();
             jsnode["prefabName"] = prefabName;
+            return jsnode;
+        }
+
+        public virtual void FromJson(JSONNode jsnode)
+        {
+            id = jsnode["id"].AsInt;
+            elementType = (TileElementType)(jsnode["elementType"].AsInt);
+            prefabName = jsnode["prefabName"];
+        }
+    }
+
+    [System.Serializable]
+	public class PACrystalBuilding : PABuilding
+    {
+        public int level;
+        public int randomSeed;
+        public Shuijing shuijing = null;
+
+        public PACrystalBuilding()
+        {
+        }
+
+        public PACrystalBuilding(int id ,int level,TileElementType elementType, string prefabName,int randomSeed)
+            : base(id,elementType,prefabName)
+        {
+            this.level = level;
+            this.randomSeed = randomSeed;
+        }
+
+        public override JSONNode ToJson()
+        {
+            JSONNode jsnode = base.ToJson();
+            jsnode["level"] = level.ToString();
             jsnode["randomSeed"] = randomSeed.ToString();
             return jsnode;
         }
 
-        public void FromJson(JSONNode jsnode)
+        public override void FromJson(JSONNode jsnode)
         {
-            id = jsnode["id"].AsInt;
+            base.FromJson(jsnode);
             level = jsnode["level"].AsInt;
-            elementType = (TileElementType)(jsnode["elementType"].AsInt);
-            prefabName = jsnode["prefabName"];
             randomSeed = jsnode["randomSeed"].AsInt;
         }
     }
@@ -435,7 +460,7 @@ public partial class PATileTerrain
 		public List<PATSTransition> tsTrans = new List<PATSTransition>();
 		public List<PATSType> tsTypes = new List<PATSType>();
 
-        public List<PACrystal> crystals = new List<PACrystal>();
+        public List<PACrystalBuilding> crystals = new List<PACrystalBuilding>();
 
         public void RemoveCrystal(int id)
         {
@@ -457,7 +482,7 @@ public partial class PATileTerrain
             crystals.Clear();
         }
 
-        public PACrystal GetCrystal(int id)
+        public PACrystalBuilding GetCrystalBuilding(int id)
         {
             foreach (var crystal in crystals)
             {
@@ -541,9 +566,9 @@ public partial class PATileTerrain
             crystals.Clear();
             foreach (var crystalNode in jsnode["crystals"].Childs)
             {
-                PACrystal crystal = new PACrystal();
-                crystal.FromJson(crystalNode);
-                crystals.Add(crystal);
+                PACrystalBuilding crystalBuilding = new PACrystalBuilding();
+                crystalBuilding.FromJson(crystalNode);
+                crystals.Add(crystalBuilding);
             }
         }
 	}

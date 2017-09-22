@@ -11,6 +11,8 @@ public class Building : MonoBehaviour
         Nest = 2,
     }
     [HideInInspector]
+    public PATileTerrain.PATile tile = null;
+    [HideInInspector]
     public PATileTerrain.TileElementType elementType;
     [HideInInspector]
     public string prefabName;

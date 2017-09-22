@@ -8,14 +8,9 @@ public class Shuijing : Building
     public int brushType;
     public Transform vPointRoot;
     public GameObject selectTag;
-
-    [HideInInspector]
-    public PATileTerrain.PATile tile = null;
+    
     [HideInInspector]
     public int level;
-    //[HideInInspector]
-    //public PATileTerrain.TileElementType elementType;
-    
     [HideInInspector]
     public List<Transform> buildings = new List<Transform>();
     [HideInInspector]
@@ -39,7 +34,7 @@ public class Shuijing : Building
     public void CreateBuildings(PATileTerrain tileTerrain)
     {
         //return;
-        RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystal(tile.id).randomSeed);
+        RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystalBuilding(tile.id).randomSeed);
         PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
 
         foreach (var point in vPoints)

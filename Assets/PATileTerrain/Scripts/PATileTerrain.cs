@@ -446,10 +446,10 @@ public partial class PATileTerrain: MonoBehaviour
 		return uv;
 	}
 
-    public PATile[] GetCrystalTileNeighbor(PACrystalTile crystalTile,int n)
-    {
-        return GetCrystalTileNeighbor(crystalTile.leftBottomTile.x,crystalTile.leftBottomTile.y,n);
-    }
+    //public PATile[] GetCrystalTileNeighbor(PABuildingTile crystalTile,int n)
+    //{
+    //    return GetCrystalTileNeighbor(crystalTile.leftBottomTile.x,crystalTile.leftBottomTile.y,n);
+    //}
 
     public PATile[] GetCrystalTileNeighbor(int x,int y ,int n)
     {
@@ -591,79 +591,79 @@ public partial class PATileTerrain: MonoBehaviour
 		if (tile != null && tile.type >= settings.tsTypes.Count) { tile.type = -1; tile.bits = 0; }
 	}
 
-    public void PaintCrystalTile(PATile tile,int t , int range)
-    {
-        if (tile == null) return;
+    //public void PaintCrystalTile(PATile tile,int t , int range)
+    //{
+    //    if (tile == null) return;
 
-        t = Mathf.Clamp(t, 0, settings.tsTypes.Count);
+    //    t = Mathf.Clamp(t, 0, settings.tsTypes.Count);
 
-        IntermediateInfo[] imInfo = new IntermediateInfo[(range + 3) * (range + 3) - (range + 1) * (range + 1)];
-        List<PATile> normalTiles = new List<PATile>();
-        PACrystalTile crystalTile = PACrystalTile.GetByTile(this,tile);
+    //    IntermediateInfo[] imInfo = new IntermediateInfo[(range + 3) * (range + 3) - (range + 1) * (range + 1)];
+    //    List<PATile> normalTiles = new List<PATile>();
+    //    PABuildingTile crystalTile = PABuildingTile.GetByTile(this,tile);
 
-        //for (int i = 1; i < range - 1; i += 2)
-        //    normalTiles.AddRange(GetNeighboringTilesNxN(tile, i));
+    //    //for (int i = 1; i < range - 1; i += 2)
+    //    //    normalTiles.AddRange(GetNeighboringTilesNxN(tile, i));
 
-        if (tile.type == tile.toType && tile.type == t && tile.bits == 0)
-        { }
-        else
-        {
-            tile.type = t;
-            tile.toType = t;
-            tile.bits = 0;
-            UpdateTileUV(tile);
-        }
+    //    if (tile.type == tile.toType && tile.type == t && tile.bits == 0)
+    //    { }
+    //    else
+    //    {
+    //        tile.type = t;
+    //        tile.toType = t;
+    //        tile.bits = 0;
+    //        UpdateTileUV(tile);
+    //    }
 
-        foreach (var normalTile in normalTiles)
-        {
-            if (normalTile.type == normalTile.toType && normalTile.type == t && normalTile.bits == 0)
-            { }
-            else
-            {
-                normalTile.type = t;
-                normalTile.toType = t;
-                normalTile.bits = 0;
-                UpdateTileUV(normalTile);
-            }
-        }
+    //    foreach (var normalTile in normalTiles)
+    //    {
+    //        if (normalTile.type == normalTile.toType && normalTile.type == t && normalTile.bits == 0)
+    //        { }
+    //        else
+    //        {
+    //            normalTile.type = t;
+    //            normalTile.toType = t;
+    //            normalTile.bits = 0;
+    //            UpdateTileUV(normalTile);
+    //        }
+    //    }
 
-        PATile[] otherTiles = crystalTile.GetOtherTiles(this);
-        foreach(var otherTile in otherTiles)
-        {
-            if (otherTile.type == otherTile.toType && otherTile.type == t && otherTile.bits == 0)
-            { }
-            else
-            {
-                otherTile.type = t;
-                otherTile.toType = t;
-                otherTile.bits = 0;
-                UpdateTileUV(otherTile);
-            }
-        }
+    //    PATile[] otherTiles = crystalTile.GetOtherTiles(this);
+    //    foreach(var otherTile in otherTiles)
+    //    {
+    //        if (otherTile.type == otherTile.toType && otherTile.type == t && otherTile.bits == 0)
+    //        { }
+    //        else
+    //        {
+    //            otherTile.type = t;
+    //            otherTile.toType = t;
+    //            otherTile.bits = 0;
+    //            UpdateTileUV(otherTile);
+    //        }
+    //    }
 
-        PATile[] nTiles = GetCrystalTileNeighbor(crystalTile, range);
-        int k = 0;
-        //×óÏÂ½Ç
-        CalcTileBits(t, nTiles[k], 2, out imInfo[k++]);
-        //×ó±ß
-        for (int j = 0; j < range + 1; j++)
-            CalcTileBits(t, nTiles[k], 3, out imInfo[k++]);
-        //×óÉÏ½Ç
-        CalcTileBits(t, nTiles[k], 1, out imInfo[k++]);
-        //ÉÏ±ß
-        for (int j = 0; j < range + 1; j++)
-            CalcTileBits(t, nTiles[k], 9, out imInfo[k++]);
-        //ÓÒÉÏ½Ç	
-        CalcTileBits(t, nTiles[k], 8, out imInfo[k++]);
-        //ÓÒ±ß
-        for (int j = 0; j < range + 1; j++)
-            CalcTileBits(t, nTiles[k], 12, out imInfo[k++]);
-        //ÓÒÏÂ½Ç
-        CalcTileBits(t, nTiles[k], 4, out imInfo[k++]);
-        //ÏÂ±ß
-        for (int j = 0; j < range + 1; j++)
-            CalcTileBits(t, nTiles[k], 6, out imInfo[k++]);
-    }
+    //    PATile[] nTiles = GetCrystalTileNeighbor(crystalTile, range);
+    //    int k = 0;
+    //    //×óÏÂ½Ç
+    //    CalcTileBits(t, nTiles[k], 2, out imInfo[k++]);
+    //    //×ó±ß
+    //    for (int j = 0; j < range + 1; j++)
+    //        CalcTileBits(t, nTiles[k], 3, out imInfo[k++]);
+    //    //×óÉÏ½Ç
+    //    CalcTileBits(t, nTiles[k], 1, out imInfo[k++]);
+    //    //ÉÏ±ß
+    //    for (int j = 0; j < range + 1; j++)
+    //        CalcTileBits(t, nTiles[k], 9, out imInfo[k++]);
+    //    //ÓÒÉÏ½Ç	
+    //    CalcTileBits(t, nTiles[k], 8, out imInfo[k++]);
+    //    //ÓÒ±ß
+    //    for (int j = 0; j < range + 1; j++)
+    //        CalcTileBits(t, nTiles[k], 12, out imInfo[k++]);
+    //    //ÓÒÏÂ½Ç
+    //    CalcTileBits(t, nTiles[k], 4, out imInfo[k++]);
+    //    //ÏÂ±ß
+    //    for (int j = 0; j < range + 1; j++)
+    //        CalcTileBits(t, nTiles[k], 6, out imInfo[k++]);
+    //}
 
     public void PaintTile(PATile tile, int t,int range)
     {
@@ -1253,7 +1253,7 @@ public partial class PATileTerrain: MonoBehaviour
             foreach (var crystal in settings.crystals)
             {
                 PATile theTile = GetTile(crystal.id);
-                PACrystalTile theCrystalTile = PACrystalTile.GetByTile(this,theTile);
+                PABuildingTile buildingTile = PABuildingTile.GetByTile(this,theTile);
                 PATileTerrainChunk theChunk =  GetChunk(theTile.chunkId);
     
                 GameObject shuijingGo  = null;
@@ -1263,7 +1263,8 @@ public partial class PATileTerrain: MonoBehaviour
                     shuijingGo = Object.Instantiate(Resources.Load<GameObject>("Terrain\\Shuijing\\" + crystal.prefabName)) as GameObject;
 
                 shuijingGo.transform.SetParent(theChunk.settings.crystalGo.transform);
-                shuijingGo.transform.position = theCrystalTile.GetShuijingPos(this);
+                shuijingGo.transform.position = buildingTile.GetBuildingPos(this);
+                GameUtility.SetLayerRecursive(shuijingGo.transform, LayerMask.NameToLayer("Building"));
                 Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
                 shuijing.level = crystal.level;
                 shuijing.elementType = crystal.elementType;
