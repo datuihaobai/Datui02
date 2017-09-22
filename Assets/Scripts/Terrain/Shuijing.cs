@@ -13,10 +13,9 @@ public class Shuijing : Building
     public PATileTerrain.PATile tile = null;
     [HideInInspector]
     public int level;
-    [HideInInspector]
-    public PATileTerrain.TileElementType elementType;
-    [HideInInspector]
-    public string prefabName;
+    //[HideInInspector]
+    //public PATileTerrain.TileElementType elementType;
+    
     [HideInInspector]
     public List<Transform> buildings = new List<Transform>();
     [HideInInspector]

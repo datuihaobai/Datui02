@@ -10,6 +10,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public const string TerrainManagerEvent_PlaceBuilding = "TerrainManagerEvent_PlaceBuilding "; 
     public const int defaultBrushType = 0;
     public const string shuijingName = "shuij";
+    public const string nestName = "nest_01";
     public const int crystalLevelMax = 3;
 
     public PATileTerrain tileTerrain;
@@ -24,8 +25,26 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private bool isOverUI = false;
     private bool isStarted = false;
 
+    private int terrainChunkLayermask;
+    private int editCrystalLayerMask;
+    private int buildingLayer;
+    private int buildingLayerMask;
+    private int toPlaceBuildingLayer;
+    private int toPlaceBuildingLayerMask;
+
     void Start()
     {
+        terrainChunkLayermask = LayerMask.NameToLayer("TerrainChunk");
+        terrainChunkLayermask = 1 << terrainChunkLayermask;
+
+        buildingLayer = LayerMask.NameToLayer("Building");
+        buildingLayerMask = 1 << buildingLayer;
+
+        toPlaceBuildingLayer = LayerMask.NameToLayer("ToPlaceBuilding");
+        toPlaceBuildingLayerMask = 1 << toPlaceBuildingLayer;
+
+        editCrystalLayerMask = terrainChunkLayermask | buildingLayerMask;
+
         StartCoroutine(ToStart());
     }
 
@@ -51,15 +70,15 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 isOverUI = false;
         }
 
-        if(Input.GetMouseButton(0))
+        if (isCrystalMode && toPlaceBuilding != null)
         {
-            if(isCrystalMode && toPlaceBuilding != null)
-            {
-
-            }
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out hit, Mathf.Infinity, terrainChunkLayermask);
+            toPlaceBuilding.transform.position = hit.point;
         }
 
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             EditCrystal();
         }
@@ -90,10 +109,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             toPlaceBuilding = CreateCrystal(selectLevel,selectElementType);
         }
-        else if (selectBuildingType == Building.BuildingType.Shuijing)
+        else if (selectBuildingType == Building.BuildingType.Nest)
         {
-            // to do
-            toPlaceBuilding = null;
+            toPlaceBuilding = CreateNest(selectElementType);
         }
     }
 
@@ -130,10 +148,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         Vector3 pos;
         int x, y;
-        int cameraMoveAreaLayer = LayerMask.NameToLayer("CameraMoveArea");
-        int layermask = 1 << cameraMoveAreaLayer;
-        layermask = ~layermask;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layermask))
+        //int cameraMoveAreaLayer = LayerMask.NameToLayer("CameraMoveArea");
+        //int layermask = 1 << cameraMoveAreaLayer;
+        //layermask = ~layermask;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, editCrystalLayerMask))
         {
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             Shuijing hitShuijing = hit.transform.GetComponent<Shuijing>();
@@ -185,11 +203,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             preShuijingName = "w_";
         string shuijingPrefabName = preShuijingName + shuijingName + level.ToString();
         GameObject shuijingGo = PoolManager.Pools["Shuijing"].Spawn(shuijingPrefabName).gameObject;
+        GameUtility.SetLayerRecursive(shuijingGo.transform,toPlaceBuildingLayer);
         Shuijing shuijing = shuijingGo.GetComponent<Shuijing>();
         shuijing.level = level;
         shuijing.elementType = elementType;
         shuijing.prefabName = shuijingPrefabName;
-        
+        shuijing.SetSelectTag(true);
         //PATileTerrainChunk chunk = tileTerrain.GetChunk(crystalTile.leftBottomTile.chunkId);
         //shuijingGo.transform.SetParent(chunk.settings.crystalGo.transform);
         //shuijingGo.transform.position = crystalTile.GetShuijingPos(tileTerrain);
@@ -217,6 +236,21 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.settings.crystals.Add(crystalData);
 
         return shuijing;
+    }
+
+    NestBuilding CreateNest(PATileTerrain.TileElementType elementType)
+    {
+        string preName = "";
+        if (elementType == PATileTerrain.TileElementType.Fire)
+            preName = "v_";
+        else if (elementType == PATileTerrain.TileElementType.Wood)
+            preName = "w_";
+        string nestPrefabName = preName + nestName;
+        GameObject nestGo = PoolManager.Pools["Shuijing"].Spawn(nestPrefabName).gameObject;
+        NestBuilding nest = nestGo.GetComponent<NestBuilding>();
+        nest.elementType = elementType;
+        nest.prefabName = nestPrefabName;
+        return nest;
     }
 
     void SetSelectShuijing(Shuijing shuijing)

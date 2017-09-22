@@ -24,4 +24,14 @@ public static class GameUtility
             GetComponentsInChildrenRecursive<T>(trans.GetChild(i),ref results);
         }
     }
+
+    public static void SetLayerRecursive(Transform trans,int layer)
+    {
+        trans.gameObject.layer = layer;
+        for (int i = 0; i < trans.childCount; i++ )
+        {
+            Transform child = trans.GetChild(i);
+            SetLayerRecursive(child,layer);
+        }
+    }
 }

@@ -10,5 +10,8 @@ public class Building : MonoBehaviour
         Shuijing = 1,
         Nest = 2,
     }
-
+    [HideInInspector]
+    public PATileTerrain.TileElementType elementType;
+    [HideInInspector]
+    public string prefabName;
 }

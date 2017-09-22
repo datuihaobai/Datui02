@@ -25,6 +25,7 @@ public class UITerrainRoot : MonoBehaviour
     void OnDestroy()
     {
         Messenger.RemoveListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
+        Messenger.RemoveListener(TerrainManager.TerrainManagerEvent_PlaceBuilding, OnPlaceBuilding);
     }
 
     public void OnClickCrystalOn()
@@ -90,11 +91,13 @@ public class UITerrainRoot : MonoBehaviour
     void UpdateSelectLevel()
     {
         TerrainManager.instance.selectLevel = crystalLevelSelect.value + 1;
+        TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     void UpdateSelectElement()
     {
         TerrainManager.instance.selectElementType = (PATileTerrain.TileElementType)(crystalElementSelect.value + 1);
+        TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     void UpdateSelectBuildingType()
