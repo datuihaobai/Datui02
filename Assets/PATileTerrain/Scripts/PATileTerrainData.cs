@@ -358,6 +358,7 @@ public partial class PATileTerrain
         public int id;
         public TileElementType elementType;
         public string prefabName;
+        public int belongShuijingId;
 
         public PABuilding()
         {
@@ -376,6 +377,7 @@ public partial class PATileTerrain
             jsnode["id"] = id.ToString();
             jsnode["elementType"] = ((int)elementType).ToString();
             jsnode["prefabName"] = prefabName;
+            jsnode["belongShuijingId"] = belongShuijingId.ToString();
             return jsnode;
         }
 
@@ -384,6 +386,7 @@ public partial class PATileTerrain
             id = jsnode["id"].AsInt;
             elementType = (TileElementType)(jsnode["elementType"].AsInt);
             prefabName = jsnode["prefabName"];
+            belongShuijingId = jsnode["belongShuijingId"].AsInt;
         }
     }
 

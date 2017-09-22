@@ -148,9 +148,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         Vector3 pos;
         int x, y;
-        //int cameraMoveAreaLayer = LayerMask.NameToLayer("CameraMoveArea");
-        //int layermask = 1 << cameraMoveAreaLayer;
-        //layermask = ~layermask;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, editCrystalLayerMask))
         {
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
@@ -174,7 +171,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                         toPlaceBuilding = null;
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
-                    else if(toPlaceBuilding is NestBuilding)
+                    else if (toPlaceBuilding is NestBuilding && buildingTile.leftBottomTile.affectShuijing != null)
                     {
                         NestBuilding nest = toPlaceBuilding as NestBuilding;
                         PlaceNest(nest,buildingTile);
@@ -184,7 +181,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 }
                 SetSelectShuijing(buildingTile.leftBottomTile.shuijing);
             }
-            else if (hitShuijing != null)
+            else if (hitShuijing != null && toPlaceBuilding == null)
             {
                 SetSelectShuijing(hitShuijing);
             }
@@ -253,14 +250,21 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     void PlaceNest(NestBuilding nest, PATileTerrain.PABuildingTile buildingTile)
     {
+        Shuijing belongShuijing = buildingTile.leftBottomTile.affectShuijing;
+        if (belongShuijing == null)
+            return;
+
         PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
         nest.gameObject.transform.SetParent(chunk.settings.buildingsRoot.transform);
         nest.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
         nest.tile = buildingTile.leftBottomTile;
+        //nest.belongShuijing = belongShuijing;
         GameUtility.SetLayerRecursive(nest.transform, buildingLayer);
         PATileTerrain.PABuilding buildingData = new PATileTerrain.PABuilding(
             buildingTile.leftBottomTile.id, nest.elementType, nest.prefabName);
         tileTerrain.settings.buildings.Add(buildingData);
+        buildingData.belongShuijingId = belongShuijing.tile.id;
+        belongShuijing.buildings.Add(nest.transform);
     }
 
     void SetSelectShuijing(Shuijing shuijing)

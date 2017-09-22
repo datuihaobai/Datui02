@@ -1295,6 +1295,11 @@ public partial class PATileTerrain: MonoBehaviour
                 Building building = buildingGo.GetComponent<Building>();
                 building.elementType = buildingData.elementType;
                 building.tile = theTile;
+
+                PATile belongShuijingTile = GetTile(buildingData.belongShuijingId);
+                Shuijing belongShuijing = belongShuijingTile.shuijing;
+                //building.belongShuijing = belongShuijing;
+                belongShuijing.buildings.Add(building.transform);
             }
         }
 		
