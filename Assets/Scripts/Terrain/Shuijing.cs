@@ -44,7 +44,8 @@ public class Shuijing : Building
             buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }
 
-        LocalNavMeshBuilder.instance.UpdateNavMesh();
+        if(Application.isPlaying)
+            LocalNavMeshBuilder.instance.UpdateNavMesh();
 
         foreach (var point in vPoints)
         {

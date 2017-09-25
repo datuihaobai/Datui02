@@ -1275,31 +1275,30 @@ public partial class PATileTerrain: MonoBehaviour
                 shuijing.tile = theTile;
                 crystal.shuijing = shuijing;
                 shuijing.CreateBuildings(this);
-            }
 
-            foreach (var buildingData in settings.buildings)
-            {
-                PATile theTile = GetTile(buildingData.id);
-                PABuildingTile buildingTile = PABuildingTile.GetByTile(this, theTile);
-                PATileTerrainChunk theChunk = GetChunk(theTile.chunkId);
+                foreach (var buildingData in crystal.buildings)
+                {
+                    theTile = GetTile(buildingData.id);
+                    buildingTile = PABuildingTile.GetByTile(this, theTile);
+                    theChunk = GetChunk(theTile.chunkId);
 
-                GameObject buildingGo = null;
-                if (Application.isPlaying)
-                    buildingGo = PoolManager.Pools["Shuijing"].Spawn(buildingData.prefabName).gameObject;
-                else
-                    buildingGo = Object.Instantiate(Resources.Load<GameObject>("Terrain\\Buildings\\" + buildingData.prefabName)) as GameObject;
+                    GameObject buildingGo = null;
+                    if (Application.isPlaying)
+                        buildingGo = PoolManager.Pools["Shuijing"].Spawn(buildingData.prefabName).gameObject;
+                    else
+                        buildingGo = Object.Instantiate(Resources.Load<GameObject>("Terrain\\Buildings\\" + buildingData.prefabName)) as GameObject;
 
-                buildingGo.transform.SetParent(theChunk.settings.buildingsRoot.transform);
-                buildingGo.transform.position = buildingTile.GetBuildingPos(this);
-                GameUtility.SetLayerRecursive(buildingGo.transform, LayerMask.NameToLayer("Building"));
-                Building building = buildingGo.GetComponent<Building>();
-                building.elementType = buildingData.elementType;
-                building.tile = theTile;
+                    buildingGo.transform.SetParent(theChunk.settings.buildingsRoot.transform);
+                    buildingGo.transform.position = buildingTile.GetBuildingPos(this);
+                    GameUtility.SetLayerRecursive(buildingGo.transform, LayerMask.NameToLayer("Building"));
+                    Building building = buildingGo.GetComponent<Building>();
+                    building.elementType = buildingData.elementType;
+                    building.tile = theTile;
 
-                PATile belongShuijingTile = GetTile(buildingData.belongShuijingId);
-                Shuijing belongShuijing = belongShuijingTile.shuijing;
-                //building.belongShuijing = belongShuijing;
-                belongShuijing.buildings.Add(building.transform);
+                    PATile belongShuijingTile = GetTile(buildingData.belongShuijingId);
+                    Shuijing belongShuijing = belongShuijingTile.shuijing;
+                    belongShuijing.buildings.Add(building.transform);
+                }
             }
         }
 		

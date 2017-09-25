@@ -31,24 +31,24 @@ public partial class PATileTerrain
     public class PABuildingTile
     {
         //水晶格子内部左下角的小格子
-        public PATile leftBottomTile = null;
+        public PATile keyTile = null;
 
         public Vector3 GetBuildingPos(PATileTerrain tileTerrain)
         {
-            if (leftBottomTile == null)
+            if (keyTile == null)
                 return Vector3.zero;
-            Vector3 pos = new Vector3(leftBottomTile.position.x + tileTerrain.settings.tileSize / 2, 0, leftBottomTile.position.z + tileTerrain.settings.tileSize / 2);
+            Vector3 pos = new Vector3(keyTile.position.x + tileTerrain.settings.tileSize / 2, 0, keyTile.position.z + tileTerrain.settings.tileSize / 2);
             return tileTerrain.transform.TransformPoint(pos);
         }
 
         public PATile[] GetOtherTiles(PATileTerrain tileTerrain)
         {
-            if (leftBottomTile == null)
+            if (keyTile == null)
                 return null;
             PATile[] otherTiles = new PATile[3];
-            otherTiles[0] = tileTerrain.GetTile(leftBottomTile.x,leftBottomTile.y+1);
-            otherTiles[1] = tileTerrain.GetTile(leftBottomTile.x+1, leftBottomTile.y + 1);
-            otherTiles[2] = tileTerrain.GetTile(leftBottomTile.x+1, leftBottomTile.y);
+            otherTiles[0] = tileTerrain.GetTile(keyTile.x,keyTile.y+1);
+            otherTiles[1] = tileTerrain.GetTile(keyTile.x+1, keyTile.y + 1);
+            otherTiles[2] = tileTerrain.GetTile(keyTile.x+1, keyTile.y);
             return otherTiles;
         }
 
@@ -57,7 +57,7 @@ public partial class PATileTerrain
             PABuildingTile buildingTile = new PABuildingTile();
             int x = tile.x / 2;
             int y = tile.y / 2;
-            buildingTile.leftBottomTile = tileTerrain.GetTile(x * 2,y * 2);
+            buildingTile.keyTile = tileTerrain.GetTile(x * 2,y * 2);
             return buildingTile;
         }
     }
@@ -396,6 +396,7 @@ public partial class PATileTerrain
         public int level;
         public int randomSeed;
         public Shuijing shuijing = null;
+        public List<PABuilding> buildings = new List<PABuilding>();//属于水晶的功能建筑列表
 
         public PACrystalBuilding()
         {
@@ -408,11 +409,30 @@ public partial class PATileTerrain
             this.randomSeed = randomSeed;
         }
 
+        public void AddBuilding(PABuilding building)
+        {
+            buildings.Add(building);
+        }
+
+        public void RemoveBuilding(PABuilding building)
+        {
+            buildings.Remove(building);
+        }
+
+        public void ClearBuildings()
+        {
+            buildings.Clear();
+        }
+
         public override JSONNode ToJson()
         {
             JSONNode jsnode = base.ToJson();
             jsnode["level"] = level.ToString();
             jsnode["randomSeed"] = randomSeed.ToString();
+            JSONNode buildingsNodeArray = new JSONArray();
+            foreach (var building in buildings)
+                buildingsNodeArray.Add(building.ToJson());
+            jsnode["buildings"] = buildingsNodeArray;
             return jsnode;
         }
 
@@ -421,6 +441,13 @@ public partial class PATileTerrain
             base.FromJson(jsnode);
             level = jsnode["level"].AsInt;
             randomSeed = jsnode["randomSeed"].AsInt;
+            buildings.Clear();
+            foreach (var buildingNode in jsnode["buildings"].Childs)
+            {
+                PABuilding building = new PABuilding();
+                building.FromJson(buildingNode);
+                buildings.Add(building);
+            }
         }
     }
 	
@@ -465,14 +492,13 @@ public partial class PATileTerrain
 
         public List<PACrystalBuilding> crystals = new List<PACrystalBuilding>();
 
-        public List<PABuilding> buildings = new List<PABuilding>();
-
         public void RemoveCrystal(int id)
         {
             foreach(var crystal in crystals)
             {
                 if (crystal.id == id)
                 {
+                    crystal.ClearBuildings();
                     crystal.shuijing = null;
                     crystals.Remove(crystal);
                     return;
@@ -483,7 +509,10 @@ public partial class PATileTerrain
         public void ClearCrystal()
         {
             foreach (var crystal in crystals)
+            {
+                crystal.ClearBuildings();
                 crystal.shuijing = null;
+            } 
             crystals.Clear();
         }
 
@@ -536,11 +565,6 @@ public partial class PATileTerrain
                 crystalsNodeArray.Add(crystal.ToJson());
             jsnode["crystals"] = crystalsNodeArray;
 
-            JSONNode buildingsNodeArray = new JSONArray();
-            foreach (var building in buildings)
-                buildingsNodeArray.Add(building.ToJson());
-            jsnode["buildings"] = buildingsNodeArray;
-
             return jsnode;
         }
 
@@ -579,14 +603,6 @@ public partial class PATileTerrain
                 PACrystalBuilding crystalBuilding = new PACrystalBuilding();
                 crystalBuilding.FromJson(crystalNode);
                 crystals.Add(crystalBuilding);
-            }
-
-            buildings.Clear();
-            foreach (var buildingNode in jsnode["buildings"].Childs)
-            {
-                PABuilding building = new PABuilding();
-                building.FromJson(buildingNode);
-                buildings.Add(building);
             }
         }
 	}

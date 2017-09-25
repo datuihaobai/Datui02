@@ -160,7 +160,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                if (toPlaceBuilding != null && buildingTile.leftBottomTile.shuijing == null)
+                if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
                 {
                     if (toPlaceBuilding is Shuijing)
                     {
@@ -171,7 +171,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                         toPlaceBuilding = null;
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
-                    else if (toPlaceBuilding is NestBuilding && buildingTile.leftBottomTile.affectShuijing != null)
+                    else if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
                     {
                         NestBuilding nest = toPlaceBuilding as NestBuilding;
                         PlaceNest(nest,buildingTile);
@@ -179,7 +179,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
                 }
-                SetSelectShuijing(buildingTile.leftBottomTile.shuijing);
+                SetSelectShuijing(buildingTile.keyTile.shuijing);
             }
             else if (hitShuijing != null && toPlaceBuilding == null)
             {
@@ -218,14 +218,14 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     public Shuijing PlaceCrystal(Shuijing shuijing, PATileTerrain.PABuildingTile buildingTile)
     {
-        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.keyTile.chunkId);
         shuijing.gameObject.transform.SetParent(chunk.settings.crystalGo.transform);
         shuijing.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
-        buildingTile.leftBottomTile.shuijing = shuijing;
-        shuijing.tile = buildingTile.leftBottomTile;
+        buildingTile.keyTile.shuijing = shuijing;
+        shuijing.tile = buildingTile.keyTile;
         GameUtility.SetLayerRecursive(shuijing.transform,buildingLayer);
         PATileTerrain.PACrystalBuilding crystalBuildingData = new PATileTerrain.PACrystalBuilding(
-            buildingTile.leftBottomTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
+            buildingTile.keyTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
         crystalBuildingData.shuijing = shuijing;
         tileTerrain.settings.crystals.Add(crystalBuildingData);
 
@@ -250,19 +250,19 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
     void PlaceNest(NestBuilding nest, PATileTerrain.PABuildingTile buildingTile)
     {
-        Shuijing belongShuijing = buildingTile.leftBottomTile.affectShuijing;
+        Shuijing belongShuijing = buildingTile.keyTile.affectShuijing;
         if (belongShuijing == null)
             return;
 
-        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.leftBottomTile.chunkId);
+        PATileTerrainChunk chunk = tileTerrain.GetChunk(buildingTile.keyTile.chunkId);
         nest.gameObject.transform.SetParent(chunk.settings.buildingsRoot.transform);
         nest.gameObject.transform.position = buildingTile.GetBuildingPos(tileTerrain);
-        nest.tile = buildingTile.leftBottomTile;
+        nest.tile = buildingTile.keyTile;
         //nest.belongShuijing = belongShuijing;
         GameUtility.SetLayerRecursive(nest.transform, buildingLayer);
         PATileTerrain.PABuilding buildingData = new PATileTerrain.PABuilding(
-            buildingTile.leftBottomTile.id, nest.elementType, nest.prefabName);
-        tileTerrain.settings.buildings.Add(buildingData);
+            buildingTile.keyTile.id, nest.elementType, nest.prefabName);
+        tileTerrain.settings.GetCrystalBuilding(belongShuijing.tile.id).AddBuilding(buildingData);
         buildingData.belongShuijingId = belongShuijing.tile.id;
         belongShuijing.buildings.Add(nest.transform);
     }
