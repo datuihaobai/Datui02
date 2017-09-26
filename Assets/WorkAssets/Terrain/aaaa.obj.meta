@@ -22,6 +22,8 @@ ModelImporter:
     100028: Object777
     100030: Object778
     100032: Object779
+    100034: Object825
+    100036: w1_mountain_01
     400000: //RootNode
     400002: Object156
     400004: Object157
@@ -39,6 +41,8 @@ ModelImporter:
     400028: Object777
     400030: Object778
     400032: Object779
+    400034: Object825
+    400036: w1_mountain_01
     2300000: Object156
     2300002: Object157
     2300004: Object273
@@ -55,6 +59,8 @@ ModelImporter:
     2300026: Object777
     2300028: Object778
     2300030: Object779
+    2300032: Object825
+    2300034: w1_mountain_01
     3300000: Object156
     3300002: Object157
     3300004: Object273
@@ -71,6 +77,8 @@ ModelImporter:
     3300026: Object777
     3300028: Object778
     3300030: Object779
+    3300032: Object825
+    3300034: w1_mountain_01
     4300000: Object156
     4300002: Object157
     4300004: Object273
@@ -87,6 +95,8 @@ ModelImporter:
     4300026: Object777
     4300028: Object778
     4300030: Object779
+    4300032: Object825
+    4300034: w1_mountain_01
   materials:
     importMaterials: 1
     materialName: 0
