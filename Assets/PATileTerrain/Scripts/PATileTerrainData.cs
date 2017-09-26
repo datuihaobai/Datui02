@@ -336,8 +336,15 @@ public partial class PATileTerrain
 		public string name = "";
 		
 		public int[] transitions = new int[14];
-		
-		public PATSTransition() { for (int i = 0; i < 14; ++i) transitions[i] = 0; }
+        public int[] transitionCounts = new int[14];
+
+		public PATSTransition() 
+        {
+            for (int i = 0; i < 14; ++i) 
+                transitions[i] = 0;
+            for (int i = 0; i < 14; ++i)
+                transitionCounts[i] = 1; 
+        }
 		
 		//Editor helpers
 		public bool show = true;
@@ -352,6 +359,10 @@ public partial class PATileTerrain
             foreach(var transition in transitions)
                 transNodes.Add(transition.ToString());
             jsnode["transitions"] = transNodes;
+            transNodes = new JSONArray();
+            foreach (var transitionCount in transitionCounts)
+                transNodes.Add(transitionCount.ToString());
+            jsnode["transitionCounts"] = transNodes;
 
             return jsnode;
         }
@@ -364,6 +375,9 @@ public partial class PATileTerrain
             int index = 0;
             foreach (var transition in jsnode["transitions"].Childs)
                 transitions[index++] = transition.AsInt;
+            index = 0;
+            foreach (var transitionCount in jsnode["transitionCounts"].Childs)
+                transitionCounts[index++] = transitionCount.AsInt;
         }
 	}
 

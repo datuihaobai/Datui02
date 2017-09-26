@@ -900,7 +900,9 @@ public partial class PATileTerrain: MonoBehaviour
 			} else 
 			{
 				index = transition.transitions[id];
-			}
+                int randomValue = RandomManager.instance.Range(0, transition.transitionCounts[id]);
+                index += randomValue;
+            }
 		}
 
         if (specifiedIndex != -1)

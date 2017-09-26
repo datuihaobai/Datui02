@@ -1143,6 +1143,11 @@ public class PATileTerrainEditor : Editor
 												transition.transitions[j] = ind;
 												UpdateTilesetTransition(i);
 											}
+
+                                            ind = EditorGUILayout.IntField(transition.transitionCounts[j], GUILayout.Width(32));
+                                            if (ind != transition.transitionCounts[j])
+                                                transition.transitionCounts[j] = ind;
+
 											GUILayout.Label(tilesetTransitionsA[i * 14 + j], GUILayout.Width(32), GUILayout.Height(32));
 											
 											GUILayout.EndHorizontal();
@@ -1282,9 +1287,12 @@ public class PATileTerrainEditor : Editor
 		{
 			f.WriteLine(tileTerrain.settings.tsTrans[i].from);
 			f.WriteLine(tileTerrain.settings.tsTrans[i].to);
-			f.WriteLine(tileTerrain.settings.tsTrans[i].name);			
-			for (j = 0; j < 14; ++j) 
-				f.WriteLine(tileTerrain.settings.tsTrans[i].transitions[j]);			
+			f.WriteLine(tileTerrain.settings.tsTrans[i].name);
+            for (j = 0; j < 14; ++j)
+            {
+                f.WriteLine(tileTerrain.settings.tsTrans[i].transitions[j]);
+                f.WriteLine(tileTerrain.settings.tsTrans[i].transitionCounts[j]);
+            } 	
 		}
 		
 		f.Close();
@@ -1344,6 +1352,7 @@ public class PATileTerrainEditor : Editor
 				for (j = 0; j < 14; ++j)
 				{
 					t.transitions[j] = int.Parse(f.ReadLine());
+                    t.transitionCounts[j] = int.Parse(f.ReadLine());
 				}
 				tileTerrain.settings.tsTrans.Add(t);
 			}

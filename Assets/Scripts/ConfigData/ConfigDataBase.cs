@@ -28,7 +28,6 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 #elif UNITY_ANDROID  
         string path = "jar:file://" + Application.dataPath + "!/assets/"+"AssetBundles/" + GetPlatformName() + "/configasset";  
 #endif
-
         WWW loadWWW = new WWW(path);
         yield return loadWWW;
         assetBundle = loadWWW.assetBundle;
