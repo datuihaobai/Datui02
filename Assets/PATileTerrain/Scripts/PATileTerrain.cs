@@ -912,6 +912,28 @@ public partial class PATileTerrain: MonoBehaviour
 
         if(rotateType == UVRotateType.None)
         {
+            if (tile.bits == 1)
+                rotateType = UVRotateType._270;
+            else if (tile.bits == 2)
+                rotateType = UVRotateType._180;
+            else if (tile.bits == 4)
+                rotateType = UVRotateType._90;
+            else if (tile.bits == 9)
+                rotateType = UVRotateType._270;
+            else if (tile.bits == 3)
+                rotateType = UVRotateType._180;
+            else if (tile.bits == 6)
+                rotateType = UVRotateType._90;
+            else if (tile.bits == 11)
+                rotateType = UVRotateType._270;
+            else if (tile.bits == 7)
+                rotateType = UVRotateType._180;
+            else if (tile.bits == 14)
+                rotateType = UVRotateType._90;
+        }
+
+        if(rotateType == UVRotateType.None)
+        {
             uvs[i * 4 + 0] = uv.p0;
             uvs[i * 4 + 1] = uv.p1;
             uvs[i * 4 + 2] = uv.p2;

@@ -101,6 +101,16 @@ public partial class PATileTerrain
     {
         private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
 
+        public int FireValue
+        {
+            get { return GetElementValue(TileElementType.Fire); }
+        }
+
+        public int WoodValue
+        {
+            get { return GetElementValue(TileElementType.Wood); }
+        }
+
         public PATileElement()
         {
             elementsDic[TileElementType.Fire] = new TileElementValue();
@@ -141,7 +151,7 @@ public partial class PATileTerrain
             return maxElementType;
         }
 
-        int GetBrushFromConfig(TileElementType elementType,int value)
+        public int GetBrushFromConfig(TileElementType elementType, int value)
         {
             foreach (var config in ConfigDataBase.instance.TileBrushConfigAsset.configs)
             {
@@ -152,10 +162,15 @@ public partial class PATileTerrain
         }
 
         //根据属性值返回地表贴图
-        public int GetPaintBrushType()
+        public int GetMaxElementPaintBrushType()
         {
             TileElementType maxElementType = GetMaxElementType();
             return GetBrushFromConfig(maxElementType, elementsDic[maxElementType].GetIntValue());
+        }
+
+        public int GetElementPaintBrushType(TileElementType elementType)
+        {
+            return GetBrushFromConfig(elementType, elementsDic[elementType].GetIntValue());
         }
     }
 

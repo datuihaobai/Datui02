@@ -21,7 +21,7 @@ public class VirtualPoint : MonoBehaviour
     public List<BuildingData> buildings = new List<BuildingData>();
     public VirtualPointType virtualPointType;
 
-    public Transform CreateBuilding(Transform chunk)
+    public Transform CreateBuilding(Transform parent)
     {
         int randomValue = RandomManager.instance.Range(0,buildings.Count);
         Transform building = null;
@@ -29,9 +29,13 @@ public class VirtualPoint : MonoBehaviour
             building = PoolManager.Pools["Shuijing"].Spawn(buildings[randomValue].trans);
         else
             building = Object.Instantiate(buildings[randomValue].trans);
-        building.SetParent(chunk,false);
+        building.SetParent(parent,false);
         building.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        building.localRotation = Quaternion.Euler(0, buildings[randomValue].rotateY, 0);
+        if (buildings[randomValue].rotateY.Equals(0f))
+            building.rotation = transform.rotation;
+        else
+            building.localRotation = Quaternion.Euler(0, buildings[randomValue].rotateY, 0);
+        
         return building;
     }
 }

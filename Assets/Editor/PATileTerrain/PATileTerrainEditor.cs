@@ -691,6 +691,18 @@ public class PATileTerrainEditor : Editor
 						GUILayout.Label(selectedTile.y.ToString() + " (read only)");
 						GUILayout.EndHorizontal();
                         GUILayout.BeginHorizontal();
+                        GUILayout.Label("Type : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.type.ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("ToType : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.toType.ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Bits : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.bits.ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
                         GUILayout.Label("Fire : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
                         GUILayout.Label(selectedTile.element.GetElementValue(PATileTerrain.TileElementType.Fire).ToString() + " (read only)");
                         GUILayout.EndHorizontal();

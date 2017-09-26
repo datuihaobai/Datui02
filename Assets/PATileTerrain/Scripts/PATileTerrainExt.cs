@@ -290,97 +290,135 @@ public partial class PATileTerrain
     //        PaintNormalTilesSym(tiles, t, bits.Length, normalCount);
     //}
 
-    void PaintATile(PATile tile,int t)
+    void PaintATile(PATile tile)
     {
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
-        int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0, 
+        int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0,
             rightTopValue = 0, rightValue = 0, rightBottomValue = 0, bottomValue = 0;
-        int elementValue = tile.element.GetPaintBrushType();
-        if (nTiles[0] != null)
-            leftBottomValue = nTiles[0].element.GetPaintBrushType();
-        if (nTiles[1] != null)
-            leftValue = nTiles[1].element.GetPaintBrushType();
-        if (nTiles[2] != null)
-            leftTopValue = nTiles[2].element.GetPaintBrushType();
-        if (nTiles[3] != null)
-            topValue = nTiles[3].element.GetPaintBrushType();
-        if (nTiles[4] != null)
-            rightTopValue = nTiles[4].element.GetPaintBrushType();
-        if (nTiles[5] != null)
-            rightValue = nTiles[5].element.GetPaintBrushType();
-        if (nTiles[6] != null)
-            rightBottomValue = nTiles[6].element.GetPaintBrushType();
-        if (nTiles[7] != null)
-            bottomValue = nTiles[7].element.GetPaintBrushType();
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
 
-        if (leftValue < elementValue && bottomValue < elementValue)
+        int t = 0;
+        int elementValue = 0;
+        int fireValue = tile.element.FireValue;
+        int woodValue = tile.element.WoodValue;
+        if (fireValue > 0 && woodValue > 0)
+        // 火木双属性
         {
-            CalcTileBits(t, tile, 2);//左下角
-            tile.tileSetType = TileSetType.Corner;
+            if(rightTile.element.WoodValue > woodValue)
+            {
+                tile.type = 4;
+                tile.toType = 7;
+                tile.bits = 3;
+            }
+            else if (leftTile.element.FireValue > fireValue)
+            {
+                tile.type = 1;
+                tile.toType = 7;
+                tile.bits = 12;
+            }
+            UpdateTileUV(tile);
         }
-        else if (leftValue < elementValue && topValue < elementValue)
-        {
-            CalcTileBits(t, tile, 1);//左上角
-            tile.tileSetType = TileSetType.Corner;
-        }
-        else if (rightValue < elementValue && bottomValue < elementValue)
-        {
-            CalcTileBits(t, tile, 4);//右下角
-            tile.tileSetType = TileSetType.Corner;
-        }
-        else if (topValue < elementValue && rightValue < elementValue)
-        {
-            CalcTileBits(t, tile, 8);//右上角
-            tile.tileSetType = TileSetType.Corner;
-        }
-
-        else if (leftValue < elementValue)
-        {
-            CalcTileBits(t, tile, 3);
-            tile.tileSetType = TileSetType.Edge;
-        }
-        else if (topValue < elementValue)
-        {
-            CalcTileBits(t, tile, 9);
-            tile.tileSetType = TileSetType.Edge;
-        }
-        else if (rightValue < elementValue)
-        {
-            CalcTileBits(t, tile, 12);
-            tile.tileSetType = TileSetType.Edge;
-        }
-        else if (bottomValue < elementValue)
-        {
-            CalcTileBits(t, tile, 6);
-            tile.tileSetType = TileSetType.Edge;
-        }
-
-        else if (leftBottomValue < elementValue)
-        {
-            CalcTileBits(t, tile, 7);
-            tile.tileSetType = TileSetType.BigCorner;
-        }
-        else if (leftTopValue < elementValue)
-        {
-            CalcTileBits(t, tile, 11);
-            tile.tileSetType = TileSetType.BigCorner;
-        }
-        else if (rightTopValue < elementValue)
-        {
-            CalcTileBits(t, tile, 13);
-            tile.tileSetType = TileSetType.BigCorner;
-        }
-        else if (rightBottomValue < elementValue)
-        {
-            CalcTileBits(t, tile, 14);
-            tile.tileSetType = TileSetType.BigCorner;
-        }
-
         else
         {
-            PaintNormalTile(tile, t);
-            tile.tileSetType = TileSetType.Full;
-        } 
+            TileElementType elementType = TileElementType.None;
+            if (fireValue > 0)
+                elementType = TileElementType.Fire;
+            else if (woodValue > 0)
+                elementType = TileElementType.Wood;
+
+            t = elementValue = tile.element.GetElementPaintBrushType(elementType);
+            if (leftBottomTile != null)
+                leftBottomValue = leftBottomTile.element.GetElementPaintBrushType(elementType);
+            if (leftTile != null)
+                leftValue = leftTile.element.GetElementPaintBrushType(elementType);
+            if (leftTopTile != null)
+                leftTopValue = leftTopTile.element.GetElementPaintBrushType(elementType);
+            if (topTile != null)
+                topValue = topTile.element.GetElementPaintBrushType(elementType);
+            if (rightTopTile != null)
+                rightTopValue = rightTopTile.element.GetElementPaintBrushType(elementType);
+            if (rightTile != null)
+                rightValue = rightTile.element.GetElementPaintBrushType(elementType);
+            if (rightBottomTile != null)
+                rightBottomValue = rightBottomTile.element.GetElementPaintBrushType(elementType);
+            if (bottomTile != null)
+                bottomValue = bottomTile.element.GetElementPaintBrushType(elementType);
+
+            if (leftValue < elementValue && bottomValue < elementValue)
+            {
+                CalcTileBits(t, tile, 2);//左下角
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (leftValue < elementValue && topValue < elementValue)
+            {
+                CalcTileBits(t, tile, 1);//左上角
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (rightValue < elementValue && bottomValue < elementValue)
+            {
+                CalcTileBits(t, tile, 4);//右下角
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (topValue < elementValue && rightValue < elementValue)
+            {
+                CalcTileBits(t, tile, 8);//右上角
+                tile.tileSetType = TileSetType.Corner;
+            }
+
+            else if (leftValue < elementValue)
+            {
+                CalcTileBits(t, tile, 3);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (topValue < elementValue)
+            {
+                CalcTileBits(t, tile, 9);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (rightValue < elementValue)
+            {
+                CalcTileBits(t, tile, 12);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (bottomValue < elementValue)
+            {
+                CalcTileBits(t, tile, 6);
+                tile.tileSetType = TileSetType.Edge;
+            }
+
+            else if (leftBottomValue < elementValue)
+            {
+                CalcTileBits(t, tile, 7);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (leftTopValue < elementValue)
+            {
+                CalcTileBits(t, tile, 11);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (rightTopValue < elementValue)
+            {
+                CalcTileBits(t, tile, 13);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (rightBottomValue < elementValue)
+            {
+                CalcTileBits(t, tile, 14);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else
+            {
+                PaintNormalTile(tile, t);
+                tile.tileSetType = TileSetType.Full;
+            } 
+        }
     }
 
     public void PaintATileDecal(PATile tile)
@@ -527,28 +565,27 @@ public partial class PATileTerrain
         }
     }
 
-    void PaintCollectTiles(ref Dictionary<int, List<PATile>> collectTiles)
-    {
-        List<int> collectBT = new List<int>();
-        foreach (var bt in collectTiles.Keys)
-            collectBT.Add(bt);
-        collectBT.Sort();
+    //void PaintCollectTiles(ref Dictionary<int, List<PATile>> collectTiles)
+    //{
+    //    List<int> collectBT = new List<int>();
+    //    foreach (var bt in collectTiles.Keys)
+    //        collectBT.Add(bt);
+    //    collectBT.Sort();
 
-        foreach (var bt in collectBT)
-            foreach (var t0 in collectTiles[bt])
-                PaintATile(t0, bt);
-
-        //foreach (var bt in collectBT)
-        //    foreach (var t0 in collectTiles[bt])
-        //        PaintATileDecal(t0);
-    }
+    //    foreach (var bt in collectBT)
+    //        foreach (var t0 in collectTiles[bt])
+    //            PaintATile(t0, bt);
+    //}
 
     public void PaintTiles(ref List<PATile> tiles)
     {
-        Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
-        PATile[] tilesArray = tiles.ToArray();
-        CollectTiles(ref tilesArray, ref collectTiles);
-        PaintCollectTiles(ref collectTiles);
+        //Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
+        //PATile[] tilesArray = tiles.ToArray();
+        //CollectTiles(ref tilesArray, ref collectTiles);
+        //PaintCollectTiles(ref collectTiles);
+
+        foreach(var tile in tiles)
+            PaintATile(tile);
     }
 
     //public void PaintCrystalLevel1(PATile tile, int t)
@@ -664,16 +701,16 @@ public partial class PATileTerrain
     //    CalcTileBits(t,tile,b);
     //}
 
-    void CollectTiles(ref PATile[] tiles, ref Dictionary<int, List<PATile>> collectTiles)
-    {
-        foreach (var t0 in tiles)
-        {
-            int bt = t0.element.GetPaintBrushType();
-            if (!collectTiles.ContainsKey(bt))
-                collectTiles[bt] = new List<PATile>();
-            collectTiles[bt].Add(t0);
-        }
-    }
+    //void CollectTiles(ref PATile[] tiles, ref Dictionary<int, List<PATile>> collectTiles)
+    //{
+    //    foreach (var t0 in tiles)
+    //    {
+    //        int bt = t0.element.GetPaintBrushType();
+    //        if (!collectTiles.ContainsKey(bt))
+    //            collectTiles[bt] = new List<PATile>();
+    //        collectTiles[bt].Add(t0);
+    //    }
+    //}
 
     //public void PaintCrystalLevel2(PATile tile, int t)
     //{

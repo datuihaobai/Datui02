@@ -429,13 +429,16 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     {
         tileTerrain.ResetTile();
         List<PATileTerrain.PATile> collectTiles = new List<PATileTerrain.PATile>();
+        // 设置属性值
         foreach (var crystal in tileTerrain.settings.crystals)
             PaintElement(crystal.shuijing,ref collectTiles);
 
         //foreach(var crystal in tileTerrain.settings.crystals)
         //    PaintCrystal(crystal.shuijing);
+        //设置地表贴图
         tileTerrain.PaintTiles(ref collectTiles);
 
+        //设置贴花
         foreach (var crystal in tileTerrain.settings.crystals)
         {
             RandomManager.instance.SetSeed(crystal.randomSeed);
