@@ -134,6 +134,18 @@ public partial class PATileTerrain
             return FireValue > 0 && WoodValue > 0;
         }
 
+        bool IsBaseElement()
+        {
+            return FireValue == 0 && WoodValue == 0;
+        }
+
+        public bool IsSingleElement()
+        {
+            if (IsBaseElement())
+                return false;
+            return !IsMultiElement();
+        }
+
         public void AddElement(TileElementType elementType,float addValue)
         {
             elementsDic[elementType].AddValue(addValue);
@@ -188,6 +200,15 @@ public partial class PATileTerrain
         Edge = 3,//边
     }
 
+    // 四分之一tile的贴图属性枚举
+    public enum QtrTileElementType
+    {
+        Base = 0,// 底色
+        Fire = 1,// 火
+        Wood = 2,// 木
+        Sand = 3,// 火木融合
+    }
+
 	[System.Serializable]
 	public class PATile
 	{	
@@ -213,20 +234,61 @@ public partial class PATileTerrain
         public Shuijing shuijing = null;//tile内放置的水晶
         public PATileElement element = new PATileElement();
 
+        public QtrTileElementType[] qtrTiles = null;//四分之一tile列表 顺序为leftBottom leftTop rightTop rightBottom
+
         public float distance = -1f;//距离水晶中心的距离
         public int decalTilesetIndex = -1;//贴花地格图index
         //public bool isFull;//true贴图全格，false贴图边角
         public TileSetType tileSetType;
         public Shuijing affectShuijing = null;//受影响的水晶，一个tile只保存第一个影响它的水晶
 
+        public PATile()
+        {
+            qtrTiles = new QtrTileElementType[4];
+            ResetQtrTiles();
+        }
+        //lb=leftBottom lt=leftTop rt=rightTop rb=rightBottom
+        public void SetQtrTiles(QtrTileElementType lb,QtrTileElementType lt,QtrTileElementType rt,QtrTileElementType rb)
+        {
+            if (qtrTiles == null || qtrTiles.Length != 4)
+            {
+                Debug.LogError("qtrTiles == null || qtrTiles.Length != 4");
+                return;
+            }
+            qtrTiles[0] = lb;
+            qtrTiles[1] = lt;
+            qtrTiles[2] = rt;
+            qtrTiles[3] = rb;
+        }
+
         public void Reset()
         {
+            ResetQtrTiles();
             specifiedIndex = -1;
             rotateType = UVRotateType.None;
             element.Reset();
             decalTilesetIndex = -1;
             distance = -1;
             affectShuijing = null;
+        }
+
+        void ResetQtrTiles()
+        {
+            if (qtrTiles == null)
+                return;
+            for (int i = 0; i < qtrTiles.Length; i++)
+                qtrTiles[i] = QtrTileElementType.Base;
+        }
+
+        //是否完全设置了qtrTiles的属性
+        public bool IsQtrTilesSet()
+        {
+            for (int i = 0; i < qtrTiles.Length; i++)
+            {
+                if (qtrTiles[i] == QtrTileElementType.Base)
+                    return false;
+            }
+            return true;
         }
 
         public void SetTileProp(int type, int toType, byte bits, int specifiedIndex = -1, UVRotateType rotateType = UVRotateType.None)

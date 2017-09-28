@@ -40,6 +40,7 @@ public class CreateConfig
 	private static void CreateConfigAssetList(){
 
 		CreateConfigAsset<DecalConfigAsset> ();
+		CreateConfigAsset<TileMixConfigAsset> ();
 		CreateConfigAsset<CrystalRangeConfigAsset> ();
 		CreateConfigAsset<TileBrushConfigAsset> ();
 	}

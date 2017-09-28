@@ -317,11 +317,117 @@ public partial class PATileTerrain
         return state;
     }
 
-    void PaintATile(PATile tile)
+    //通过周围8格计算当前格子该使用哪种属性进行融合
+    QtrTileElementType GetQtrTileElementType(PATile[] nTiles)
+    {
+        foreach (var tile in nTiles)
+        {
+            if (!tile.element.IsMultiElement())
+            {
+                TileElementState tileElementState = GetTileElementState(tile);
+                if (tileElementState == TileElementState.TotalFire)
+                    return QtrTileElementType.Fire;
+                else if (tileElementState == TileElementState.TotalWood)
+                    return QtrTileElementType.Wood;
+            } 
+        }
+        return QtrTileElementType.Base;
+    }
+
+    // index=0=lb index=1=lt index=2=rt index=3=rb
+    bool IsCornerMix(PATile[] nTiles,int index)
+    {
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
+
+        if (index == 0)
+        {
+            if (leftBottomTile.element.IsSingleElement() &&
+                leftTile.element.IsMultiElement() &&
+                leftTopTile.element.IsMultiElement() &&
+                topTile.element.IsMultiElement() &&
+                rightTopTile.element.IsMultiElement() &&
+                rightTile.element.IsMultiElement() &&
+                rightBottomTile.element.IsMultiElement() &&
+                bottomTile.element.IsMultiElement())
+                return true;
+        }
+        else if(index == 1)
+        {
+            if (leftBottomTile.element.IsMultiElement() &&
+                leftTile.element.IsMultiElement() &&
+                leftTopTile.element.IsSingleElement() &&
+                topTile.element.IsMultiElement() &&
+                rightTopTile.element.IsMultiElement() &&
+                rightTile.element.IsMultiElement() &&
+                rightBottomTile.element.IsMultiElement() &&
+                bottomTile.element.IsMultiElement())
+                return true;
+        }
+        else if (index == 2)
+        {
+            if (leftBottomTile.element.IsMultiElement() &&
+                leftTile.element.IsMultiElement() &&
+                leftTopTile.element.IsMultiElement() &&
+                topTile.element.IsMultiElement() &&
+                rightTopTile.element.IsSingleElement() &&
+                rightTile.element.IsMultiElement() &&
+                rightBottomTile.element.IsMultiElement() &&
+                bottomTile.element.IsMultiElement())
+                return true;
+        }
+        else if (index == 3)
+        {
+            if (leftBottomTile.element.IsMultiElement() &&
+                leftTile.element.IsMultiElement() &&
+                leftTopTile.element.IsMultiElement() &&
+                topTile.element.IsMultiElement() &&
+                rightTopTile.element.IsMultiElement() &&
+                rightTile.element.IsMultiElement() &&
+                rightBottomTile.element.IsSingleElement() &&
+                bottomTile.element.IsMultiElement())
+                return true;
+        }
+
+        return false;
+    }
+
+    bool IsFullMix(PATile[] nTiles)
+    {
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
+
+        if (leftBottomTile.element.IsMultiElement() &&
+            leftTile.element.IsMultiElement() &&
+            leftTopTile.element.IsMultiElement() &&
+            topTile.element.IsMultiElement() &&
+            rightTopTile.element.IsMultiElement() &&
+            rightTile.element.IsMultiElement() &&
+            rightBottomTile.element.IsMultiElement() &&
+            bottomTile.element.IsMultiElement())
+            return true;
+
+        return false;
+    }
+
+    void PaintATile(PATile tile, List<PATile> postProcessMultiElementTiles = null)
     {
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
         int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0,
             rightTopValue = 0, rightValue = 0, rightBottomValue = 0, bottomValue = 0;
+        
         PATile leftBottomTile = nTiles[0];
         PATile leftTile = nTiles[1];
         PATile leftTopTile = nTiles[2];
@@ -333,13 +439,19 @@ public partial class PATileTerrain
 
         int t = 0;
         int elementValue = 0;
-        int specifiedIndex = -1;
-        UVRotateType rotateType = UVRotateType.None;
         int fireValue = tile.element.FireValue;
         int woodValue = tile.element.WoodValue;
+        QtrTileElementType qtrTileElementType = QtrTileElementType.Base;
+
         if (fireValue > 0 && woodValue > 0)
         // 火木双属性
         {
+            qtrTileElementType = GetQtrTileElementType(nTiles);
+            if (qtrTileElementType == QtrTileElementType.Fire)
+                t = 1;
+            else if (qtrTileElementType == QtrTileElementType.Wood)
+                t = 4;
+
             TileElementState leftElementState = GetTileElementState(leftTile);
             TileElementState rightElementState = GetTileElementState(rightTile);
             TileElementState topElementState = GetTileElementState(topTile);
@@ -349,242 +461,137 @@ public partial class PATileTerrain
             TileElementState rightTopElementState = GetTileElementState(rightTopTile);
             TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
 
-            if (leftTopElementState == TileElementState.TotalWood && 
-                leftElementState == TileElementState.TotalWood && 
-                topElementState == TileElementState.TotalWood && 
-                leftTopTile.tileSetType == TileSetType.Full && 
-                leftTile.tileSetType == TileSetType.Full &&
-                topTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(4, 7, 14);
-            else if (rightTopElementState == TileElementState.TotalWood &&
-                rightElementState == TileElementState.TotalWood &&
-                topElementState == TileElementState.TotalWood &&
-                rightTopTile.tileSetType == TileSetType.Full &&
-                rightTile.tileSetType == TileSetType.Full &&
-                topTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(4, 7, 7);
-            else if (leftBottomElementState == TileElementState.TotalWood &&
-                leftElementState == TileElementState.TotalWood &&
-                bottomElementState == TileElementState.TotalWood &&
-                leftBottomTile.tileSetType == TileSetType.Full &&
-                leftTile.tileSetType == TileSetType.Full &&
-                bottomTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(4, 7, 13);
-            else if (rightBottomElementState == TileElementState.TotalWood &&
-                rightElementState == TileElementState.TotalWood &&
-                bottomElementState == TileElementState.TotalWood &&
-                rightBottomTile.tileSetType == TileSetType.Full &&
-                rightTile.tileSetType == TileSetType.Full &&
-                bottomTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(4, 7, 11);
-
-            else if (leftTopElementState == TileElementState.TotalWood && 
-                leftTopTile.tileSetType == TileSetType.Full &&
-                leftElementState != TileElementState.TotalWood && 
-                topElementState != TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 4);
-            else if (leftBottomElementState == TileElementState.TotalWood &&
-                leftBottomTile.tileSetType == TileSetType.Full &&
-                leftElementState != TileElementState.TotalWood && 
-                bottomElementState != TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 8);
-            else if (rightTopElementState == TileElementState.TotalWood &&
-                rightTopTile.tileSetType == TileSetType.Full &&
-                rightElementState != TileElementState.TotalWood &&
-                topElementState != TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 2);
-            else if (rightBottomElementState == TileElementState.TotalWood &&
-                rightBottomTile.tileSetType == TileSetType.Full &&
-                rightElementState != TileElementState.TotalWood &&
-                bottomElementState != TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 1);
-
-            else if(topElementState == TileElementState.Zero && 
-                leftElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0,144,UVRotateType._90_Mirror_TB);
-            else if (bottomElementState == TileElementState.Zero &&
-                leftElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0, 144,UVRotateType._90);
-            else if (topElementState == TileElementState.Zero &&
-                rightElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0, 144, UVRotateType._270);
-            else if (bottomElementState == TileElementState.Zero &&
-                rightElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0, 144, UVRotateType._270_Mirror_TB);
-
-            else if (leftElementState == TileElementState.TotalWood &&
-                leftTile.tileSetType == TileSetType.Full &&
-                !topTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._90_Mirror_TB);
-            else if (leftElementState == TileElementState.TotalWood &&
-                leftTile.tileSetType == TileSetType.Full &&
-                !bottomTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._90);
-            else if (rightElementState == TileElementState.TotalWood &&
-                rightTile.tileSetType == TileSetType.Full &&
-                !topTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._270);
-            else if (rightElementState == TileElementState.TotalWood &&
-                rightTile.tileSetType == TileSetType.Full &&
-                !bottomTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._270_Mirror_TB);
-            else if (topElementState == TileElementState.TotalWood &&
-                topTile.tileSetType == TileSetType.Full &&
-                !leftTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._180);
-            else if (topElementState == TileElementState.TotalWood &&
-                topTile.tileSetType == TileSetType.Full &&
-                !rightTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129, UVRotateType._180_Mirror_LR);
-            else if (bottomElementState == TileElementState.TotalWood &&
-                bottomTile.tileSetType == TileSetType.Full &&
-                !leftTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129,UVRotateType.Mirror_LR);
-            else if (bottomElementState == TileElementState.TotalWood &&
-                bottomTile.tileSetType == TileSetType.Full &&
-                !rightTile.element.IsMultiElement())
-                tile.SetTileProp(4, 7, 0, 129);
-            
-            else if (leftBottomElementState == TileElementState.Zero && 
-                rightBottomElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0, 134, UVRotateType._270);
-            else if (rightTopElementState == TileElementState.Zero && 
-                rightBottomElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 0, 134, UVRotateType._270);
-            else if (leftBottomElementState == TileElementState.Zero &&
-                rightBottomElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 134, UVRotateType._90);
-            else if (rightTopElementState == TileElementState.Zero &&
-                rightBottomElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 134, UVRotateType._90);
-
-            else if(leftElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 12);
-            else if (rightElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 3);
-            else if (topElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 6);
-            else if (bottomElementState == TileElementState.TotalWood)
-                tile.SetTileProp(4, 7, 9);
-
-
-            else if (leftTopElementState == TileElementState.TotalFire &&
-                leftElementState == TileElementState.TotalFire &&
-                topElementState == TileElementState.TotalFire &&
+            if (leftTopTile.element.IsSingleElement() &&
+                leftTile.element.IsSingleElement() &&
+                topTile.element.IsSingleElement() && 
                 leftTopTile.tileSetType == TileSetType.Full &&
                 leftTile.tileSetType == TileSetType.Full &&
                 topTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(1, 7, 14);
-            else if (rightTopElementState == TileElementState.TotalFire &&
-                rightElementState == TileElementState.TotalFire &&
-                topElementState == TileElementState.TotalFire &&
+            {
+                tile.SetTileProp(t, 7, 14);
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (rightTopTile.element.IsSingleElement() && 
+                rightTile.element.IsSingleElement() &&
+                topTile.element.IsSingleElement() &&
                 rightTopTile.tileSetType == TileSetType.Full &&
                 rightTile.tileSetType == TileSetType.Full &&
                 topTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(1, 7, 7);
-            else if (leftBottomElementState == TileElementState.TotalFire &&
-                leftElementState == TileElementState.TotalFire &&
-                bottomElementState == TileElementState.TotalFire &&
+            {
+                tile.SetTileProp(t, 7, 7);
+                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, qtrTileElementType);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (leftBottomTile.element.IsSingleElement() &&
+                leftTile.element.IsSingleElement() &&
+                bottomTile.element.IsSingleElement() &&
                 leftBottomTile.tileSetType == TileSetType.Full &&
                 leftTile.tileSetType == TileSetType.Full &&
                 bottomTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(1, 7, 13);
-            else if (rightBottomElementState == TileElementState.TotalFire &&
-                rightElementState == TileElementState.TotalFire &&
-                bottomElementState == TileElementState.TotalFire &&
+            {
+                tile.SetTileProp(t, 7, 13);
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
+            else if (rightBottomTile.element.IsSingleElement() &&
+                rightTile.element.IsSingleElement() &&
+                bottomTile.element.IsSingleElement() &&
                 rightBottomTile.tileSetType == TileSetType.Full &&
                 rightTile.tileSetType == TileSetType.Full &&
                 bottomTile.tileSetType == TileSetType.Full)
-                tile.SetTileProp(1, 7, 11);
+            {
+                tile.SetTileProp(t, 7, 11);
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
+                tile.tileSetType = TileSetType.BigCorner;
+            }
 
-            else if (leftTopElementState == TileElementState.TotalFire &&
-                leftTopTile.tileSetType == TileSetType.Full &&
-                leftElementState != TileElementState.TotalFire &&
-                topElementState != TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 4);
-            else if (leftBottomElementState == TileElementState.TotalFire &&
-                leftBottomTile.tileSetType == TileSetType.Full &&
-                leftElementState != TileElementState.TotalFire &&
-                bottomElementState != TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 8);
-            else if (rightTopElementState == TileElementState.TotalFire &&
-                rightTopTile.tileSetType == TileSetType.Full &&
-                rightElementState != TileElementState.TotalFire &&
-                topElementState != TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 2);
-            else if (rightBottomElementState == TileElementState.TotalFire &&
-                rightBottomTile.tileSetType == TileSetType.Full &&
-                rightElementState != TileElementState.TotalFire &&
-                bottomElementState != TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 1);
+            else if(leftTile.element.IsSingleElement() &&
+                topTile.element.IsMultiElement() &&
+                bottomTile.element.IsMultiElement())
+            {
+                tile.SetTileProp(t, 7, 12);
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (rightTile.element.IsSingleElement() &&
+                topTile.element.IsMultiElement() &&
+                bottomTile.element.IsMultiElement())
+            {
+                tile.SetTileProp(t, 7, 3);
+                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (topTile.element.IsSingleElement() &&
+                leftTile.element.IsMultiElement() &&
+                rightTile.element.IsMultiElement())
+            {
+                tile.SetTileProp(t, 7, 6);
+                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Edge;
+            }
+            else if (bottomTile.element.IsSingleElement() &&
+                leftTile.element.IsMultiElement() &&
+                rightTile.element.IsMultiElement())
+            {
+                tile.SetTileProp(t, 7, 9);
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType);
+                tile.tileSetType = TileSetType.Edge;
+            }
 
-            else if (topElementState == TileElementState.Zero &&
-                leftElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 145, UVRotateType._90_Mirror_TB);
-            else if (bottomElementState == TileElementState.Zero &&
-                leftElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 145, UVRotateType._90);
-            else if (topElementState == TileElementState.Zero &&
-                rightElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 145, UVRotateType._270);
-            else if (bottomElementState == TileElementState.Zero &&
-                rightElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 0, 145, UVRotateType._270_Mirror_TB);
+            else if (IsFullMix(nTiles))
+            {
+                tile.SetTileProp(7, 7, 0);
+                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Full;
+            }
 
-            else if (leftElementState == TileElementState.TotalFire && 
-                leftTile.tileSetType == TileSetType.Full &&
-                !topTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._90_Mirror_TB);
-            else if (leftElementState == TileElementState.TotalFire &&
-                leftTile.tileSetType == TileSetType.Full &&
-                !bottomTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._90);
-            else if (rightElementState == TileElementState.TotalFire &&
-                rightTile.tileSetType == TileSetType.Full &&
-                !topTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._270);
-            else if (rightElementState == TileElementState.TotalFire &&
-                rightTile.tileSetType == TileSetType.Full &&
-                !bottomTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._270_Mirror_TB);
-            else if (topElementState == TileElementState.TotalFire &&
-                topTile.tileSetType == TileSetType.Full &&
-                !leftTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._180);
-            else if (topElementState == TileElementState.TotalFire &&
-                topTile.tileSetType == TileSetType.Full &&
-                !rightTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130, UVRotateType._180_Mirror_LR);
-            else if (bottomElementState == TileElementState.TotalFire &&
-                bottomTile.tileSetType == TileSetType.Full &&
-                !leftTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130,UVRotateType.Mirror_LR);
-            else if (bottomElementState == TileElementState.TotalFire &&
-                bottomTile.tileSetType == TileSetType.Full &&
-                !rightTile.element.IsMultiElement())
-                tile.SetTileProp(1, 7, 0, 130);
-
-            else if (leftElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 12);
-            else if (rightElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 3);
-            else if (topElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 6);
-            else if (bottomElementState == TileElementState.TotalFire)
-                tile.SetTileProp(1, 7, 9);
-
+            else if (IsCornerMix(nTiles, 0))
+            {
+                tile.SetTileProp(t, 7, 8);
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (IsCornerMix(nTiles, 1))
+            {
+                tile.SetTileProp(t,7,4);
+                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (IsCornerMix(nTiles, 2))
+            {
+                tile.SetTileProp(t, 7, 2);
+                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand);
+                tile.tileSetType = TileSetType.Corner;
+            }
+            else if (IsCornerMix(nTiles, 3))
+            {
+                tile.SetTileProp(t, 7, 1);
+                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType);
+                tile.tileSetType = TileSetType.Corner;
+            }
 
             else
-                tile.SetTileProp(7, 7, 0);
+            {
+                postProcessMultiElementTiles.Add(tile);
+                return;
+            }
+            
             UpdateTileUV(tile);
         }
         else
         {
             TileElementType elementType = TileElementType.None;
             if (fireValue > 0)
+            {
                 elementType = TileElementType.Fire;
+                qtrTileElementType = QtrTileElementType.Fire;
+            }
             else if (woodValue > 0)
+            {
                 elementType = TileElementType.Wood;
+                qtrTileElementType = QtrTileElementType.Wood;
+            }
 
             t = elementValue = tile.element.GetElementPaintBrushType(elementType);
             if (leftBottomTile != null)
@@ -608,70 +615,138 @@ public partial class PATileTerrain
             {
                 CalcTileBits(t, tile, 2);//左下角
                 tile.tileSetType = TileSetType.Corner;
+                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base);
             }
             else if (leftValue < elementValue && topValue < elementValue)
             {
                 CalcTileBits(t, tile, 1);//左上角
                 tile.tileSetType = TileSetType.Corner;
+                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
             }
             else if (rightValue < elementValue && bottomValue < elementValue)
             {
                 CalcTileBits(t, tile, 4);//右下角
                 tile.tileSetType = TileSetType.Corner;
+                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
             }
             else if (topValue < elementValue && rightValue < elementValue)
             {
                 CalcTileBits(t, tile, 8);//右上角
                 tile.tileSetType = TileSetType.Corner;
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base);
             }
 
             else if (leftValue < elementValue)
             {
                 CalcTileBits(t, tile, 3);
                 tile.tileSetType = TileSetType.Edge;
+                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
             }
             else if (topValue < elementValue)
             {
                 CalcTileBits(t, tile, 9);
                 tile.tileSetType = TileSetType.Edge;
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
             }
             else if (rightValue < elementValue)
             {
                 CalcTileBits(t, tile, 12);
                 tile.tileSetType = TileSetType.Edge;
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
             }
             else if (bottomValue < elementValue)
             {
                 CalcTileBits(t, tile, 6);
                 tile.tileSetType = TileSetType.Edge;
+                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
             }
 
             else if (leftBottomValue < elementValue)
             {
                 CalcTileBits(t, tile, 7);
                 tile.tileSetType = TileSetType.BigCorner;
+                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, qtrTileElementType);
             }
             else if (leftTopValue < elementValue)
             {
                 CalcTileBits(t, tile, 11);
                 tile.tileSetType = TileSetType.BigCorner;
+                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
             }
             else if (rightTopValue < elementValue)
             {
                 CalcTileBits(t, tile, 13);
                 tile.tileSetType = TileSetType.BigCorner;
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, qtrTileElementType);
             }
             else if (rightBottomValue < elementValue)
             {
                 CalcTileBits(t, tile, 14);
                 tile.tileSetType = TileSetType.BigCorner;
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
             }
             else
             {
                 PaintNormalTile(tile, t);
                 tile.tileSetType = TileSetType.Full;
+                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, qtrTileElementType);
             } 
         }
+    }
+
+    void PaintPostProcessMultiElementTile(PATile tile)
+    {
+        PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
+
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
+
+        QtrTileElementType qte0 = bottomTile.qtrTiles[1];
+        QtrTileElementType qte1 = leftBottomTile.qtrTiles[2];
+        QtrTileElementType qte2 = leftTile.qtrTiles[3];
+        if(qte0 == qte1)
+            tile.qtrTiles[0] = qte0;
+        else if(qte0 == qte2)
+            tile.qtrTiles[0] = qte0;
+        else if(qte1 == qte2)
+            tile.qtrTiles[0] = qte1;
+
+        qte0 = leftTile.qtrTiles[2];
+        qte1 = leftTopTile.qtrTiles[3];
+        qte2 = topTile.qtrTiles[0];
+        if (qte0 == qte1)
+            tile.qtrTiles[1] = qte0;
+        else if (qte0 == qte2)
+            tile.qtrTiles[1] = qte0;
+        else if (qte1 == qte2)
+            tile.qtrTiles[1] = qte1;
+
+        qte0 = topTile.qtrTiles[3];
+        qte1 = rightTopTile.qtrTiles[0];
+        qte2 = rightTile.qtrTiles[1];
+        if (qte0 == qte1)
+            tile.qtrTiles[2] = qte0;
+        else if (qte0 == qte2)
+            tile.qtrTiles[2] = qte0;
+        else if (qte1 == qte2)
+            tile.qtrTiles[2] = qte1;
+
+        qte0 = rightTile.qtrTiles[0];
+        qte1 = rightBottomTile.qtrTiles[1];
+        qte2 = bottomTile.qtrTiles[2];
+        if (qte0 == qte1)
+            tile.qtrTiles[3] = qte0;
+        else if (qte0 == qte2)
+            tile.qtrTiles[3] = qte0;
+        else if (qte1 == qte2)
+            tile.qtrTiles[3] = qte1;
+
     }
 
     public void PaintATileDecal(PATile tile)
@@ -838,16 +913,33 @@ public partial class PATileTerrain
         //PaintCollectTiles(ref collectTiles);
         
         //先处理单属性地格 多属性的后处理
-        tiles.Sort((PATile t1,PATile t2) =>
+        //tiles.Sort((PATile t1,PATile t2) =>
+        //{
+        //    if(t1.element.IsMultiElement() && !t2.element.IsMultiElement())
+        //        return 1;
+        //    else if (!t1.element.IsMultiElement() && t2.element.IsMultiElement())
+        //        return -1;
+        //    return 0;
+        //});
+
+        //先处理单属性地格 多属性的后处理
+        List<PATile> multiElementTiles = new List<PATile>();
+        foreach (var tile in tiles)
         {
-            if(t1.element.IsMultiElement() && !t2.element.IsMultiElement())
-                return 1;
-            else if (!t1.element.IsMultiElement() && t2.element.IsMultiElement())
-                return -1;
-            return 0;
-        });
-        foreach(var tile in tiles)
+            if (tile.element.IsMultiElement())
+            {
+                multiElementTiles.Add(tile);
+                continue;
+            } 
             PaintATile(tile);
+        }
+
+        List<PATile> postProcessMultiElementTiles = new List<PATile>();
+        foreach (var tile in multiElementTiles)
+            PaintATile(tile,postProcessMultiElementTiles);
+
+        foreach (var tile in postProcessMultiElementTiles)
+            PaintPostProcessMultiElementTile(tile);
     }
 
     //public void PaintCrystalLevel1(PATile tile, int t)
