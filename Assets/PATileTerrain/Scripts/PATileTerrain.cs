@@ -681,9 +681,7 @@ public partial class PATileTerrain: MonoBehaviour
         { }
         else
         {
-            tile.type = t;
-            tile.toType = t;
-            tile.bits = 0;
+            tile.SetTileProp(t,t,0);
             UpdateTileUV(tile);
         }
 
@@ -693,9 +691,7 @@ public partial class PATileTerrain: MonoBehaviour
             { }
             else
             {
-                normalTile.type = t;
-                normalTile.toType = t;
-                normalTile.bits = 0;
+                normalTile.SetTileProp(t,t,0);
                 UpdateTileUV(normalTile);
             }
         }
@@ -853,9 +849,7 @@ public partial class PATileTerrain: MonoBehaviour
 			}
 		}			
 		
-		tile.type = fromType;
-		tile.toType = toType;
-		tile.bits = bits;
+        tile.SetTileProp(fromType,toType,bits);
 		UpdateTileUV(tile);
 	}
 
@@ -868,9 +862,13 @@ public partial class PATileTerrain: MonoBehaviour
 
         Mirror_LR = 4,
         Mirror_TB = 5,
+
+        _90_Mirror_TB = 6,
+        _270_Mirror_TB = 7,
+        _180_Mirror_LR  = 8,
     }
 
-    protected void UpdateTileUV(PATile tile, int specifiedIndex = -1,UVRotateType rotateType = UVRotateType.None)
+    protected void UpdateTileUV(PATile tile)
 	{
 		if (tile.type == -1) { return; }	
 
@@ -878,6 +876,8 @@ public partial class PATileTerrain: MonoBehaviour
 		Vector2[] uvs = mesh.uv;
 		int i = tile.cId;
 		int index;
+        int specifiedIndex = tile.specifiedIndex;
+        UVRotateType rotateType = tile.rotateType;
 
 		if (tile.bits == 0 || tile.type == tile.toType)
 		{
@@ -908,11 +908,9 @@ public partial class PATileTerrain: MonoBehaviour
         if (specifiedIndex != -1)
             index = specifiedIndex;
 
-        //tile.tilesetIndex = index;
-
         PATileUV uv = GetIndexUV(index);
-
-        if(rotateType == UVRotateType.None)
+        
+        if(rotateType == UVRotateType.None && specifiedIndex == -1)
         {
             if (tile.bits == 1)
                 rotateType = UVRotateType._270;
@@ -964,17 +962,38 @@ public partial class PATileTerrain: MonoBehaviour
         }
         else if (rotateType == UVRotateType.Mirror_LR)
         {
+            uvs[i * 4 + 0] = uv.p3;
+            uvs[i * 4 + 1] = uv.p2;
+            uvs[i * 4 + 2] = uv.p1;
+            uvs[i * 4 + 3] = uv.p0;
+        }
+        else if (rotateType == UVRotateType.Mirror_TB)
+        {
             uvs[i * 4 + 0] = uv.p1;
             uvs[i * 4 + 1] = uv.p0;
             uvs[i * 4 + 2] = uv.p3;
             uvs[i * 4 + 3] = uv.p2;
         }
-        else if (rotateType == UVRotateType.Mirror_TB)
+        else if (rotateType == UVRotateType._90_Mirror_TB)
         {
-            uvs[i * 4 + 0] = uv.p3;
-            uvs[i * 4 + 1] = uv.p2;
-            uvs[i * 4 + 2] = uv.p1;
-            uvs[i * 4 + 3] = uv.p0;
+            uvs[i * 4 + 0] = uv.p0;
+            uvs[i * 4 + 1] = uv.p3;
+            uvs[i * 4 + 2] = uv.p2;
+            uvs[i * 4 + 3] = uv.p1;
+        }
+        else if (rotateType == UVRotateType._270_Mirror_TB)
+        {
+            uvs[i * 4 + 0] = uv.p2;
+            uvs[i * 4 + 1] = uv.p1;
+            uvs[i * 4 + 2] = uv.p0;
+            uvs[i * 4 + 3] = uv.p3;
+        }
+        else if (rotateType == UVRotateType._180_Mirror_LR)
+        {
+            uvs[i * 4 + 0] = uv.p1;
+            uvs[i * 4 + 1] = uv.p0;
+            uvs[i * 4 + 2] = uv.p3;
+            uvs[i * 4 + 3] = uv.p2;
         }
 		
 		mesh.uv = uvs;

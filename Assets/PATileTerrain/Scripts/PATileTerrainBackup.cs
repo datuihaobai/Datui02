@@ -16,25 +16,19 @@ public partial class PATileTerrain
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 5);
         PATile[] tls = GetNeighboringTilesNxN(tile, 7);
 
-        tile.type = t;
-        tile.toType = t;
-        tile.bits = 0;
+        tile.SetTileProp(t,t,0);
         UpdateTileUV(tile);
 
         for (i = 0; i < 8; ++i)
             if (tile2[i] != null)
             {
-                tile2[i].type = t;
-                tile2[i].toType = t;
-                tile2[i].bits = 0;
+                tile2[i].SetTileProp(t,t,0);
                 UpdateTileUV(tile2[i]);
             }
         for (i = 0; i < 16; ++i)
             if (tile3[i] != null)
             {
-                tile3[i].type = t;
-                tile3[i].toType = t;
-                tile3[i].bits = 0;
+                tile3[i].SetTileProp(t,t,0);
                 UpdateTileUV(tile3[i]);
             }
 
@@ -164,17 +158,13 @@ public partial class PATileTerrain
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 3);
         PATile[] tls = GetNeighboringTilesNxN(tile, 5);
 
-        tile.type = t;
-        tile.toType = t;
-        tile.bits = 0;
+        tile.SetTileProp(t,t,0);
         UpdateTileUV(tile);
 
         for (i = 0; i < 8; ++i)
             if (tile2[i] != null)
             {
-                tile2[i].type = t;
-                tile2[i].toType = t;
-                tile2[i].bits = 0;
+                tile2[i].SetTileProp(t,t,0);
                 UpdateTileUV(tile2[i]);
             }
 
@@ -299,9 +289,7 @@ public partial class PATileTerrain
         PATile[] tls = GetNeighboringTilesNxN(tile, 3);
 
         //Current tile		
-        tile.type = t;
-        tile.toType = t;
-        tile.bits = 0;
+        tile.SetTileProp(t,t,0);
         UpdateTileUV(tile);
 
         //0	

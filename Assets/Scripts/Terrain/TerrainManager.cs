@@ -267,7 +267,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         belongShuijing.buildings.Add(nest.transform);
     }
 
-    void SetSelectShuijing(Shuijing shuijing)
+    public void SetSelectShuijing(Shuijing shuijing)
     {
         if (selectShuijing != null)
             selectShuijing.SetSelectTag(false);
@@ -363,7 +363,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         bool outOfRange = false;
         Vector2 crystalPos = new Vector2(shuijing.tile.x + 1,shuijing.tile.y + 1);
         CalTileElement(shuijing.tile, crystalPos, centerValue, atten, shuijing.elementType);
-        collectTiles.Add(shuijing.tile);
+        if (!collectTiles.Contains(shuijing.tile))
+            collectTiles.Add(shuijing.tile);
         shuijing.affectTiles.Add(shuijing.tile);
         shuijing.tile.affectShuijing = shuijing;
         while(true)
@@ -377,7 +378,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                     continue;
                 if (CalTileElement(tile, crystalPos, centerValue, atten, shuijing.elementType))
                 {
-                    collectTiles.Add(tile);
+                    if (!collectTiles.Contains(tile))
+                        collectTiles.Add(tile);
                     if (tile.affectShuijing == null)
                     {
                         shuijing.affectTiles.Add(tile);
@@ -439,12 +441,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.PaintTiles(ref collectTiles);
 
         //设置贴花
-        foreach (var crystal in tileTerrain.settings.crystals)
-        {
-            RandomManager.instance.SetSeed(crystal.randomSeed);
-            foreach (var tile in crystal.shuijing.affectTiles)
-                tileTerrain.PaintATileDecal(tile);
-        }
+        //foreach (var crystal in tileTerrain.settings.crystals)
+        //{
+        //    RandomManager.instance.SetSeed(crystal.randomSeed);
+        //    foreach (var tile in crystal.shuijing.affectTiles)
+        //        tileTerrain.PaintATileDecal(tile);
+        //}
     }
 
     public string GetUpgradeTips()

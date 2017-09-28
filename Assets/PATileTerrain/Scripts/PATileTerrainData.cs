@@ -129,6 +129,11 @@ public partial class PATileTerrain
                 element.ResetValue();
         }
 
+        public bool IsMultiElement()
+        {
+            return FireValue > 0 && WoodValue > 0;
+        }
+
         public void AddElement(TileElementType elementType,float addValue)
         {
             elementsDic[elementType].AddValue(addValue);
@@ -200,8 +205,8 @@ public partial class PATileTerrain
 		public int type = -1;
 		public int toType = -1;
 		public byte bits = 0;
-        //public int tilesetIndex = -1;
-
+        public int specifiedIndex = -1;
+        public UVRotateType rotateType = UVRotateType.None;
         //Game data
 		public bool walkability = true; //for PathFinder
 		public Object customData; //User data, you can assign your object
@@ -216,48 +221,22 @@ public partial class PATileTerrain
 
         public void Reset()
         {
+            specifiedIndex = -1;
+            rotateType = UVRotateType.None;
             element.Reset();
             decalTilesetIndex = -1;
             distance = -1;
             affectShuijing = null;
         }
 
-        //public JSONNode ToJson()
-        //{
-        //    JSONNode jsnode = new JSONClass();
-
-        //    int int32Data = ToInt32Data();
-        //    jsnode["data"] = int32Data.ToString();
-
-        //    return jsnode;
-        //}
-
-        //int ToInt32Data()
-        //{
-        //    byte[] byteDatas = new byte[4];
-        //    byteDatas[0] = (byte)(type & 0xFF);
-        //    byteDatas[1] = (byte)(toType & 0xFF);
-        //    byteDatas[2] = bits;
-        //    byteDatas[3] = (byte)(tilesetIndex & 0xFF);
-
-        //    int data = System.BitConverter.ToInt32(byteDatas,0);
-        //    return data; 
-        //}
-
-        //void FromInt32Data(int data)
-        //{
-        //    byte[] byteDatas = System.BitConverter.GetBytes(data);
-        //    type = byteDatas[0];
-        //    toType = byteDatas[1];
-        //    bits = byteDatas[2];
-        //    tilesetIndex = byteDatas[3];
-        //}
-
-        //public void FromJson(JSONNode jsnode)
-        //{
-        //    int int32Data = jsnode["data"].AsInt;
-        //    FromInt32Data(int32Data);
-        //}
+        public void SetTileProp(int type, int toType, byte bits, int specifiedIndex = -1, UVRotateType rotateType = UVRotateType.None)
+        {
+            this.type = type;
+            this.toType = toType;
+            this.bits = bits;
+            this.specifiedIndex = specifiedIndex;
+            this.rotateType = rotateType;
+        }
     }
 	
 	[System.Serializable]
