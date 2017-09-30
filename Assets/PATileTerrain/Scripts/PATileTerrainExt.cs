@@ -143,6 +143,26 @@ public partial class PATileTerrain
             QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Wood,
             WoodLevel1Brush, FireLevel1Brush, 13);
         tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+           QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Wood,
+           WoodLevel1Brush, FireLevel1Brush, 1);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+           QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Wood, QtrTileElementType.Wood,
+           WoodLevel1Brush, FireLevel1Brush, 11);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+           QtrTileElementType.Fire, QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Fire,
+           WoodLevel1Brush, FireLevel1Brush, 4);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+           QtrTileElementType.Fire, QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Fire,
+           WoodLevel1Brush, FireLevel1Brush, 6);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+           QtrTileElementType.Fire, QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Wood,
+           WoodLevel1Brush, FireLevel1Brush, 7);
+        tilePaintSamples.Add(tps);
     }
 
     public TilePaintSample GetFitTilePaintSample(PATile tile)
