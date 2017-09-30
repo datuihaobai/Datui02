@@ -6,6 +6,153 @@ using System.IO;
 
 public partial class PATileTerrain
 {
+    public const int FireLevel1Brush = 1;
+    public const int WoodLevel1Brush = 4;
+    public const int SandBrush = 7;
+
+    public class TilePaintSample
+    {
+        public QtrTileElementType[] qtrTiles = null;
+        public int type;
+        public int toType;
+        public byte bits;
+
+        public TilePaintSample(QtrTileElementType lb, QtrTileElementType lt, QtrTileElementType rt, QtrTileElementType rb,
+            int type , int toType, byte bits)
+        {
+            qtrTiles = new QtrTileElementType[4];
+            qtrTiles[0] = lb;
+            qtrTiles[1] = lt;
+            qtrTiles[2] = rt;
+            qtrTiles[3] = rb;
+            this.type = type;
+            this.toType = toType;
+            this.bits = bits;
+        }
+    
+        public bool IsFitTile(PATile tile)
+        {
+            if (tile.qtrTiles[0] == qtrTiles[0] && tile.qtrTiles[1] == qtrTiles[1] &&
+                tile.qtrTiles[2] == qtrTiles[2] && tile.qtrTiles[3] == qtrTiles[3])
+                return true;
+            return false;
+        }
+    }
+
+    public List<TilePaintSample> tilePaintSamples = new List<TilePaintSample>();
+
+    public void GenerateTilePaintSamples()
+    {
+        TilePaintSample tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Sand, 
+            FireLevel1Brush, SandBrush, 12);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Wood, QtrTileElementType.Wood, 
+            WoodLevel1Brush, SandBrush, 3);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Sand, QtrTileElementType.Sand, 
+            WoodLevel1Brush, SandBrush, 12);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Fire, QtrTileElementType.Fire,
+            FireLevel1Brush, SandBrush, 3);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Wood, 
+            WoodLevel1Brush, SandBrush, 1);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Sand,
+            FireLevel1Brush, SandBrush, 4);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Sand,
+            FireLevel1Brush, SandBrush, 6);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Wood,
+            WoodLevel1Brush, SandBrush, 9);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand,
+            FireLevel1Brush, SandBrush, 8);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Wood, QtrTileElementType.Sand,
+            WoodLevel1Brush, SandBrush, 2);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Sand, QtrTileElementType.Wood, QtrTileElementType.Wood,
+            WoodLevel1Brush, SandBrush, 11);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Sand,
+            FireLevel1Brush, SandBrush, 14);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Fire,
+            FireLevel1Brush, SandBrush, 7);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Sand, QtrTileElementType.Wood,
+            WoodLevel1Brush, SandBrush, 13);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand,
+            WoodLevel1Brush, SandBrush, 8);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Sand,
+            WoodLevel1Brush, SandBrush, 6);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Fire,
+            FireLevel1Brush, SandBrush, 9);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Fire, QtrTileElementType.Fire,
+            FireLevel1Brush, SandBrush, 11);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Sand,
+            WoodLevel1Brush, SandBrush, 14);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Sand, QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Wood,
+            WoodLevel1Brush, SandBrush, 7);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Sand, QtrTileElementType.Fire,
+            FireLevel1Brush, SandBrush, 13);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Wood, QtrTileElementType.Wood,
+            WoodLevel1Brush,FireLevel1Brush, 3);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Wood,
+            WoodLevel1Brush, FireLevel1Brush, 9);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Fire, QtrTileElementType.Fire,
+            WoodLevel1Brush, FireLevel1Brush, 8);
+        tilePaintSamples.Add(tps);
+        tps = new TilePaintSample(
+            QtrTileElementType.Wood, QtrTileElementType.Wood, QtrTileElementType.Fire, QtrTileElementType.Wood,
+            WoodLevel1Brush, FireLevel1Brush, 13);
+        tilePaintSamples.Add(tps);
+    }
+
+    public TilePaintSample GetFitTilePaintSample(PATile tile)
+    {
+        foreach(var tps in tilePaintSamples)
+            if (tps.IsFitTile(tile))
+                return tps;
+        return null;
+    }
+
     /// <summary>
     /// 使用json格式将地图数据存储到文件中
     /// </summary>
@@ -99,39 +246,6 @@ public partial class PATileTerrain
         }
     }
 
-    //void SetTilesElementSym(PATile[] tiles, int startIndex,int count, 
-    //    TileElementType elementType,int value,bool isReset)
-    //{
-    //    SetTilesElement(tiles,startIndex,count,elementType,value,isReset);
-    //    SetTilesElementFromTail(tiles, startIndex, count, elementType, value, isReset);
-    //}
-
-    //void SetTilesElementFromTail(PATile[] tiles, int startIndex, int count,
-    //    TileElementType elementType, int value, bool isReset)
-    //{
-    //    for (int i = tiles.Length - startIndex - 1; i > tiles.Length - startIndex - count - 1; i--)
-    //        SetTileElement(tiles[i], elementType, value, isReset);
-    //}
-
-    //void SetTilesElement(PATile[] tiles, int startIndex,int count,
-    //    TileElementType elementType,int value,bool isReset)
-    //{
-    //    for (int i = startIndex; i < startIndex + count; i ++)
-    //        SetTileElement(tiles[i], elementType, value, isReset);
-    //}
-
-    //void SetTileElement(PATile tile, TileElementType elementType, int value, bool isReset = false)
-    //{
-    //    if (tile == null)
-    //        return;
-    //    if (isReset)
-    //        tile.element.Reset();
-    //    else
-    //    {
-    //        tile.element.AddElement(elementType,value);
-    //    }
-    //}
-
     void PaintTileDecal(PATile tile, UVRotateType rotateType = UVRotateType.None)
     {
         PaintNormalTile(tile,0,tile.decalTilesetIndex,rotateType);
@@ -146,184 +260,47 @@ public partial class PATileTerrain
         UpdateTileUV(tile);
     }
 
-    //void PaintNormalTiles(PATile[] tiles,int t,int startIndex,int count)
-    //{
-    //    for (int i = startIndex; i < startIndex + count; i++ )
-    //        PaintNormalTile(tiles[i],t);
-    //}
-
-    //void PaintNormalTilesFromTail(PATile[] tiles,int t,int startIndex,int count)
-    //{
-    //    for (int i = tiles.Length - startIndex - 1; i > tiles.Length - startIndex - count - 1; i--)
-    //        PaintNormalTile(tiles[i], t);
-    //}
-
-    //void PaintNormalTilesSym(PATile[] tiles,int t,int startIndex,int count)
-    //{
-    //    if (count == 0)
-    //        return;
-    //    PaintNormalTiles(tiles,t,startIndex,count);
-    //    PaintNormalTilesFromTail(tiles, t, startIndex, count);
-    //}
-
-    //PATile GetATile(PATile tile,int offsetX,int offsetY)
-    //{
-    //    return GetATile(tile.x,tile.y,offsetX,offsetY);
-    //}
-
-    //PATile GetATile(int x,int y,int offsetX,int offsetY)
-    //{
-    //    PATile[] tiles = GetLineTiles(x,y,offsetX,offsetY,1);
-    //    if (tiles.Length == 1)
-    //        return tiles[0];
-    //    return null;
-    //}
-
-    //PATile[] GetLineTiles(int x,int y,int offsetX,int offsetY,int count)
-    //{
-    //    PATile[] tiles = new PATile[count];
-    //    for (int i = 0; i < count; i++)
-    //        tiles[i] = null;
-
-    //    if (y + offsetY < 0 || y + offsetY > settings.yCount - 1)
-    //        return tiles;
-        
-    //    int index = 0;
-    //    for (int ix = x + offsetX; ix < x + offsetX + count; ix++)
-    //    {
-    //        if (ix < 0 || ix > settings.xCount - 1) { index++; continue; }
-    //        tiles[index++] = GetTile(ix,y + offsetY);
-    //    }
-    //    return tiles;
-    //}
-
-    //byte GetSymBitsLR(byte bits)
-    //{
-    //    if (bits == 2)
-    //        return 4;
-    //    else if (bits == 6)
-    //        return 6;
-    //    else if (bits == 7)
-    //        return 14;
-    //    else if (bits == 3)
-    //        return 12;
-    //    else if (bits == 1)
-    //        return 8;
-    //    else if (bits == 11)
-    //        return 13;
-    //    else if (bits == 9)
-    //        return 9;
-    //    return 0;
-    //}
-
-    //byte GetSymBitsTB(byte bits)
-    //{
-    //    if (bits == 2)
-    //        return 1;
-    //    else if (bits == 6)
-    //        return 9;
-    //    else if (bits == 7)
-    //        return 11;
-    //    else if (bits == 3)
-    //        return 3;
-    //    return 0;
-    //}
-
-    //byte[] GetSymBitsLR(byte[] bits)
-    //{
-    //    byte[] symBits = new byte[bits.Length];
-    //    for (int i = 0; i < bits.Length; i++ )
-    //        symBits[i] = GetSymBitsLR(bits[i]);
-    //    return symBits;
-    //}
-
-    //byte[] GetSymBitsTB(byte[] bits)
-    //{
-    //    byte[] symBits = new byte[bits.Length];
-    //    for (int i = 0; i < bits.Length; i++)
-    //        symBits[i] = GetSymBitsTB(bits[i]);
-    //    return symBits;
-    //}
-
-    //void CalcTilesBits(int t,PATile[] tiles,int startIndex,byte[] bits)
-    //{
-    //    for (int i = startIndex,j = 0; i < startIndex + bits.Length; i++,j++)
-    //        CalcTileBits(t, tiles[i], bits[j]);
-    //}
-
-    //void CalcTilesBitsFromTail(int t, PATile[] tiles, int startIndex, byte[] bits)
-    //{
-    //    byte[] symBits = GetSymBitsLR(bits);
-    //    for (int i = tiles.Length - startIndex - 1,j = 0;
-    //        i > tiles.Length - startIndex - bits.Length - 1;
-    //        i--,j++)
-    //        CalcTileBits(t, tiles[i], symBits[j]);
-    //}
-
-    //void CalcTilesBitsSymLR(int t, PATile[] tiles, int startIndex, byte[] bits)
-    //{
-    //    CalcTilesBits(t,tiles,startIndex,bits);
-    //    CalcTilesBitsFromTail(t, tiles, startIndex, bits);
-    //}
-
-    //void CalcTilesBitsSymTB(int t, PATile[] tiles, int startIndex, byte[] bits)
-    //{
-    //    byte[] symBits = GetSymBitsTB(bits);
-    //    CalcTilesBits(t, tiles, startIndex, symBits);
-    //    CalcTilesBitsFromTail(t, tiles, startIndex, symBits);
-    //}
-
-    //void PaintALine(PATile tile, int xOffset, int yOffset, int count, int t, byte[] bits)
-    //{
-    //    int normalCount = (count / 2) - bits.Length;
-    //    PATile[] tiles = GetLineTiles(tile.x, tile.y, xOffset, yOffset, count);
-    //    CalcTilesBitsSymLR(t, tiles, 0, bits);
-    //    if (normalCount > 0)
-    //        PaintNormalTilesSym(tiles, t, bits.Length, normalCount);
-
-    //    tiles = GetLineTiles(tile.x, tile.y, xOffset, Mathf.Abs(yOffset) + 1, count);
-    //    CalcTilesBitsSymTB(t, tiles, 0, bits);
-    //    if (normalCount > 0)
-    //        PaintNormalTilesSym(tiles, t, bits.Length, normalCount);
-    //}
-
-    // 地格属性状态枚举
     public enum TileElementState
     {
         None,
         TotalFire,// 完全火属性
         TotalWood,// 完全木属性
-        FireMax,//  火属性最大
-        WoodMax,// 木属性最大
-        FireWoodEqual,// 火木属性相等
-        Zero,// 无属性
+        //FireMax,//  火属性最大
+        //WoodMax,// 木属性最大
+        //FireWoodEqual,// 火木属性相等
+        //Zero,// 无属性
     }
 
     TileElementState GetTileElementState(PATile tile)
     {
         TileElementState state = TileElementState.None;
-        if (tile.element.FireValue == tile.element.WoodValue && tile.element.FireValue == 0)
-            state = TileElementState.Zero;
-        else if (tile.element.FireValue > 0 && tile.element.WoodValue == 0)
+        //if (tile.element.FireValue == tile.element.WoodValue && tile.element.FireValue == 0)
+        //    state = TileElementState.Zero;
+        //else 
+        if (tile.element.FireValue > 0 && tile.element.WoodValue == 0)
             state = TileElementState.TotalFire;
         else if (tile.element.WoodValue > 0 && tile.element.FireValue == 0)
             state = TileElementState.TotalWood;
-        else if (tile.element.FireValue > tile.element.WoodValue)
-            state = TileElementState.FireMax;
-        else if (tile.element.WoodValue > tile.element.FireValue)
-            state = TileElementState.WoodMax;
-        else if (tile.element.WoodValue == tile.element.FireValue)
-            state = TileElementState.FireWoodEqual;
+        //else if (tile.element.FireValue > tile.element.WoodValue)
+        //    state = TileElementState.FireMax;
+        //else if (tile.element.WoodValue > tile.element.FireValue)
+        //    state = TileElementState.WoodMax;
+        //else if (tile.element.WoodValue == tile.element.FireValue)
+        //    state = TileElementState.FireWoodEqual;
         return state;
     }
 
     //通过周围8格计算当前格子该使用哪种属性进行融合
     QtrTileElementType GetQtrTileElementType(PATile[] nTiles)
     {
+        //int index = 0;
         foreach (var tile in nTiles)
         {
-            if (!tile.element.IsMultiElement())
+            if (tile.element.IsSingleElement())
             {
+                //if (index++ % 2 == 0)
+                //    continue;
+
                 TileElementState tileElementState = GetTileElementState(tile);
                 if (tileElementState == TileElementState.TotalFire)
                     return QtrTileElementType.Fire;
@@ -422,8 +399,181 @@ public partial class PATileTerrain
         return false;
     }
 
-    void PaintATile(PATile tile, List<PATile> postProcessMultiElementTiles = null)
+    void PaintAMultiElementTile(PATile tile, List<PATile> postProcessMultiElementTiles = null)
     {
+        if (tile.element.IsSingleElement())
+            return;
+
+        PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
+
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
+        
+        int t = 0;
+        //QtrTileElementType qtrTileElementType = QtrTileElementType.None;
+        QtrTileElementType qtrTileElementType = GetQtrTileElementType(nTiles);
+        if (qtrTileElementType == QtrTileElementType.Fire)
+            t = FireLevel1Brush;
+        else if (qtrTileElementType == QtrTileElementType.Wood)
+            t = WoodLevel1Brush;
+
+        TileElementState leftElementState = GetTileElementState(leftTile);
+        TileElementState rightElementState = GetTileElementState(rightTile);
+        TileElementState topElementState = GetTileElementState(topTile);
+        TileElementState bottomElementState = GetTileElementState(bottomTile);
+        TileElementState leftTopElementState = GetTileElementState(leftTopTile);
+        TileElementState leftBottomElementState = GetTileElementState(leftBottomTile);
+        TileElementState rightTopElementState = GetTileElementState(rightTopTile);
+        TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
+
+        if (leftTopTile.element.IsSingleElement() &&
+            leftTile.element.IsSingleElement() &&
+            topTile.element.IsSingleElement() &&
+            rightBottomTile.element.IsMultiElement() &&
+            leftTopTile.tileSetType == TileSetType.Full &&
+            leftTile.tileSetType == TileSetType.Full &&
+            topTile.tileSetType == TileSetType.Full)
+        {
+            if (leftTopElementState == TileElementState.TotalFire)
+            {
+                qtrTileElementType = QtrTileElementType.Fire;
+                t = FireLevel1Brush;
+            }
+            else if (leftTopElementState == TileElementState.TotalWood)
+            {
+                qtrTileElementType = QtrTileElementType.Wood;
+                t = WoodLevel1Brush;
+            } 
+
+            tile.SetTileProp(t, SandBrush, 14);
+            tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
+        else if (rightTopTile.element.IsSingleElement() &&
+            rightTile.element.IsSingleElement() &&
+            topTile.element.IsSingleElement() &&
+            leftBottomTile.element.IsMultiElement() &&
+            rightTopTile.tileSetType == TileSetType.Full &&
+            rightTile.tileSetType == TileSetType.Full &&
+            topTile.tileSetType == TileSetType.Full)
+        {
+            if (rightTopElementState == TileElementState.TotalFire)
+            {
+                qtrTileElementType = QtrTileElementType.Fire;
+                t = FireLevel1Brush;
+            }
+            else if (rightTopElementState == TileElementState.TotalWood)
+            {
+                qtrTileElementType = QtrTileElementType.Wood;
+                t = WoodLevel1Brush;
+            } 
+
+            tile.SetTileProp(t, SandBrush, 7);
+            tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, qtrTileElementType);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
+        else if (leftBottomTile.element.IsSingleElement() &&
+            leftTile.element.IsSingleElement() &&
+            bottomTile.element.IsSingleElement() &&
+            rightTopTile.element.IsMultiElement() &&
+            leftBottomTile.tileSetType == TileSetType.Full &&
+            leftTile.tileSetType == TileSetType.Full &&
+            bottomTile.tileSetType == TileSetType.Full)
+        {
+
+            if (leftBottomElementState == TileElementState.TotalFire)
+            {
+                qtrTileElementType = QtrTileElementType.Fire;
+                t = FireLevel1Brush;
+            }
+            else if (leftBottomElementState == TileElementState.TotalWood)
+            {
+                qtrTileElementType = QtrTileElementType.Wood;
+                t = WoodLevel1Brush;
+            } 
+
+            tile.SetTileProp(t, SandBrush, 13);
+            tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
+        else if (rightBottomTile.element.IsSingleElement() &&
+            rightTile.element.IsSingleElement() &&
+            bottomTile.element.IsSingleElement() &&
+            leftTopTile.element.IsMultiElement() &&
+            rightBottomTile.tileSetType == TileSetType.Full &&
+            rightTile.tileSetType == TileSetType.Full &&
+            bottomTile.tileSetType == TileSetType.Full)
+        {
+
+            if (rightBottomElementState == TileElementState.TotalFire)
+            {
+                qtrTileElementType = QtrTileElementType.Fire;
+                t = FireLevel1Brush;
+            }
+            else if (rightBottomElementState == TileElementState.TotalWood)
+            {
+                qtrTileElementType = QtrTileElementType.Wood;
+                t = WoodLevel1Brush;
+            } 
+
+            tile.SetTileProp(t, SandBrush, 11);
+            tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
+            tile.tileSetType = TileSetType.BigCorner;
+        }
+
+        else if (IsFullMix(nTiles))
+        {
+            tile.SetTileProp(SandBrush, SandBrush, 0);
+            tile.SetQtrTiles(QtrTileElementType.Sand);
+            tile.tileSetType = TileSetType.Full;
+        }
+
+        else if (IsCornerMix(nTiles, 0))
+        {
+            tile.SetTileProp(t, SandBrush, 8);
+            tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand);
+            tile.tileSetType = TileSetType.Corner;
+        }
+        else if (IsCornerMix(nTiles, 1))
+        {
+            tile.SetTileProp(t, SandBrush, 4);
+            tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand);
+            tile.tileSetType = TileSetType.Corner;
+        }
+        else if (IsCornerMix(nTiles, 2))
+        {
+            tile.SetTileProp(t, SandBrush, 2);
+            tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand);
+            tile.tileSetType = TileSetType.Corner;
+        }
+        else if (IsCornerMix(nTiles, 3))
+        {
+            tile.SetTileProp(t, SandBrush, 1);
+            tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType);
+            tile.tileSetType = TileSetType.Corner;
+        }
+
+        else
+        {
+            postProcessMultiElementTiles.Add(tile);
+            tile.SetQtrTiles(QtrTileElementType.None);
+            return;
+        }
+
+        UpdateTileUV(tile);
+    }
+
+    void PaintASingleElementTile(PATile tile, List<PATile> postProcessMultiElementTiles = null)
+    {
+        if (tile.element.IsMultiElement())
+            return;
+
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
         int leftBottomValue = 0, leftValue = 0, leftTopValue = 0, topValue = 0,
             rightTopValue = 0, rightValue = 0, rightBottomValue = 0, bottomValue = 0;
@@ -443,259 +593,314 @@ public partial class PATileTerrain
         int woodValue = tile.element.WoodValue;
         QtrTileElementType qtrTileElementType = QtrTileElementType.Base;
 
-        if (fireValue > 0 && woodValue > 0)
-        // 火木双属性
+        TileElementType elementType = TileElementType.None;
+        if (fireValue > 0)
         {
-            qtrTileElementType = GetQtrTileElementType(nTiles);
-            if (qtrTileElementType == QtrTileElementType.Fire)
-                t = 1;
-            else if (qtrTileElementType == QtrTileElementType.Wood)
-                t = 4;
+            elementType = TileElementType.Fire;
+            qtrTileElementType = QtrTileElementType.Fire;
+        }
+        else if (woodValue > 0)
+        {
+            elementType = TileElementType.Wood;
+            qtrTileElementType = QtrTileElementType.Wood;
+        }
 
-            TileElementState leftElementState = GetTileElementState(leftTile);
-            TileElementState rightElementState = GetTileElementState(rightTile);
-            TileElementState topElementState = GetTileElementState(topTile);
-            TileElementState bottomElementState = GetTileElementState(bottomTile);
-            TileElementState leftTopElementState = GetTileElementState(leftTopTile);
-            TileElementState leftBottomElementState = GetTileElementState(leftBottomTile);
-            TileElementState rightTopElementState = GetTileElementState(rightTopTile);
-            TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
+        t = elementValue = tile.element.GetElementPaintBrushType(elementType);
+        if (leftBottomTile != null)
+            leftBottomValue = leftBottomTile.element.GetElementPaintBrushType(elementType);
+        if (leftTile != null)
+            leftValue = leftTile.element.GetElementPaintBrushType(elementType);
+        if (leftTopTile != null)
+            leftTopValue = leftTopTile.element.GetElementPaintBrushType(elementType);
+        if (topTile != null)
+            topValue = topTile.element.GetElementPaintBrushType(elementType);
+        if (rightTopTile != null)
+            rightTopValue = rightTopTile.element.GetElementPaintBrushType(elementType);
+        if (rightTile != null)
+            rightValue = rightTile.element.GetElementPaintBrushType(elementType);
+        if (rightBottomTile != null)
+            rightBottomValue = rightBottomTile.element.GetElementPaintBrushType(elementType);
+        if (bottomTile != null)
+            bottomValue = bottomTile.element.GetElementPaintBrushType(elementType);
 
-            if (leftTopTile.element.IsSingleElement() &&
-                leftTile.element.IsSingleElement() &&
-                topTile.element.IsSingleElement() && 
-                leftTopTile.tileSetType == TileSetType.Full &&
-                leftTile.tileSetType == TileSetType.Full &&
-                topTile.tileSetType == TileSetType.Full)
-            {
-                tile.SetTileProp(t, 7, 14);
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.BigCorner;
-            }
-            else if (rightTopTile.element.IsSingleElement() && 
-                rightTile.element.IsSingleElement() &&
-                topTile.element.IsSingleElement() &&
-                rightTopTile.tileSetType == TileSetType.Full &&
-                rightTile.tileSetType == TileSetType.Full &&
-                topTile.tileSetType == TileSetType.Full)
-            {
-                tile.SetTileProp(t, 7, 7);
-                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, qtrTileElementType);
-                tile.tileSetType = TileSetType.BigCorner;
-            }
-            else if (leftBottomTile.element.IsSingleElement() &&
-                leftTile.element.IsSingleElement() &&
-                bottomTile.element.IsSingleElement() &&
-                leftBottomTile.tileSetType == TileSetType.Full &&
-                leftTile.tileSetType == TileSetType.Full &&
-                bottomTile.tileSetType == TileSetType.Full)
-            {
-                tile.SetTileProp(t, 7, 13);
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType);
-                tile.tileSetType = TileSetType.BigCorner;
-            }
-            else if (rightBottomTile.element.IsSingleElement() &&
-                rightTile.element.IsSingleElement() &&
-                bottomTile.element.IsSingleElement() &&
-                rightBottomTile.tileSetType == TileSetType.Full &&
-                rightTile.tileSetType == TileSetType.Full &&
-                bottomTile.tileSetType == TileSetType.Full)
-            {
-                tile.SetTileProp(t, 7, 11);
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
-                tile.tileSetType = TileSetType.BigCorner;
-            }
+        if (leftValue < elementValue && bottomValue < elementValue)
+        {
+            CalcTileBits(t, tile, 2);//左下角
+            tile.tileSetType = TileSetType.Corner;
+            tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base);
+        }
+        else if (leftValue < elementValue && topValue < elementValue)
+        {
+            CalcTileBits(t, tile, 1);//左上角
+            tile.tileSetType = TileSetType.Corner;
+            tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
+        }
+        else if (rightValue < elementValue && bottomValue < elementValue)
+        {
+            CalcTileBits(t, tile, 4);//右下角
+            tile.tileSetType = TileSetType.Corner;
+            tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
+        }
+        else if (topValue < elementValue && rightValue < elementValue)
+        {
+            CalcTileBits(t, tile, 8);//右上角
+            tile.tileSetType = TileSetType.Corner;
+            tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base);
+        }
 
-            else if(leftTile.element.IsSingleElement() &&
-                topTile.element.IsMultiElement() &&
-                bottomTile.element.IsMultiElement())
-            {
-                tile.SetTileProp(t, 7, 12);
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Edge;
-            }
-            else if (rightTile.element.IsSingleElement() &&
-                topTile.element.IsMultiElement() &&
-                bottomTile.element.IsMultiElement())
-            {
-                tile.SetTileProp(t, 7, 3);
-                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
-                tile.tileSetType = TileSetType.Edge;
-            }
-            else if (topTile.element.IsSingleElement() &&
-                leftTile.element.IsMultiElement() &&
-                rightTile.element.IsMultiElement())
-            {
-                tile.SetTileProp(t, 7, 6);
-                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Edge;
-            }
-            else if (bottomTile.element.IsSingleElement() &&
-                leftTile.element.IsMultiElement() &&
-                rightTile.element.IsMultiElement())
-            {
-                tile.SetTileProp(t, 7, 9);
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType);
-                tile.tileSetType = TileSetType.Edge;
-            }
 
-            else if (IsFullMix(nTiles))
-            {
-                tile.SetTileProp(7, 7, 0);
-                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Full;
-            }
+        //else if (topValue < elementValue && leftTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
 
-            else if (IsCornerMix(nTiles, 0))
-            {
-                tile.SetTileProp(t, 7, 8);
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Corner;
-            }
-            else if (IsCornerMix(nTiles, 1))
-            {
-                tile.SetTileProp(t,7,4);
-                tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Corner;
-            }
-            else if (IsCornerMix(nTiles, 2))
-            {
-                tile.SetTileProp(t, 7, 2);
-                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType, QtrTileElementType.Sand);
-                tile.tileSetType = TileSetType.Corner;
-            }
-            else if (IsCornerMix(nTiles, 3))
-            {
-                tile.SetTileProp(t, 7, 1);
-                tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Sand, QtrTileElementType.Sand, qtrTileElementType);
-                tile.tileSetType = TileSetType.Corner;
-            }
+        else if (leftValue < elementValue)
+        {
+            CalcTileBits(t, tile, 3);
+            tile.tileSetType = TileSetType.Edge;
+            tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
+        }
+        else if (topValue < elementValue)
+        {
+            CalcTileBits(t, tile, 9);
+            tile.tileSetType = TileSetType.Edge;
+            tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
+        }
+        else if (rightValue < elementValue)
+        {
+            CalcTileBits(t, tile, 12);
+            tile.tileSetType = TileSetType.Edge;
+            tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
+        }
+        else if (bottomValue < elementValue)
+        {
+            CalcTileBits(t, tile, 6);
+            tile.tileSetType = TileSetType.Edge;
+            tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
+        }
 
-            else
-            {
-                postProcessMultiElementTiles.Add(tile);
-                return;
-            }
-            
-            UpdateTileUV(tile);
+        //else if (leftBottomValue < elementValue && bottomTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (leftBottomValue < elementValue && leftTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (rightBottomValue < elementValue && rightTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Base);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (rightBottomValue < elementValue && bottomTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (rightTopValue < elementValue && topTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, QtrTileElementType.Base, qtrTileElementType);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (rightTopValue < elementValue && rightTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Sand);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (leftTopValue < elementValue && leftTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(QtrTileElementType.Sand, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        //else if (leftTopValue < elementValue && topTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.BigCorner;
+        //    tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Sand, qtrTileElementType);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+
+        else if (leftBottomValue < elementValue)
+        {
+            CalcTileBits(t, tile, 7);
+            tile.tileSetType = TileSetType.BigCorner;
+            tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, qtrTileElementType);
+        }
+        else if (leftTopValue < elementValue)
+        {
+            CalcTileBits(t, tile, 11);
+            tile.tileSetType = TileSetType.BigCorner;
+            tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
+        }
+        else if (rightTopValue < elementValue)
+        {
+            CalcTileBits(t, tile, 13);
+            tile.tileSetType = TileSetType.BigCorner;
+            tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, qtrTileElementType);
+        }
+        else if (rightBottomValue < elementValue)
+        {
+            CalcTileBits(t, tile, 14);
+            tile.tileSetType = TileSetType.BigCorner;
+            tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
+        }
+
+        //else if (rightBottomTile.element.IsMultiAndEqualElement() &&
+        //    rightTile.element.IsMultiAndEqualElement() &&
+        //    bottomTile.element.IsMultiAndEqualElement())
+        //{
+        //    tile.SetTileProp(t, SandBrush, 14);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+        //    UpdateTileUV(tile);
+        //}
+        //else if (leftBottomTile.element.IsMultiAndEqualElement() &&
+        //    leftTile.element.IsMultiAndEqualElement() &&
+        //    bottomTile.element.IsMultiAndEqualElement())
+        //{
+        //    tile.SetTileProp(t, SandBrush, 7);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType, qtrTileElementType);
+        //    UpdateTileUV(tile);
+        //}
+        //else if (rightTopTile.element.IsMultiAndEqualElement() &&
+        //    rightTile.element.IsMultiAndEqualElement() &&
+        //    topTile.element.IsMultiAndEqualElement())
+        //{
+        //    tile.SetTileProp(t, SandBrush, 13);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType);
+        //    UpdateTileUV(tile);
+        //}
+        //else if (leftTopTile.element.IsMultiAndEqualElement() &&
+        //    leftTile.element.IsMultiAndEqualElement() &&
+        //    topTile.element.IsMultiAndEqualElement())
+        //{
+        //    tile.SetTileProp(t, SandBrush, 11);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Sand, qtrTileElementType, qtrTileElementType);
+        //    UpdateTileUV(tile);
+        //}
+        //else if (rightBottomTile.element.IsMultiAndEqualElement() &&
+        //    (rightTile.element.IsSingleElement() && rightTile.tileSetType == TileSetType.BigCorner) &&
+        //    bottomTile.element.IsMultiAndEqualElement())
+        //{
+        //    tile.SetTileProp(t, SandBrush, 14);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
+        //    UpdateTileUV(tile);
+        //}
+        
+        //else if(leftBottomTile.element.IsSingleElement() && 
+        //    leftTile.element.IsSingleElement() && 
+        //    leftTopTile.element.IsSingleElement() && 
+        //    topTile.element.IsSingleElement() && 
+        //    rightTopTile.element.IsSingleElement() && 
+        //    rightTile.element.IsSingleElement() && 
+        //    rightBottomTile.element.IsSingleElement() && 
+        //    bottomTile.element.IsSingleElement())
+        //{
+        //    PaintNormalTile(tile, t);
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType);
+        //}
+        //else if (rightBottomTile.element.IsMultiElement() && bottomTile.element.IsMultiElement())
+        //{
+        //    tile.tileSetType = TileSetType.Full;
+        //    tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.None);
+        //    postProcessMultiElementTiles.Add(tile);
+        //    return;
+        //}
+        else
+        {
+            PaintNormalTile(tile, t);
+            tile.tileSetType = TileSetType.Full;
+            tile.SetQtrTiles(qtrTileElementType);
+        }
+
+        //高阶属性地表都设置成一样带属性的
+        if(t != FireLevel1Brush && t != WoodLevel1Brush)
+            tile.SetQtrTiles(qtrTileElementType);
+        
+    }
+   
+    void PaintPostProcessMultiElementTile(PATile tile)
+    {
+        TilePaintSample tps = GetFitTilePaintSample(tile);
+        if (tps != null)
+        {
+            tile.SetTileProp(tps.type, tps.toType, tps.bits);
         }
         else
         {
-            TileElementType elementType = TileElementType.None;
-            if (fireValue > 0)
+            TileMixConfigAsset.TileMixConfig mixConfig = GetTileMixConfig(tile);
+            if (mixConfig == null)
             {
-                elementType = TileElementType.Fire;
-                qtrTileElementType = QtrTileElementType.Fire;
-            }
-            else if (woodValue > 0)
-            {
-                elementType = TileElementType.Wood;
-                qtrTileElementType = QtrTileElementType.Wood;
+                Debug.LogError("mixConfig == null tile.x = " + tile.x + " tile.y = " + tile.y);
+                tile.SetTileProp(0, 0, 0);
+                UpdateTileUV(tile);
+                return;
             }
 
-            t = elementValue = tile.element.GetElementPaintBrushType(elementType);
-            if (leftBottomTile != null)
-                leftBottomValue = leftBottomTile.element.GetElementPaintBrushType(elementType);
-            if (leftTile != null)
-                leftValue = leftTile.element.GetElementPaintBrushType(elementType);
-            if (leftTopTile != null)
-                leftTopValue = leftTopTile.element.GetElementPaintBrushType(elementType);
-            if (topTile != null)
-                topValue = topTile.element.GetElementPaintBrushType(elementType);
-            if (rightTopTile != null)
-                rightTopValue = rightTopTile.element.GetElementPaintBrushType(elementType);
-            if (rightTile != null)
-                rightValue = rightTile.element.GetElementPaintBrushType(elementType);
-            if (rightBottomTile != null)
-                rightBottomValue = rightBottomTile.element.GetElementPaintBrushType(elementType);
-            if (bottomTile != null)
-                bottomValue = bottomTile.element.GetElementPaintBrushType(elementType);
-
-            if (leftValue < elementValue && bottomValue < elementValue)
+            tile.SetTileProp(SandBrush, SandBrush, 0, mixConfig.tilesetIndex, (UVRotateType)mixConfig.rotateType);
+        }
+        UpdateTileUV(tile);
+    }
+   
+    // tile只缺少一个确定的qtrtile
+    int IsTileMiss1(PATile tile)
+    {
+        int index = -1;
+        int count = 0;
+        for (int i = 0; i < tile.qtrTiles.Length; i++ )
+        {
+            if (tile.qtrTiles[i] == QtrTileElementType.None)
             {
-                CalcTileBits(t, tile, 2);//左下角
-                tile.tileSetType = TileSetType.Corner;
-                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base);
-            }
-            else if (leftValue < elementValue && topValue < elementValue)
-            {
-                CalcTileBits(t, tile, 1);//左上角
-                tile.tileSetType = TileSetType.Corner;
-                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
-            }
-            else if (rightValue < elementValue && bottomValue < elementValue)
-            {
-                CalcTileBits(t, tile, 4);//右下角
-                tile.tileSetType = TileSetType.Corner;
-                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
-            }
-            else if (topValue < elementValue && rightValue < elementValue)
-            {
-                CalcTileBits(t, tile, 8);//右上角
-                tile.tileSetType = TileSetType.Corner;
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, QtrTileElementType.Base);
-            }
-
-            else if (leftValue < elementValue)
-            {
-                CalcTileBits(t, tile, 3);
-                tile.tileSetType = TileSetType.Edge;
-                tile.SetQtrTiles(QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
-            }
-            else if (topValue < elementValue)
-            {
-                CalcTileBits(t, tile, 9);
-                tile.tileSetType = TileSetType.Edge;
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base, qtrTileElementType);
-            }
-            else if (rightValue < elementValue)
-            {
-                CalcTileBits(t, tile, 12);
-                tile.tileSetType = TileSetType.Edge;
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, QtrTileElementType.Base);
-            }
-            else if (bottomValue < elementValue)
-            {
-                CalcTileBits(t, tile, 6);
-                tile.tileSetType = TileSetType.Edge;
-                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
-            }
-
-            else if (leftBottomValue < elementValue)
-            {
-                CalcTileBits(t, tile, 7);
-                tile.tileSetType = TileSetType.BigCorner;
-                tile.SetQtrTiles(QtrTileElementType.Base, qtrTileElementType, qtrTileElementType, qtrTileElementType);
-            }
-            else if (leftTopValue < elementValue)
-            {
-                CalcTileBits(t, tile, 11);
-                tile.tileSetType = TileSetType.BigCorner;
-                tile.SetQtrTiles(qtrTileElementType, QtrTileElementType.Base, qtrTileElementType, qtrTileElementType);
-            }
-            else if (rightTopValue < elementValue)
-            {
-                CalcTileBits(t, tile, 13);
-                tile.tileSetType = TileSetType.BigCorner;
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, QtrTileElementType.Base, qtrTileElementType);
-            }
-            else if (rightBottomValue < elementValue)
-            {
-                CalcTileBits(t, tile, 14);
-                tile.tileSetType = TileSetType.BigCorner;
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Base);
-            }
-            else
-            {
-                PaintNormalTile(tile, t);
-                tile.tileSetType = TileSetType.Full;
-                tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, qtrTileElementType);
+                index = i;
+                count++;
             } 
         }
+        if (count == 1)
+            return index;
+        else
+            return -1;
     }
 
-    void PaintPostProcessMultiElementTile(PATile tile)
+    //如果tile只有一个qtrtile是未知的 那么未知的qtrtile直接设置成融合属性
+    void ProcessMiss1Tile(PATile tile)
     {
+        int miss1Index = IsTileMiss1(tile);
+        if (miss1Index == -1)
+            return;
+
+        if(tile.element.IsMultiElement())
+            tile.qtrTiles[miss1Index] = QtrTileElementType.Sand;
+    }
+
+    bool ProcessMultiElementTile(PATile tile)
+    {
+        if (tile.IsQtrTilesSet())
+            return true;
+
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
 
         PATile leftBottomTile = nTiles[0];
@@ -710,48 +915,71 @@ public partial class PATileTerrain
         QtrTileElementType qte0 = bottomTile.qtrTiles[1];
         QtrTileElementType qte1 = leftBottomTile.qtrTiles[2];
         QtrTileElementType qte2 = leftTile.qtrTiles[3];
-        if(qte0 == qte1)
+        if (qte0 != QtrTileElementType.None)
             tile.qtrTiles[0] = qte0;
-        else if(qte0 == qte2)
-            tile.qtrTiles[0] = qte0;
-        else if(qte1 == qte2)
+        else if (qte1 != QtrTileElementType.None)
             tile.qtrTiles[0] = qte1;
+        else if (qte2 != QtrTileElementType.None)
+            tile.qtrTiles[0] = qte2;
 
         qte0 = leftTile.qtrTiles[2];
         qte1 = leftTopTile.qtrTiles[3];
         qte2 = topTile.qtrTiles[0];
-        if (qte0 == qte1)
+        if (qte0 != QtrTileElementType.None)
             tile.qtrTiles[1] = qte0;
-        else if (qte0 == qte2)
-            tile.qtrTiles[1] = qte0;
-        else if (qte1 == qte2)
+        else if (qte1 != QtrTileElementType.None)
             tile.qtrTiles[1] = qte1;
+        else if (qte2 != QtrTileElementType.None)
+            tile.qtrTiles[1] = qte2;
 
         qte0 = topTile.qtrTiles[3];
         qte1 = rightTopTile.qtrTiles[0];
         qte2 = rightTile.qtrTiles[1];
-        if (qte0 == qte1)
+        if (qte0 != QtrTileElementType.None)
             tile.qtrTiles[2] = qte0;
-        else if (qte0 == qte2)
-            tile.qtrTiles[2] = qte0;
-        else if (qte1 == qte2)
+        else if (qte1 != QtrTileElementType.None)
             tile.qtrTiles[2] = qte1;
+        else if (qte2 != QtrTileElementType.None)
+            tile.qtrTiles[2] = qte2;
 
         qte0 = rightTile.qtrTiles[0];
         qte1 = rightBottomTile.qtrTiles[1];
         qte2 = bottomTile.qtrTiles[2];
-        if (qte0 == qte1)
+        if (qte0 != QtrTileElementType.None)
             tile.qtrTiles[3] = qte0;
-        else if (qte0 == qte2)
-            tile.qtrTiles[3] = qte0;
-        else if (qte1 == qte2)
+        else if (qte1 != QtrTileElementType.None)
             tile.qtrTiles[3] = qte1;
+        else if (qte2 != QtrTileElementType.None)
+            tile.qtrTiles[3] = qte2;
 
+        ProcessMiss1Tile(tile);
+
+        if(!tile.IsQtrTilesSet())
+            return false;
+        return true;
+    }
+
+    TileMixConfigAsset.TileMixConfig GetTileMixConfig(PATile tile)
+    {
+        foreach(var config in ConfigDataBase.instance.TileMixConfigAsset.configs)
+        {
+            if (config.qtrTile0 == (int)tile.qtrTiles[0] &&
+                config.qtrTile1 == (int)tile.qtrTiles[1] &&
+                config.qtrTile2 == (int)tile.qtrTiles[2] &&
+                config.qtrTile3 == (int)tile.qtrTiles[3])
+                return config;
+        }
+
+        return null;
     }
 
     public void PaintATileDecal(PATile tile)
     {
         if (tile == null || tile.decalTilesetIndex != -1)
+            return;
+
+        //融合处不能贴花
+        if (!tile.IsElementFull())
             return;
 
         PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
@@ -893,25 +1121,8 @@ public partial class PATileTerrain
         }
     }
 
-    //void PaintCollectTiles(ref Dictionary<int, List<PATile>> collectTiles)
-    //{
-    //    List<int> collectBT = new List<int>();
-    //    foreach (var bt in collectTiles.Keys)
-    //        collectBT.Add(bt);
-    //    collectBT.Sort();
-
-    //    foreach (var bt in collectBT)
-    //        foreach (var t0 in collectTiles[bt])
-    //            PaintATile(t0, bt);
-    //}
-
     public void PaintTiles(ref List<PATile> tiles)
     {
-        //Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
-        //PATile[] tilesArray = tiles.ToArray();
-        //CollectTiles(ref tilesArray, ref collectTiles);
-        //PaintCollectTiles(ref collectTiles);
-        
         //先处理单属性地格 多属性的后处理
         //tiles.Sort((PATile t1,PATile t2) =>
         //{
@@ -924,932 +1135,53 @@ public partial class PATileTerrain
 
         //先处理单属性地格 多属性的后处理
         List<PATile> multiElementTiles = new List<PATile>();
+        List<PATile> postProcessMultiElementTiles = new List<PATile>();
         foreach (var tile in tiles)
         {
             if (tile.element.IsMultiElement())
             {
                 multiElementTiles.Add(tile);
                 continue;
-            } 
-            PaintATile(tile);
+            }
+            PaintASingleElementTile(tile, postProcessMultiElementTiles);
         }
 
-        List<PATile> postProcessMultiElementTiles = new List<PATile>();
         foreach (var tile in multiElementTiles)
-            PaintATile(tile,postProcessMultiElementTiles);
+            PaintAMultiElementTile(tile,postProcessMultiElementTiles);
+
+        List<PATile> collectUnsetTiles0 = new List<PATile>();
+        //List<PATile> collectUnsetTiles1 = new List<PATile>();
+        
+        foreach (var tile in postProcessMultiElementTiles)
+            if (!ProcessMultiElementTile(tile))
+                collectUnsetTiles0.Add(tile);
+
+        if (collectUnsetTiles0.Count > 0)
+            Debug.LogError("collectUnsetTiles0.Count  " + collectUnsetTiles0.Count);
+
+        //int processTimes = 0;
+        //while (true)
+        //{
+        //    collectUnsetTiles1.Clear();
+        //    foreach (var tile in collectUnsetTiles0)
+        //        if (!ProcessMultiElementTile(tile))
+        //            collectUnsetTiles1.Add(tile);
+
+        //    collectUnsetTiles0.Clear();
+        //    foreach (var tile in collectUnsetTiles1)
+        //        if (!ProcessMultiElementTile(tile))
+        //            collectUnsetTiles0.Add(tile);
+
+        //    if (collectUnsetTiles0.Count == 0 && collectUnsetTiles1.Count == 0)
+        //        break;
+        //    if (processTimes++ > 5)
+        //    {
+        //        Debug.LogError("processTimes++ > 5");
+        //        break;
+        //    } 
+        //}
 
         foreach (var tile in postProcessMultiElementTiles)
             PaintPostProcessMultiElementTile(tile);
     }
-
-    //public void PaintCrystalLevel1(PATile tile, int t)
-    //{
-    //    Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
-    //    PATile[] lineTiles = GetLineTiles(tile.x,tile.y,-1,-4,4);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, line1Tiles[0], 2);
-    //    //CalcTileBits(t, line1Tiles[1], 6);
-    //    //CalcTileBits(t, line1Tiles[2], 6);
-    //    //CalcTileBits(t, line1Tiles[3], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -2, -3, 6);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 2);
-    //    //CalcTileBits(t, lineTiles[4], 14);
-    //    //CalcTileBits(t, lineTiles[5], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -3, -2, 8);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 4);
-    //    //CalcTileBits(t, lineTiles[6], 14);
-    //    //CalcTileBits(t, lineTiles[7], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, -1, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 6);
-    //    //CalcTileBits(t, lineTiles[8], 14);
-    //    //CalcTileBits(t, lineTiles[9], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, 0, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 8);
-    //    //CalcTileBits(t, lineTiles[9], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, 1, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 8);
-    //    //CalcTileBits(t, lineTiles[9], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, 2, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 6);
-    //    //CalcTileBits(t, lineTiles[8], 13);
-    //    //CalcTileBits(t, lineTiles[9], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -3, 3, 8);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 4);
-    //    //CalcTileBits(t, lineTiles[6], 13);
-    //    //CalcTileBits(t, lineTiles[7], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -2, 4, 6);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 2);
-    //    //CalcTileBits(t, lineTiles[4], 13);
-    //    //CalcTileBits(t, lineTiles[5], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -1, 5, 4);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 9);
-    //    //CalcTileBits(t, lineTiles[2], 9);
-    //    //CalcTileBits(t, lineTiles[3], 8);
-
-    //    PaintCollectTiles(ref collectTiles);
-    //}
-
-    //public void PaintCrystalLevel_Specified(PATile tile, int t)
-    //{
-    //    PATile specifiedTile = GetATile(tile, 2, -1);
-    //    PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -1, 0);
-    //    PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 0, 0);
-    //    PaintNormalTile(specifiedTile, t, 34, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 1, 0);
-    //    PaintNormalTile(specifiedTile, t, 35, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 0, 1);
-    //    PaintNormalTile(specifiedTile, t, 18, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 1, 1);
-    //    PaintNormalTile(specifiedTile, t, 19, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 2, 1);
-    //    PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -1, 2);
-    //    PaintNormalTile(specifiedTile, t, 33, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 1, 2);
-    //    PaintNormalTile(specifiedTile, t, 32, UVRotateType._90);
-    //}
-
-    //void CalcTileBits(PATile tile,byte b)
-    //{
-    //    int t = tile.element.GetPaintBrushType();
-    //    CalcTileBits(t,tile,b);
-    //}
-
-    //void CollectTiles(ref PATile[] tiles, ref Dictionary<int, List<PATile>> collectTiles)
-    //{
-    //    foreach (var t0 in tiles)
-    //    {
-    //        int bt = t0.element.GetPaintBrushType();
-    //        if (!collectTiles.ContainsKey(bt))
-    //            collectTiles[bt] = new List<PATile>();
-    //        collectTiles[bt].Add(t0);
-    //    }
-    //}
-
-    //public void PaintCrystalLevel2(PATile tile, int t)
-    //{
-    //    Dictionary<int, List<PATile>> collectTiles = new Dictionary<int, List<PATile>>();
-    //    PATile[] lineTiles = GetLineTiles(tile.x, tile.y, -2, -8, 6);
-    //    CollectTiles(ref lineTiles,ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 6);
-    //    //CalcTileBits(t, lineTiles[2], 6);
-    //    //CalcTileBits(t, lineTiles[3], 6);
-    //    //CalcTileBits(t, lineTiles[4], 6);
-    //    //CalcTileBits(t, lineTiles[5], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, -7, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 6);
-    //    //CalcTileBits(t, lineTiles[2], 7);
-    //    //PaintNormalTiles(lineTiles, t, 3, 4);
-    //    //CalcTileBits(t, lineTiles[7], 14);
-    //    //CalcTileBits(t, lineTiles[8], 6);
-    //    //CalcTileBits(t, lineTiles[9], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -5, -6, 12);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 8);
-    //    //CalcTileBits(t, lineTiles[10], 14);
-    //    //CalcTileBits(t, lineTiles[11], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -6, -5, 14);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //PaintNormalTiles(lineTiles, t, 1, 12);
-    //    //CalcTileBits(t, lineTiles[13], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -7, -4, 16);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 12);
-    //    //CalcTileBits(t, lineTiles[14], 14);
-    //    //CalcTileBits(t, lineTiles[15], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -7, -3, 16);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 14);
-    //    //CalcTileBits(t, lineTiles[15], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, -2, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 2);
-    //    //CalcTileBits(t, lineTiles[1], 7);
-    //    //PaintNormalTiles(lineTiles, t, 2, 14);
-    //    //CalcTileBits(t, lineTiles[16], 14);
-    //    //CalcTileBits(t, lineTiles[17], 4);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, -1, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 16);
-    //    //CalcTileBits(t, lineTiles[17], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, 0, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 16);
-    //    //CalcTileBits(t, lineTiles[17], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, 1, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 16);
-    //    //CalcTileBits(t, lineTiles[17], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, 2, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 16);
-    //    //CalcTileBits(t, lineTiles[17], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -8, 3, 18);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 14);
-    //    //CalcTileBits(t, lineTiles[16], 13);
-    //    //CalcTileBits(t, lineTiles[17], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -7, 4, 16);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 3);
-    //    //PaintNormalTiles(lineTiles, t, 1, 14);
-    //    //CalcTileBits(t, lineTiles[15], 12);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -7, 5, 16);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 12);
-    //    //CalcTileBits(t, lineTiles[14], 13);
-    //    //CalcTileBits(t, lineTiles[15], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -6, 6, 14);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //PaintNormalTiles(lineTiles, t, 1, 12);
-    //    //CalcTileBits(t, lineTiles[13], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -5, 7, 12);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 11);
-    //    //PaintNormalTiles(lineTiles, t, 2, 8);
-    //    //CalcTileBits(t, lineTiles[10], 13);
-    //    //CalcTileBits(t, lineTiles[11], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -4, 8, 10);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 9);
-    //    //CalcTileBits(t, lineTiles[2], 11);
-    //    //PaintNormalTiles(lineTiles, t, 3, 4);
-    //    //CalcTileBits(t, lineTiles[7], 13);
-    //    //CalcTileBits(t, lineTiles[8], 9);
-    //    //CalcTileBits(t, lineTiles[9], 8);
-
-    //    lineTiles = GetLineTiles(tile.x, tile.y, -2, 9, 6);
-    //    CollectTiles(ref lineTiles, ref collectTiles);
-    //    //CalcTileBits(t, lineTiles[0], 1);
-    //    //CalcTileBits(t, lineTiles[1], 9);
-    //    //CalcTileBits(t, lineTiles[2], 9);
-    //    //CalcTileBits(t, lineTiles[3], 9);
-    //    //CalcTileBits(t, lineTiles[4], 9);
-    //    //CalcTileBits(t, lineTiles[5], 8);
-    //    PaintCollectTiles(ref collectTiles);
-    //}
-
-    //public void PaintCrystalLevel2_B_Specified(PATile tile, int t)
-    //{
-    //    PATile specifiedTile = GetATile(tile, 1, -3);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 0, -2);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -2, -1);
-    //    PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, -1, -1);
-    //    PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 2, -1);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -3, 0);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -1, 0);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -1, 2);
-    //    PaintNormalTile(specifiedTile, t, 62, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 0, 2);
-    //    PaintNormalTile(specifiedTile, t, 63, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, -1, 1);
-    //    PaintNormalTile(specifiedTile, t, 78, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 0, 1);
-    //    PaintNormalTile(specifiedTile, t, 79, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 4, 1);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 2, 2);
-    //    PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 3, 2);
-    //    PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -1, 3);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 1, 4);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
-    //}
-
-    //public void PaintCrystalLevel2_B(PATile tile, int t)
-    //{
-    //    PaintCrystalLevel1(tile, t);
-    //}
-
-    //public void PaintCrystalLevel3(PATile tile, int t)
-    //{
-    //    PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -2, -12, 6);
-    //    CalcTileBits(t, line1Tiles[0], 2);
-    //    CalcTileBits(t, line1Tiles[1], 6);
-    //    CalcTileBits(t, line1Tiles[2], 6);
-    //    CalcTileBits(t, line1Tiles[3], 6);
-    //    CalcTileBits(t, line1Tiles[4], 6);
-    //    CalcTileBits(t, line1Tiles[5], 4);
-
-    //    PATile[] line2Tiles = GetLineTiles(tile.x, tile.y, -5, -11, 12);
-    //    CalcTileBits(t, line2Tiles[0], 2);
-    //    CalcTileBits(t, line2Tiles[1], 6);
-    //    CalcTileBits(t, line2Tiles[2], 6);
-    //    CalcTileBits(t, line2Tiles[3], 7);
-    //    PaintNormalTiles(line2Tiles, t, 4, 4);
-    //    CalcTileBits(t, line2Tiles[8], 14);
-    //    CalcTileBits(t, line2Tiles[9], 6);
-    //    CalcTileBits(t, line2Tiles[10], 6);
-    //    CalcTileBits(t, line2Tiles[11], 4);
-
-    //    PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -6, -10, 14);
-    //    CalcTileBits(t, line3Tiles[0], 2);
-    //    CalcTileBits(t, line3Tiles[1], 7);
-    //    PaintNormalTiles(line3Tiles, t, 2, 10);
-    //    CalcTileBits(t, line3Tiles[12], 14);
-    //    CalcTileBits(t, line3Tiles[13], 4);
-
-    //    PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -8, -9, 18);
-    //    CalcTileBits(t, line4Tiles[0], 2);
-    //    CalcTileBits(t, line4Tiles[1], 6);
-    //    CalcTileBits(t, line4Tiles[2], 7);
-    //    PaintNormalTiles(line4Tiles, t, 3, 12);
-    //    CalcTileBits(t, line4Tiles[15], 14);
-    //    CalcTileBits(t, line4Tiles[16], 6);
-    //    CalcTileBits(t, line4Tiles[17], 4);
-
-    //    PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -9, -8, 20);
-    //    CalcTileBits(t, line5Tiles[0], 2);
-    //    CalcTileBits(t, line5Tiles[1], 7);
-    //    PaintNormalTiles(line5Tiles, t, 2, 16);
-    //    CalcTileBits(t, line5Tiles[18], 14);
-    //    CalcTileBits(t, line5Tiles[19], 4);
-
-    //    PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -9, -7, 20);
-    //    CalcTileBits(t, line6Tiles[0], 3);
-    //    PaintNormalTiles(line6Tiles, t, 1, 18);
-    //    CalcTileBits(t, line6Tiles[19], 12);
-
-    //    PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -10, -6, 22);
-    //    CalcTileBits(t, line7Tiles[0], 2);
-    //    CalcTileBits(t, line7Tiles[1], 7);
-    //    PaintNormalTiles(line7Tiles, t, 2, 18);
-    //    CalcTileBits(t, line7Tiles[20], 14);
-    //    CalcTileBits(t, line7Tiles[21], 4);
-
-    //    PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -11, -5, 24);
-    //    CalcTileBits(t, line8Tiles[0], 2);
-    //    CalcTileBits(t, line8Tiles[1], 7);
-    //    PaintNormalTiles(line8Tiles, t, 2, 20);
-    //    CalcTileBits(t, line8Tiles[22], 14);
-    //    CalcTileBits(t, line8Tiles[23], 4);
-
-    //    PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -11, -4, 24);
-    //    CalcTileBits(t, line9Tiles[0], 3);
-    //    PaintNormalTiles(line9Tiles, t, 1, 22);
-    //    CalcTileBits(t, line9Tiles[23], 12);
-
-    //    PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -11, -3, 24);
-    //    CalcTileBits(t, line10Tiles[0], 3);
-    //    PaintNormalTiles(line10Tiles, t, 1, 22);
-    //    CalcTileBits(t, line10Tiles[23], 12);
-
-    //    PATile[] line11Tiles = GetLineTiles(tile.x, tile.y, -12, -2, 26);
-    //    CalcTileBits(t, line11Tiles[0], 2);
-    //    CalcTileBits(t, line11Tiles[1], 7);
-    //    PaintNormalTiles(line11Tiles, t, 2, 22);
-    //    CalcTileBits(t, line11Tiles[24], 14);
-    //    CalcTileBits(t, line11Tiles[25], 4);
-
-    //    PATile[] line12Tiles = GetLineTiles(tile.x, tile.y, -12, -1, 26);
-    //    CalcTileBits(t, line12Tiles[0], 3);
-    //    PaintNormalTiles(line12Tiles, t, 1, 24);
-    //    CalcTileBits(t, line12Tiles[25], 12);
-
-    //    PATile[] line13Tiles = GetLineTiles(tile.x, tile.y, -12, 0, 26);
-    //    CalcTileBits(t, line13Tiles[0], 3);
-    //    PaintNormalTiles(line13Tiles, t, 1, 24);
-    //    CalcTileBits(t, line13Tiles[25], 12);
-
-    //    PATile[] line14Tiles = GetLineTiles(tile.x, tile.y, -12, 1, 26);
-    //    CalcTileBits(t, line14Tiles[0], 3);
-    //    PaintNormalTiles(line14Tiles, t, 1, 24);
-    //    CalcTileBits(t, line14Tiles[25], 12);
-
-    //    PATile[] line15Tiles = GetLineTiles(tile.x, tile.y, -12, 2, 26);
-    //    CalcTileBits(t, line15Tiles[0], 3);
-    //    PaintNormalTiles(line15Tiles, t, 1, 24);
-    //    CalcTileBits(t, line15Tiles[25], 12);
-
-    //    PATile[] line16Tiles = GetLineTiles(tile.x, tile.y, -12, 3, 26);
-    //    CalcTileBits(t, line16Tiles[0], 1);
-    //    CalcTileBits(t, line16Tiles[1], 11);
-    //    PaintNormalTiles(line16Tiles, t, 2, 22);
-    //    CalcTileBits(t, line16Tiles[24], 13);
-    //    CalcTileBits(t, line16Tiles[25], 8);
-
-    //    PATile[] line17Tiles = GetLineTiles(tile.x, tile.y, -11, 4, 24);
-    //    CalcTileBits(t, line17Tiles[0], 3);
-    //    PaintNormalTiles(line17Tiles, t, 1, 22);
-    //    CalcTileBits(t, line17Tiles[23], 12);
-
-    //    PATile[] line18Tiles = GetLineTiles(tile.x, tile.y, -11, 5, 24);
-    //    CalcTileBits(t, line18Tiles[0], 3);
-    //    PaintNormalTiles(line18Tiles, t, 1, 22);
-    //    CalcTileBits(t, line18Tiles[23], 12);
-
-    //    PATile[] line19Tiles = GetLineTiles(tile.x, tile.y, -11, 6, 24);
-    //    CalcTileBits(t, line19Tiles[0], 1);
-    //    CalcTileBits(t, line19Tiles[1], 11);
-    //    PaintNormalTiles(line19Tiles, t, 2, 20);
-    //    CalcTileBits(t, line19Tiles[22], 13);
-    //    CalcTileBits(t, line19Tiles[23], 8);
-
-    //    PATile[] line20Tiles = GetLineTiles(tile.x, tile.y, -10, 7, 22);
-    //    CalcTileBits(t, line20Tiles[0], 1);
-    //    CalcTileBits(t, line20Tiles[1], 11);
-    //    PaintNormalTiles(line20Tiles, t, 2, 18);
-    //    CalcTileBits(t, line20Tiles[20], 13);
-    //    CalcTileBits(t, line20Tiles[21], 8);
-
-    //    PATile[] line21Tiles = GetLineTiles(tile.x, tile.y, -9, 8, 20);
-    //    CalcTileBits(t, line21Tiles[0], 3);
-    //    PaintNormalTiles(line21Tiles, t, 1, 18);
-    //    CalcTileBits(t, line21Tiles[19], 12);
-
-    //    PATile[] line22Tiles = GetLineTiles(tile.x, tile.y, -9, 9, 20);
-    //    CalcTileBits(t, line22Tiles[0], 1);
-    //    CalcTileBits(t, line22Tiles[1], 11);
-    //    PaintNormalTiles(line22Tiles, t, 2, 16);
-    //    CalcTileBits(t, line22Tiles[18], 13);
-    //    CalcTileBits(t, line22Tiles[19], 8);
-
-    //    PATile[] line23Tiles = GetLineTiles(tile.x, tile.y, -8, 10, 18);
-    //    CalcTileBits(t, line23Tiles[0], 1);
-    //    CalcTileBits(t, line23Tiles[1], 9);
-    //    CalcTileBits(t, line23Tiles[2], 11);
-    //    PaintNormalTiles(line23Tiles, t, 3, 12);
-    //    CalcTileBits(t, line23Tiles[15], 13);
-    //    CalcTileBits(t, line23Tiles[16], 9);
-    //    CalcTileBits(t, line23Tiles[17], 8);
-
-    //    PATile[] line24Tiles = GetLineTiles(tile.x, tile.y, -6, 11, 14);
-    //    CalcTileBits(t, line24Tiles[0], 1);
-    //    CalcTileBits(t, line24Tiles[1], 11);
-    //    PaintNormalTiles(line24Tiles, t, 2, 10);
-    //    CalcTileBits(t, line24Tiles[12], 13);
-    //    CalcTileBits(t, line24Tiles[13], 8);
-
-    //    PATile[] line25Tiles = GetLineTiles(tile.x, tile.y, -5, 12, 12);
-    //    CalcTileBits(t, line25Tiles[0], 1);
-    //    CalcTileBits(t, line25Tiles[1], 9);
-    //    CalcTileBits(t, line25Tiles[2], 9);
-    //    CalcTileBits(t, line25Tiles[3], 11);
-    //    PaintNormalTiles(line25Tiles, t, 4, 4);
-    //    CalcTileBits(t, line25Tiles[8], 13);
-    //    CalcTileBits(t, line25Tiles[9], 9);
-    //    CalcTileBits(t, line25Tiles[10], 9);
-    //    CalcTileBits(t, line25Tiles[11], 8);
-
-    //    PATile[] line26Tiles = GetLineTiles(tile.x, tile.y, -2, 13, 6);
-    //    CalcTileBits(t, line26Tiles[0], 1);
-    //    CalcTileBits(t, line26Tiles[1], 9);
-    //    CalcTileBits(t, line26Tiles[2], 9);
-    //    CalcTileBits(t, line26Tiles[3], 9);
-    //    CalcTileBits(t, line26Tiles[4], 9);
-    //    CalcTileBits(t, line26Tiles[5], 8);
-    //}
-
-    //public void PaintCrystalLevel3_C(PATile tile, int t)
-    //{
-    //    PaintALine(tile, -2, -4, 6, t, new byte[] { 2, 6 ,6});
-    //    PaintALine(tile, -3, -3, 8, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -4, -2, 10, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -4, -1, 10, t, new byte[] { 3 });
-    //    PaintALine(tile, -4, 0, 10, t, new byte[] { 3 });
-    //}
-
-    //public void PaintCrystalLevel3_B(PATile tile, int t)
-    //{
-    //    PaintALine(tile, -1, -11, 4, t, new byte[] { 2, 6 });
-    //    PaintALine(tile, -2, -10, 6, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -4, -9, 10, t, new byte[] { 2, 6, 7 });
-    //    PaintALine(tile, -6, -8, 14, t, new byte[] { 2, 6, 7 });
-    //    PaintALine(tile, -7, -7, 16, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -7, -6, 16, t, new byte[] { 3 });
-    //    PaintALine(tile, -8, -5, 18, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -9, -4, 20, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -9, -3, 20, t, new byte[] { 3 });
-    //    PaintALine(tile, -10, -2, 22, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -11, -1, 24, t, new byte[] { 2, 7 });
-    //    PaintALine(tile, -11, 0, 24, t, new byte[] { 3 });
-
-    //    PATile specifiedTile = GetATile(tile,-1,-5);
-    //    PaintNormalTile(specifiedTile,t,58,UVRotateType._270);
-
-    //    specifiedTile = GetATile(tile, 2, -5);
-    //    PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 3, -5);
-    //    PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 4, -5);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -5, -3);
-    //    PaintNormalTile(specifiedTile, t, 62, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, -4, -3);
-    //    PaintNormalTile(specifiedTile, t, 63, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, -5, -4);
-    //    PaintNormalTile(specifiedTile, t, 78, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, -4, -4);
-    //    PaintNormalTile(specifiedTile, t, 79, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, -3, -4);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 6, -1);
-    //    PaintNormalTile(specifiedTile, t, 58, UVRotateType.None);
-
-    //    specifiedTile = GetATile(tile, 6, 3);
-    //    PaintNormalTile(specifiedTile, t, 63, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, 7, 3);
-    //    PaintNormalTile(specifiedTile, t, 79, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, 6, 2);
-    //    PaintNormalTile(specifiedTile, t, 62, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, 7, 2);
-    //    PaintNormalTile(specifiedTile, t, 78, UVRotateType.None);
-
-    //    specifiedTile = GetATile(tile, -4, 6);
-    //    PaintNormalTile(specifiedTile, t, 63, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, -3, 6);
-    //    PaintNormalTile(specifiedTile, t, 79, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, -4, 5);
-    //    PaintNormalTile(specifiedTile, t, 62, UVRotateType.None);
-    //    specifiedTile = GetATile(tile, -3, 5);
-    //    PaintNormalTile(specifiedTile, t, 78, UVRotateType.None);
-
-    //    specifiedTile = GetATile(tile, -1, 6);
-    //    PaintNormalTile(specifiedTile, t, 57, UVRotateType._90);
-
-    //    specifiedTile = GetATile(tile, 2, 6);
-    //    PaintNormalTile(specifiedTile, t, 55, UVRotateType._90);
-    //    specifiedTile = GetATile(tile, 3, 6);
-    //    PaintNormalTile(specifiedTile, t, 56, UVRotateType._90);
-    //}
-
-    //public void PaintTileElementLevel1(PATile tile,TileElementType elementType,bool isReset = false)
-    //{
-    //    PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -1, -4, 4);
-    //    SetTilesElement(line1Tiles,0,4,elementType,1,isReset);
-        
-    //    PATile[] line2Tiles = GetLineTiles(tile.x, tile.y, -2, -3, 6);
-    //    SetTilesElement(line2Tiles, 0,6,elementType, 1,isReset);
-        
-    //    PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -3, -2, 8);
-    //    SetTilesElement(line3Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line3Tiles, 2, 4, elementType, 2, isReset);
-    //    SetTilesElement(line3Tiles, 6, 2, elementType, 1, isReset);
-        
-    //    PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -4, -1, 10);
-    //    SetTilesElement(line4Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line4Tiles, 2, 6, elementType, 2, isReset);
-    //    SetTilesElement(line4Tiles, 8, 2, elementType, 1, isReset);
-       
-    //    PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -4, 0, 10);
-    //    SetTilesElement(line5Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line5Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line5Tiles, 6, 2, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 8, 2, elementType, 1, isReset);
-        
-    //    PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -4, 1, 10);
-    //    SetTilesElement(line6Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line6Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line6Tiles, 6, 2, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 8, 2, elementType, 1, isReset);
-
-    //    PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -4, 2, 10);
-    //    SetTilesElement(line7Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line7Tiles, 2, 6, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 8, 2, elementType, 1, isReset);
-
-    //    PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -3, 3, 8);
-    //    SetTilesElement(line8Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line8Tiles, 2, 4, elementType, 2, isReset);
-    //    SetTilesElement(line8Tiles, 6, 2, elementType, 1, isReset);
-
-    //    PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -2, 4, 6);
-    //    SetTilesElement(line9Tiles, 0, 6, elementType, 1, isReset);
-
-    //    PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -1, 5, 4);
-    //    SetTilesElement(line10Tiles, 0, 4, elementType, 1, isReset);
-    //}
-
-    //public void PaintTileElementLevel2(PATile tile, TileElementType elementType, bool isReset = false)
-    //{
-    //    PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -2, -8, 6);
-    //    SetTilesElement(line1Tiles, 0, 6, elementType, 1, isReset);
-
-    //    PATile[] line2Tiles = GetLineTiles(tile.x, tile.y, -4, -7, 10);
-    //    SetTilesElement(line2Tiles, 0, 10, elementType, 1, isReset);
-
-    //    PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -5, -6, 12);
-    //    SetTilesElement(line3Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line3Tiles, 3, 6, elementType, 2, isReset);
-    //    SetTilesElement(line3Tiles, 9, 3, elementType, 1, isReset);
-
-    //    PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -6, -5, 14);
-    //    SetTilesElement(line4Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line4Tiles, 3, 8, elementType, 2, isReset);
-    //    SetTilesElement(line4Tiles, 11, 3, elementType, 1, isReset);
-
-    //    PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -7, -4, 16);
-    //    SetTilesElement(line5Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line5Tiles, 3, 3, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 6, 4, elementType, 3, isReset);
-    //    SetTilesElement(line5Tiles, 10, 3, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 13, 3, elementType, 1, isReset);
-
-    //    PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -7, -3, 16);
-    //    SetTilesElement(line6Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line6Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 5, 6, elementType, 3, isReset);
-    //    SetTilesElement(line6Tiles, 11, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 14, 2, elementType, 1, isReset);
-
-    //    PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -8, -2, 18);
-    //    SetTilesElement(line7Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line7Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 5, 2, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 7, 4, elementType, 4, isReset);
-    //    SetTilesElement(line7Tiles, 11, 2, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 13, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -8, -1, 18);
-    //    SetTilesElement(line8Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line8Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line8Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line8Tiles, 6, 6, elementType, 4, isReset);
-    //    SetTilesElement(line8Tiles, 12, 2, elementType, 3, isReset);
-    //    SetTilesElement(line8Tiles, 14, 2, elementType, 2, isReset);
-    //    SetTilesElement(line8Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -8, 0, 18);
-    //    SetTilesElement(line9Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line9Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line9Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line9Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElement(line9Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElement(line9Tiles, 10, 2, elementType, 4, isReset);
-    //    SetTilesElement(line9Tiles, 12, 2, elementType, 3, isReset);
-    //    SetTilesElement(line9Tiles, 14, 2, elementType, 2, isReset);
-    //    SetTilesElement(line9Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -8, 1, 18);
-    //    SetTilesElement(line10Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line10Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line10Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line10Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElement(line10Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElement(line10Tiles, 10, 2, elementType, 4, isReset);
-    //    SetTilesElement(line10Tiles, 12, 2, elementType, 3, isReset);
-    //    SetTilesElement(line10Tiles, 14, 2, elementType, 2, isReset);
-    //    SetTilesElement(line10Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line11Tiles = GetLineTiles(tile.x, tile.y, -8, 2, 18);
-    //    SetTilesElement(line11Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line11Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElement(line11Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElement(line11Tiles, 6, 6, elementType, 4, isReset);
-    //    SetTilesElement(line11Tiles, 12, 2, elementType, 3, isReset);
-    //    SetTilesElement(line11Tiles, 14, 2, elementType, 2, isReset);
-    //    SetTilesElement(line11Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line12Tiles = GetLineTiles(tile.x, tile.y, -8, 3, 18);
-    //    SetTilesElement(line12Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line12Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line12Tiles, 5, 2, elementType, 3, isReset);
-    //    SetTilesElement(line12Tiles, 7, 4, elementType, 4, isReset);
-    //    SetTilesElement(line12Tiles, 11, 2, elementType, 3, isReset);
-    //    SetTilesElement(line12Tiles, 13, 3, elementType, 2, isReset);
-    //    SetTilesElement(line12Tiles, 16, 2, elementType, 1, isReset);
-
-    //    PATile[] line13Tiles = GetLineTiles(tile.x, tile.y, -7, 4, 16);
-    //    SetTilesElement(line13Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line13Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line13Tiles, 5, 6, elementType, 3, isReset);
-    //    SetTilesElement(line13Tiles, 11, 3, elementType, 2, isReset);
-    //    SetTilesElement(line13Tiles, 14, 2, elementType, 1, isReset);
-
-    //    PATile[] line14Tiles = GetLineTiles(tile.x, tile.y, -7, 5, 16);
-    //    SetTilesElement(line14Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line14Tiles, 3, 3, elementType, 2, isReset);
-    //    SetTilesElement(line14Tiles, 6, 4, elementType, 3, isReset);
-    //    SetTilesElement(line14Tiles, 10, 3, elementType, 2, isReset);
-    //    SetTilesElement(line14Tiles, 13, 3, elementType, 1, isReset);
-
-    //    PATile[] line15Tiles = GetLineTiles(tile.x, tile.y, -6, 6, 14);
-    //    SetTilesElement(line15Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line15Tiles, 3, 8, elementType, 2, isReset);
-    //    SetTilesElement(line15Tiles, 11, 3, elementType, 1, isReset);
-
-    //    PATile[] line16Tiles = GetLineTiles(tile.x, tile.y, -5, 7, 12);
-    //    SetTilesElement(line16Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line16Tiles, 3, 6, elementType, 2, isReset);
-    //    SetTilesElement(line16Tiles, 9, 3, elementType, 1, isReset);
-
-    //    PATile[] line17Tiles = GetLineTiles(tile.x, tile.y, -4, 8, 10);
-    //    SetTilesElement(line17Tiles, 0, 10, elementType, 1, isReset);
-        
-    //    PATile[] line18Tiles = GetLineTiles(tile.x, tile.y, -2, 9, 6);
-    //    SetTilesElement(line18Tiles, 0, 6, elementType, 1, isReset);
-    //}
-
-    //public void PaintTileElementLevel3(PATile tile, TileElementType elementType, bool isReset = false)
-    //{
-    //    PATile[] line1Tiles = GetLineTiles(tile.x, tile.y, -2, -12, 6);
-    //    SetTilesElement(line1Tiles, 0, 6, elementType, 1, isReset);
-
-    //    line1Tiles = GetLineTiles(tile.x, tile.y, -2, 13, 6);
-    //    SetTilesElement(line1Tiles, 0, 6, elementType, 1, isReset);
-
-    //    PATile[] line2Tiles = GetLineTiles(tile.x, tile.y, -5, -11, 12);
-    //    SetTilesElement(line2Tiles, 0, 12, elementType, 1, isReset);
-
-    //    line2Tiles = GetLineTiles(tile.x, tile.y, -5, 12, 12);
-    //    SetTilesElement(line2Tiles, 0, 12, elementType, 1, isReset);
-
-    //    PATile[] line3Tiles = GetLineTiles(tile.x, tile.y, -6, -10, 14);
-    //    SetTilesElement(line3Tiles, 0, 4, elementType, 1, isReset);
-    //    SetTilesElement(line3Tiles, 4, 6, elementType, 2, isReset);
-    //    SetTilesElement(line3Tiles, 10, 4, elementType, 1, isReset);
-
-    //    line3Tiles = GetLineTiles(tile.x, tile.y, -6, 11, 14);
-    //    SetTilesElement(line3Tiles, 0, 4, elementType, 1, isReset);
-    //    SetTilesElement(line3Tiles, 4, 6, elementType, 2, isReset);
-    //    SetTilesElement(line3Tiles, 10, 4, elementType, 1, isReset);
-
-    //    PATile[] line4Tiles = GetLineTiles(tile.x, tile.y, -8, -9, 18);
-    //    SetTilesElement(line4Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line4Tiles, 3, 12, elementType, 2, isReset);
-    //    SetTilesElement(line4Tiles, 15, 3, elementType, 1, isReset);
-
-    //    line4Tiles = GetLineTiles(tile.x, tile.y, -8, 10, 18);
-    //    SetTilesElement(line4Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line4Tiles, 3, 12, elementType, 2, isReset);
-    //    SetTilesElement(line4Tiles, 15, 3, elementType, 1, isReset);
-
-    //    PATile[] line5Tiles = GetLineTiles(tile.x, tile.y, -9, -8, 20);
-    //    SetTilesElement(line5Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line5Tiles, 3, 4, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 7, 6, elementType, 3, isReset);
-    //    SetTilesElement(line5Tiles, 13, 4, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 17, 3, elementType, 1, isReset);
-
-    //    line5Tiles = GetLineTiles(tile.x, tile.y, -9, 9, 20);
-    //    SetTilesElement(line5Tiles, 0, 3, elementType, 1, isReset);
-    //    SetTilesElement(line5Tiles, 3, 4, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 7, 6, elementType, 3, isReset);
-    //    SetTilesElement(line5Tiles, 13, 4, elementType, 2, isReset);
-    //    SetTilesElement(line5Tiles, 17, 3, elementType, 1, isReset);
-
-    //    PATile[] line6Tiles = GetLineTiles(tile.x, tile.y, -9, -7, 20);
-    //    SetTilesElement(line6Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line6Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 5, 10, elementType, 3, isReset);
-    //    SetTilesElement(line6Tiles, 15, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 18, 2, elementType, 1, isReset);
-
-    //    line6Tiles = GetLineTiles(tile.x, tile.y, -9, 8, 20);
-    //    SetTilesElement(line6Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line6Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 5, 10, elementType, 3, isReset);
-    //    SetTilesElement(line6Tiles, 15, 3, elementType, 2, isReset);
-    //    SetTilesElement(line6Tiles, 18, 2, elementType, 1, isReset);
-
-    //    PATile[] line7Tiles = GetLineTiles(tile.x, tile.y, -10, -6, 22);
-    //    SetTilesElement(line7Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line7Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 5, 3, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 8, 6, elementType, 4, isReset);
-    //    SetTilesElement(line7Tiles, 14, 3, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 17, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 20, 2, elementType, 1, isReset);
-
-    //    line7Tiles = GetLineTiles(tile.x, tile.y, -10, 7, 22);
-    //    SetTilesElement(line7Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElement(line7Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 5, 3, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 8, 6, elementType, 4, isReset);
-    //    SetTilesElement(line7Tiles, 14, 3, elementType, 3, isReset);
-    //    SetTilesElement(line7Tiles, 17, 3, elementType, 2, isReset);
-    //    SetTilesElement(line7Tiles, 20, 2, elementType, 1, isReset);
-
-    //    PATile[] line8Tiles = GetLineTiles(tile.x, tile.y, -11, -5, 24);
-    //    SetTilesElementSym(line8Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line8Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElementSym(line8Tiles, 5, 3, elementType, 3, isReset);
-    //    SetTilesElementSym(line8Tiles, 8, 4, elementType, 4, isReset);
-
-    //    GetLineTiles(tile.x, tile.y, -11, 6, 24);
-    //    SetTilesElementSym(line8Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line8Tiles, 2, 3, elementType, 2, isReset);
-    //    SetTilesElementSym(line8Tiles, 5, 3, elementType, 3, isReset);
-    //    SetTilesElementSym(line8Tiles, 8, 4, elementType, 4, isReset);
-
-    //    PATile[] line9Tiles = GetLineTiles(tile.x, tile.y, -11, -4, 24);
-    //    SetTilesElementSym(line9Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line9Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line9Tiles, 4, 3, elementType, 3, isReset);
-    //    SetTilesElementSym(line9Tiles, 7, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line9Tiles, 10, 2, elementType, 5, isReset);
-
-    //    line9Tiles = GetLineTiles(tile.x, tile.y, -11, 5, 24);
-    //    SetTilesElementSym(line9Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line9Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line9Tiles, 4, 3, elementType, 3, isReset);
-    //    SetTilesElementSym(line9Tiles, 7, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line9Tiles, 10, 2, elementType, 5, isReset);
-
-    //    PATile[] line10Tiles = GetLineTiles(tile.x, tile.y, -11, -3, 24);
-    //    SetTilesElementSym(line10Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line10Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line10Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line10Tiles, 6, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line10Tiles, 9, 3, elementType, 5, isReset);
-
-    //    line10Tiles = GetLineTiles(tile.x, tile.y, -11, 4, 24);
-    //    SetTilesElementSym(line10Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line10Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line10Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line10Tiles, 6, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line10Tiles, 9, 3, elementType, 5, isReset);
-
-    //    PATile[] line11Tiles = GetLineTiles(tile.x, tile.y, -12, -2, 26);
-    //    SetTilesElementSym(line11Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line11Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line11Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line11Tiles, 6, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line11Tiles, 9, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line11Tiles, 11, 2, elementType, 6, isReset);
-
-    //    line11Tiles = GetLineTiles(tile.x, tile.y, -12, 3, 26);
-    //    SetTilesElementSym(line11Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line11Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line11Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line11Tiles, 6, 3, elementType, 4, isReset);
-    //    SetTilesElementSym(line11Tiles, 9, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line11Tiles, 11, 2, elementType, 6, isReset);
-
-    //    PATile[] line12Tiles = GetLineTiles(tile.x, tile.y, -12, -1, 26);
-    //    SetTilesElementSym(line12Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line12Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line12Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line12Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElementSym(line12Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line12Tiles, 10, 3, elementType, 6, isReset);
-
-    //    line12Tiles = GetLineTiles(tile.x, tile.y, -12, 2, 26);
-    //    SetTilesElementSym(line12Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line12Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line12Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line12Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElementSym(line12Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line12Tiles, 10, 3, elementType, 6, isReset);
-
-    //    PATile[] line13Tiles = GetLineTiles(tile.x, tile.y, -12, 0, 26);
-    //    SetTilesElementSym(line13Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line13Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line13Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line13Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElementSym(line13Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line13Tiles, 10, 2, elementType, 6, isReset);
-    //    SetTilesElementSym(line13Tiles, 12, 1, elementType, 7, isReset);
-
-    //    line13Tiles = GetLineTiles(tile.x, tile.y, -12, 1, 26);
-    //    SetTilesElementSym(line13Tiles, 0, 2, elementType, 1, isReset);
-    //    SetTilesElementSym(line13Tiles, 2, 2, elementType, 2, isReset);
-    //    SetTilesElementSym(line13Tiles, 4, 2, elementType, 3, isReset);
-    //    SetTilesElementSym(line13Tiles, 6, 2, elementType, 4, isReset);
-    //    SetTilesElementSym(line13Tiles, 8, 2, elementType, 5, isReset);
-    //    SetTilesElementSym(line13Tiles, 10, 2, elementType, 6, isReset);
-    //    SetTilesElementSym(line13Tiles, 12, 1, elementType, 7, isReset);
-    //}
 }

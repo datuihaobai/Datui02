@@ -129,9 +129,26 @@ public partial class PATileTerrain
                 element.ResetValue();
         }
 
+        public bool Equals(PATileElement other)
+        {
+            if (other.FireValue == FireValue && other.WoodValue == WoodValue)
+                return true;
+            return false;
+        }
+
         public bool IsMultiElement()
         {
             return FireValue > 0 && WoodValue > 0;
+        }
+
+        public bool IsEqualElement()
+        {
+            return FireValue == WoodValue;
+        }
+
+        public bool IsMultiAndEqualElement()
+        {
+            return IsMultiElement() && IsEqualElement();
         }
 
         bool IsBaseElement()
@@ -198,11 +215,14 @@ public partial class PATileTerrain
         Corner = 1,//角1:3
         BigCorner = 2,//大角3:1
         Edge = 3,//边
+
+        //Mix = 4,//融合
     }
 
     // 四分之一tile的贴图属性枚举
     public enum QtrTileElementType
     {
+        None = -1,//未知
         Base = 0,// 底色
         Fire = 1,// 火
         Wood = 2,// 木
@@ -261,6 +281,19 @@ public partial class PATileTerrain
             qtrTiles[3] = rb;
         }
 
+        // 四个qtrtile属性相同
+        public bool IsElementFull()
+        {
+            if (qtrTiles[0] == qtrTiles[1] && qtrTiles[0] == qtrTiles[2] && qtrTiles[0] == qtrTiles[3])
+                return true;
+            return false;
+        }
+
+        public void SetQtrTiles(QtrTileElementType theSameType)
+        {
+            SetQtrTiles(theSameType, theSameType, theSameType, theSameType);
+        }
+
         public void Reset()
         {
             ResetQtrTiles();
@@ -285,7 +318,7 @@ public partial class PATileTerrain
         {
             for (int i = 0; i < qtrTiles.Length; i++)
             {
-                if (qtrTiles[i] == QtrTileElementType.Base)
+                if (qtrTiles[i] == QtrTileElementType.None)
                     return false;
             }
             return true;

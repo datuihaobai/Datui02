@@ -711,6 +711,10 @@ public class PATileTerrainEditor : Editor
                         GUILayout.Label(selectedTile.element.GetElementValue(PATileTerrain.TileElementType.Wood).ToString() + " (read only)");
                         GUILayout.EndHorizontal();
                         GUILayout.BeginHorizontal();
+                        GUILayout.Label("TileSetType : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.tileSetType.ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
                         GUILayout.Label("QtrTile_LB : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
                         GUILayout.Label(selectedTile.qtrTiles[0].ToString() + " (read only)");
                         GUILayout.EndHorizontal();

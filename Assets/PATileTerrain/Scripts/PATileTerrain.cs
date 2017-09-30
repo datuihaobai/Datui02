@@ -865,7 +865,6 @@ public partial class PATileTerrain: MonoBehaviour
 
         _90_Mirror_TB = 6,
         _270_Mirror_TB = 7,
-        _180_Mirror_LR  = 8,
     }
 
     protected void UpdateTileUV(PATile tile)
@@ -893,7 +892,7 @@ public partial class PATileTerrain: MonoBehaviour
 			PATSTransition transition = FindTransition(tile.type, tile.toType, out transitionId);	
 			if (transition == null)
 			{
-				Debug.LogError("For the tile set is not known transition!");
+				Debug.LogError("For the tile set is not known transition! tile.x = " + tile.x + " tile.y = " +tile.y);
 				PATSType type = settings.tsTypes[tile.type];
 				//index = type.baseIndexes[0];
                 index = type.GetRandomBaseIndex();
@@ -987,13 +986,6 @@ public partial class PATileTerrain: MonoBehaviour
             uvs[i * 4 + 1] = uv.p1;
             uvs[i * 4 + 2] = uv.p0;
             uvs[i * 4 + 3] = uv.p3;
-        }
-        else if (rotateType == UVRotateType._180_Mirror_LR)
-        {
-            uvs[i * 4 + 0] = uv.p1;
-            uvs[i * 4 + 1] = uv.p0;
-            uvs[i * 4 + 2] = uv.p3;
-            uvs[i * 4 + 3] = uv.p2;
         }
 		
 		mesh.uv = uvs;
