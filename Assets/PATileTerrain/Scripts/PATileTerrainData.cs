@@ -96,6 +96,16 @@ public partial class PATileTerrain
         }
     }
 
+    // 贴花适用的地表属性类型
+    public enum DecalSuitTileType
+    {
+        None = -1,//未知
+        Base = 0,// 底色
+        Fire = 1,// 火
+        Wood = 2,// 木
+        Sand = 3,// 火木融合
+    }
+
     [System.Serializable]
     public class PATileElement
     {
@@ -202,9 +212,28 @@ public partial class PATileTerrain
             return GetBrushFromConfig(maxElementType, elementsDic[maxElementType].GetIntValue());
         }
 
-        public int GetElementPaintBrushType(TileElementType elementType)
+        public int GetSingleElementPaintBrushType(TileElementType elementType)
         {
             return GetBrushFromConfig(elementType, elementsDic[elementType].GetIntValue());
+        }
+
+        public DecalSuitTileType GetDecalSuitTileType()
+        {
+            if (FireValue > 0 && WoodValue > 0)
+                return DecalSuitTileType.Sand;
+            else if (FireValue > 0 && WoodValue == 0)
+                return DecalSuitTileType.Fire;
+            else if(WoodValue > 0 && FireValue == 0)
+                return DecalSuitTileType.Wood;
+
+            return DecalSuitTileType.None;
+        }
+
+        public static bool IsMultiElemenTile(PATile tile)
+        {
+            if (tile != null && tile.element.IsMultiElement())
+                return true;
+            return false;
         }
     }
 
@@ -227,6 +256,12 @@ public partial class PATileTerrain
         Fire = 1,// 火
         Wood = 2,// 木
         Sand = 3,// 火木融合
+    
+        Fire2 = 11,// 2级（深色）火
+        Fire3 = 12,// 3级（红色）火
+
+        Wood2 = 21,// 2级木
+        Wood3 = 22,// 3级木
     }
 
 	[System.Serializable]
@@ -331,6 +366,208 @@ public partial class PATileTerrain
             this.bits = bits;
             this.specifiedIndex = specifiedIndex;
             this.rotateType = rotateType;
+        }
+
+        // 存在几种元素的融合
+        public int QtrTileTypeCount()
+        {
+            int count =0;
+            if (HasQtrTileType(QtrTileElementType.Wood))
+                count++;
+            if (HasQtrTileType(QtrTileElementType.Fire))
+                count++;
+            if (HasQtrTileType(QtrTileElementType.Base))
+                count++;
+            if (HasQtrTileType(QtrTileElementType.Sand))
+                count++;
+            return count;
+        }
+
+        bool HasQtrTileType(QtrTileElementType theQtr)
+        {
+            foreach(var qtrTile in qtrTiles)
+            {
+                if (qtrTile == theQtr)
+                    return true;
+            }
+
+            return false;
+        }
+
+        // 根据qtrtile推算bits
+        byte GetBits(QtrTileElementType theQtr)
+        {
+            byte bits = 0;
+            if (qtrTiles[0] == theQtr)
+                bits += 8;
+            if (qtrTiles[1] == theQtr)
+                bits += 4;
+            if (qtrTiles[2] == theQtr)
+                bits += 2;
+            if (qtrTiles[3] == theQtr)
+                bits += 1;
+            return bits;
+        }
+
+        //根据qtrtile（四分之一格子）计算绘制tile需要的属性。type，totype和bits ,
+        //只适用于2种元素融合的情况，三种以上需要查表
+        public void SetTilePropByQtrTile()
+        {
+            if(HasQtrTileType(QtrTileElementType.Fire2))
+            {
+                // fire2和fire融合
+                if(HasQtrTileType(QtrTileElementType.Fire))
+                {
+                    type = FireLevel2Brush;
+                    toType = FireLevel1Brush;
+                    bits = GetBits(QtrTileElementType.Fire2);
+                }
+                // 纯fire2
+                else
+                {
+                    type = FireLevel2Brush;
+                    toType = FireLevel2Brush;
+                    bits = 0;
+                }
+            }
+            else if (HasQtrTileType(QtrTileElementType.Wood2))
+            {
+                // wood2和wood融合
+                if (HasQtrTileType(QtrTileElementType.Wood))
+                {
+                    type = WoodLevel2Brush;
+                    toType = WoodLevel1Brush;
+                    bits = GetBits(QtrTileElementType.Wood2);
+                }
+                // 纯wood2
+                else
+                {
+                    type = WoodLevel2Brush;
+                    toType = WoodLevel2Brush;
+                    bits = 0;
+                }
+            }
+            else if (HasQtrTileType(QtrTileElementType.Wood))
+            {
+                // wood和fire融合
+                if (HasQtrTileType(QtrTileElementType.Fire))
+                {
+                    type = WoodLevel1Brush;
+                    toType = FireLevel1Brush;
+                    bits = GetBits(QtrTileElementType.Wood);
+                }
+                // wood和base融合
+                else if (HasQtrTileType(QtrTileElementType.Base))
+                {
+                    type = WoodLevel1Brush;
+                    toType = BaseBrush;
+                    bits = GetBits(QtrTileElementType.Wood);
+                }
+                else if (HasQtrTileType(QtrTileElementType.Sand))
+                {
+                    type = WoodLevel1Brush;
+                    toType = SandBrush;
+                    bits = GetBits(QtrTileElementType.Wood);
+                }
+                // 纯wood
+                else
+                {
+                    type = WoodLevel1Brush;
+                    toType = WoodLevel1Brush;
+                    bits = 0;
+                }
+            }
+            else if (HasQtrTileType(QtrTileElementType.Fire))
+            {
+                // fire和base融合
+                if (HasQtrTileType(QtrTileElementType.Base))
+                {
+                    type = FireLevel1Brush;
+                    toType = BaseBrush;
+                    bits = GetBits(QtrTileElementType.Fire);
+                }
+                else if (HasQtrTileType(QtrTileElementType.Sand))
+                {
+                    type = FireLevel1Brush;
+                    toType = SandBrush;
+                    bits = GetBits(QtrTileElementType.Fire);
+                }
+                // 纯fire
+                else
+                {
+                    type = FireLevel1Brush;
+                    toType = FireLevel1Brush;
+                    bits = 0;
+                }
+            }
+        }
+
+        public int GetSingleElementPaintBrushType(TileElementType elementType)
+        {
+            if (element.IsSingleElement())
+                return element.GetSingleElementPaintBrushType(elementType);
+            else if (element.IsMultiElement())
+            {
+                if (elementType == TileElementType.Fire)
+                    return FireLevel1Brush;
+                else if (elementType == TileElementType.Wood)
+                    return WoodLevel1Brush;
+            }
+            return -1;
+        }
+
+        //是否处于完美融合状态
+        public bool IsMixPerfect(PATileTerrain tileTerrain)
+        {
+            PATile[] nTiles = tileTerrain.GetNeighboringTilesNxN(this, 1);
+
+            PATile leftBottomTile = nTiles[0];
+            PATile leftTile = nTiles[1];
+            PATile leftTopTile = nTiles[2];
+            PATile topTile = nTiles[3];
+            PATile rightTopTile = nTiles[4];
+            PATile rightTile = nTiles[5];
+            PATile rightBottomTile = nTiles[6];
+            PATile bottomTile = nTiles[7];
+            bool isPerfect = true;
+
+            QtrTileElementType qte0 = bottomTile.qtrTiles[1];
+            QtrTileElementType qte1 = leftBottomTile.qtrTiles[2];
+            QtrTileElementType qte2 = leftTile.qtrTiles[3];
+            QtrTileElementType qte = qtrTiles[0];
+            if (qte == qte0 && qte == qte1 && qte == qte2)
+            { }
+            else
+                isPerfect = false;
+
+            qte0 = leftTile.qtrTiles[2];
+            qte1 = leftTopTile.qtrTiles[3];
+            qte2 = topTile.qtrTiles[0];
+            qte = qtrTiles[1];
+            if (qte == qte0 && qte == qte1 && qte == qte2)
+            { }
+            else
+                isPerfect = false;
+
+            qte0 = topTile.qtrTiles[3];
+            qte1 = rightTopTile.qtrTiles[0];
+            qte2 = rightTile.qtrTiles[1];
+            qte = qtrTiles[2];
+            if (qte == qte0 && qte == qte1 && qte == qte2)
+            { }
+            else
+                isPerfect = false;
+
+            qte0 = rightTile.qtrTiles[0];
+            qte1 = rightBottomTile.qtrTiles[1];
+            qte2 = bottomTile.qtrTiles[2];
+            qte = qtrTiles[3];
+            if (qte == qte0 && qte == qte1 && qte == qte2)
+            { }
+            else
+                isPerfect = false;
+
+            return isPerfect;
         }
     }
 	

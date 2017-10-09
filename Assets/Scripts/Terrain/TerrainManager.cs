@@ -53,7 +53,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         ConfigDataBase.instance.StartLoad();
         if (!ConfigDataBase.instance.loadFinish)
             yield return null;
-        tileTerrain.GenerateTilePaintSamples();
+        //tileTerrain.GenerateTilePaintSamples();
         tileTerrain.LoadTerrain();
         isStarted = true;
     }
@@ -442,12 +442,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.PaintTiles(ref collectTiles);
 
         //设置贴花
-        foreach (var crystal in tileTerrain.settings.crystals)
-        {
-            RandomManager.instance.SetSeed(crystal.randomSeed);
-            foreach (var tile in crystal.shuijing.affectTiles)
-                tileTerrain.PaintATileDecal(tile); 
-        }
+        //foreach (var crystal in tileTerrain.settings.crystals)
+        //{
+        //    RandomManager.instance.SetSeed(crystal.randomSeed);
+        //    foreach (var tile in crystal.shuijing.affectTiles)
+        //        tileTerrain.PaintATileDecal(tile); 
+        //}
     }
 
     public string GetUpgradeTips()
