@@ -500,6 +500,13 @@ public partial class PATileTerrain
                     bits = 0;
                 }
             }
+            //纯sand
+            else if (HasQtrTileType(QtrTileElementType.Sand))
+            {
+                type = SandBrush;
+                toType = SandBrush;
+                bits = 0;
+            }
         }
 
         public int GetSingleElementPaintBrushType(TileElementType elementType)
@@ -514,6 +521,14 @@ public partial class PATileTerrain
                     return WoodLevel1Brush;
             }
             return -1;
+        }
+
+        public static QtrTileElementType GetQtrTileElementType(PATile tile, int qtrIndex)
+        {
+            if (tile == null)
+                return QtrTileElementType.None;
+            else
+                return tile.qtrTiles[qtrIndex];
         }
 
         //将没有完美融合的qtrtile设置成none
@@ -531,9 +546,9 @@ public partial class PATileTerrain
             PATile bottomTile = nTiles[7];
             bool isPerfect = true;
 
-            QtrTileElementType qte0 = bottomTile.qtrTiles[1];
-            QtrTileElementType qte1 = leftBottomTile.qtrTiles[2];
-            QtrTileElementType qte2 = leftTile.qtrTiles[3];
+            QtrTileElementType qte0 = GetQtrTileElementType(bottomTile, 1);
+            QtrTileElementType qte1 = GetQtrTileElementType(leftBottomTile, 2);
+            QtrTileElementType qte2 = GetQtrTileElementType(leftTile, 3);
             QtrTileElementType qte = qtrTiles[0];
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
@@ -544,9 +559,9 @@ public partial class PATileTerrain
             }
                
 
-            qte0 = leftTile.qtrTiles[2];
-            qte1 = leftTopTile.qtrTiles[3];
-            qte2 = topTile.qtrTiles[0];
+            qte0 = GetQtrTileElementType(leftTile, 2);
+            qte1 = GetQtrTileElementType(leftTopTile, 3);
+            qte2 = GetQtrTileElementType(topTile, 0);
             qte = qtrTiles[1];
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
@@ -556,9 +571,9 @@ public partial class PATileTerrain
                 qtrTiles[1] = QtrTileElementType.None;
             }
 
-            qte0 = topTile.qtrTiles[3];
-            qte1 = rightTopTile.qtrTiles[0];
-            qte2 = rightTile.qtrTiles[1];
+            qte0 = GetQtrTileElementType(topTile, 3);
+            qte1 = GetQtrTileElementType(rightTopTile, 0);
+            qte2 = GetQtrTileElementType(rightTile, 1);
             qte = qtrTiles[2];
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
@@ -568,9 +583,9 @@ public partial class PATileTerrain
                 qtrTiles[2] = QtrTileElementType.None;
             }
 
-            qte0 = rightTile.qtrTiles[0];
-            qte1 = rightBottomTile.qtrTiles[1];
-            qte2 = bottomTile.qtrTiles[2];
+            qte0 = GetQtrTileElementType(rightTile, 0);
+            qte1 = GetQtrTileElementType(rightBottomTile, 1);
+            qte2 = GetQtrTileElementType(bottomTile, 2);
             qte = qtrTiles[3];
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
