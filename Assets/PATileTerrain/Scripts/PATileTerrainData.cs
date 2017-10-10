@@ -500,12 +500,22 @@ public partial class PATileTerrain
                     bits = 0;
                 }
             }
-            //纯sand
             else if (HasQtrTileType(QtrTileElementType.Sand))
             {
-                type = SandBrush;
-                toType = SandBrush;
-                bits = 0;
+                // sand和base融合
+                if (HasQtrTileType(QtrTileElementType.Base))
+                {
+                    type = SandBrush;
+                    toType = BaseBrush;
+                    bits = GetBits(QtrTileElementType.Sand);
+                }
+                //纯sand
+                else
+                {
+                    type = SandBrush;
+                    toType = SandBrush;
+                    bits = 0;
+                }
             }
         }
 
