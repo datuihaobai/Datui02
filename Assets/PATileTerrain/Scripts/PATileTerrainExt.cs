@@ -164,6 +164,8 @@ public partial class PATileTerrain
 
     TileElementState GetTileElementState(PATile tile)
     {
+        if (tile == null)
+            return TileElementState.None;
         TileElementState state = TileElementState.None;
         //if (tile.element.FireValue == tile.element.WoodValue && tile.element.FireValue == 0)
         //    state = TileElementState.Zero;
@@ -187,6 +189,8 @@ public partial class PATileTerrain
         //int index = 0;
         foreach (var tile in nTiles)
         {
+            if (tile == null)
+                continue;
             if (tile.element.IsSingleElement())
             {
                 //if (index++ % 2 == 0)
@@ -314,22 +318,18 @@ public partial class PATileTerrain
         else if (qtrTileElementType == QtrTileElementType.Wood)
             t = WoodLevel1Brush;
 
-        TileElementState leftElementState = GetTileElementState(leftTile);
-        TileElementState rightElementState = GetTileElementState(rightTile);
-        TileElementState topElementState = GetTileElementState(topTile);
-        TileElementState bottomElementState = GetTileElementState(bottomTile);
         TileElementState leftTopElementState = GetTileElementState(leftTopTile);
         TileElementState leftBottomElementState = GetTileElementState(leftBottomTile);
         TileElementState rightTopElementState = GetTileElementState(rightTopTile);
         TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
 
-        if (leftTopTile.element.IsSingleElement() &&
-            leftTile.element.IsSingleElement() &&
-            topTile.element.IsSingleElement() &&
-            rightBottomTile.element.IsMultiElement() &&
-            leftTopTile.tileSetType == TileSetType.Full &&
-            leftTile.tileSetType == TileSetType.Full &&
-            topTile.tileSetType == TileSetType.Full)
+        if (PATile.IsSingleElement(leftTopTile) &&
+            PATile.IsSingleElement(leftTile) &&
+            PATile.IsSingleElement(topTile) &&
+            PATile.IsMultiElement(rightBottomTile) &&
+            PATile.IsTileSetType(leftTopTile,TileSetType.Full)&&
+            PATile.IsTileSetType(leftTile,TileSetType.Full)&&
+            PATile.IsTileSetType(topTile,TileSetType.Full))
         {
             if (leftTopElementState == TileElementState.TotalFire)
             {
@@ -346,9 +346,9 @@ public partial class PATileTerrain
             tile.SetQtrTiles(qtrTileElementType, qtrTileElementType, qtrTileElementType, QtrTileElementType.Sand);
             tile.tileSetType = TileSetType.BigCorner;
         }
-        else if (rightTopTile.element.IsSingleElement() &&
-            rightTile.element.IsSingleElement() &&
-            topTile.element.IsSingleElement() &&
+        else if (PATile.IsSingleElement(rightTopTile)&&
+            PATile.IsSingleElement(rightTile)&&
+            PATile.IsSingleElement(topTile)&&
             leftBottomTile.element.IsMultiElement() &&
             rightTopTile.tileSetType == TileSetType.Full &&
             rightTile.tileSetType == TileSetType.Full &&
@@ -827,7 +827,7 @@ public partial class PATileTerrain
             needUpdate = true;
 
         if (!tile.IsQtrTilesSet())
-            Debug.LogError("ProcessSingleElememtTile !tile.IsQtrTilesSet() tile.x = " + tile.x + " tile.y " + tile.y);
+            Debug.LogWarning("ProcessSingleElememtTile !tile.IsQtrTilesSet() tile.x = " + tile.x + " tile.y " + tile.y);
 
         return needUpdate;
     }
@@ -1021,8 +1021,9 @@ public partial class PATileTerrain
 
         foreach (var tile in postProcessSingleElementTiles)
         {
-            if(!tile.IsMixPerfect(this))
-                tile.SetQtrTiles(QtrTileElementType.None);
+            //if (!tile.ProcessMixPerfect(this))
+            //    tile.SetQtrTiles(QtrTileElementType.None);
+            tile.ProcessMixPerfect(this);
         }
 
         List<PATile> needUpdateTiles = new List<PATile>();
@@ -1030,7 +1031,7 @@ public partial class PATileTerrain
             if (ProcessSingleElememtTile(tile))
                 needUpdateTiles.Add(tile);
 
-        foreach (var tile in needUpdateTiles)
+        foreach (var tile in postProcessSingleElementTiles)
             PaintPostProcessSingleElementTile(tile);
     }
 }

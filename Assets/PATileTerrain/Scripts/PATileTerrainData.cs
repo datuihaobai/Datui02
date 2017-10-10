@@ -516,8 +516,8 @@ public partial class PATileTerrain
             return -1;
         }
 
-        //是否处于完美融合状态
-        public bool IsMixPerfect(PATileTerrain tileTerrain)
+        //将没有完美融合的qtrtile设置成none
+        public bool ProcessMixPerfect(PATileTerrain tileTerrain)
         {
             PATile[] nTiles = tileTerrain.GetNeighboringTilesNxN(this, 1);
 
@@ -538,7 +538,11 @@ public partial class PATileTerrain
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
             else
+            {
                 isPerfect = false;
+                qtrTiles[0] = QtrTileElementType.None;
+            }
+               
 
             qte0 = leftTile.qtrTiles[2];
             qte1 = leftTopTile.qtrTiles[3];
@@ -547,7 +551,10 @@ public partial class PATileTerrain
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
             else
+            {
                 isPerfect = false;
+                qtrTiles[1] = QtrTileElementType.None;
+            }
 
             qte0 = topTile.qtrTiles[3];
             qte1 = rightTopTile.qtrTiles[0];
@@ -556,7 +563,10 @@ public partial class PATileTerrain
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
             else
+            {
                 isPerfect = false;
+                qtrTiles[2] = QtrTileElementType.None;
+            }
 
             qte0 = rightTile.qtrTiles[0];
             qte1 = rightBottomTile.qtrTiles[1];
@@ -565,9 +575,36 @@ public partial class PATileTerrain
             if (qte == qte0 && qte == qte1 && qte == qte2)
             { }
             else
+            {
                 isPerfect = false;
+                qtrTiles[3] = QtrTileElementType.None;
+            }
 
             return isPerfect;
+        }
+
+        public static bool IsSingleElement(PATile tile)
+        {
+            if (tile == null)
+                return false;
+            else
+                return tile.element.IsSingleElement();
+        }
+
+        public static bool IsMultiElement(PATile tile)
+        {
+            if (tile == null)
+                return false;
+            else
+                return tile.element.IsMultiElement();
+        }
+
+        public static bool IsTileSetType(PATile tile, TileSetType tst)
+        {
+            if (tile == null)
+                return false;
+            else
+                return tile.tileSetType == tst;
         }
     }
 	
