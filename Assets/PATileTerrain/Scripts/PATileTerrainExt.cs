@@ -812,8 +812,9 @@ public partial class PATileTerrain
             int randomValue =  RandomManager.instance.Range(0,100);
             if (rate < randomValue)
                 continue;
-            int randomRotate = RandomManager.instance.Range(0,4);
-            UVRotateType rotateType = (UVRotateType)randomRotate;
+            //int randomRotate = RandomManager.instance.Range(0,4);
+            //UVRotateType rotateType = (UVRotateType)randomRotate;
+            UVRotateType rotateType = UVRotateType._90;
             if (config.decalType == (int)TileDecalType.Decal_2)
             {
                 if(config.tileSetIndex.Count != 2)
