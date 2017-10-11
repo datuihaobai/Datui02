@@ -151,37 +151,37 @@ public partial class PATileTerrain
         UpdateTileUV(tile);
     }
 
-    public enum TileElementState
-    {
-        None,
-        TotalFire,// 完全火属性
-        TotalWood,// 完全木属性
-        //FireMax,//  火属性最大
-        //WoodMax,// 木属性最大
-        //FireWoodEqual,// 火木属性相等
-        //Zero,// 无属性
-    }
+    //public enum TileElementState
+    //{
+    //    None,
+    //    TotalFire,// 完全火属性
+    //    TotalWood,// 完全木属性
+    //    //FireMax,//  火属性最大
+    //    //WoodMax,// 木属性最大
+    //    //FireWoodEqual,// 火木属性相等
+    //    //Zero,// 无属性
+    //}
 
-    TileElementState GetTileElementState(PATile tile)
-    {
-        if (tile == null)
-            return TileElementState.None;
-        TileElementState state = TileElementState.None;
-        //if (tile.element.FireValue == tile.element.WoodValue && tile.element.FireValue == 0)
-        //    state = TileElementState.Zero;
-        //else 
-        if (tile.element.FireValue > 0 && tile.element.WoodValue == 0)
-            state = TileElementState.TotalFire;
-        else if (tile.element.WoodValue > 0 && tile.element.FireValue == 0)
-            state = TileElementState.TotalWood;
-        //else if (tile.element.FireValue > tile.element.WoodValue)
-        //    state = TileElementState.FireMax;
-        //else if (tile.element.WoodValue > tile.element.FireValue)
-        //    state = TileElementState.WoodMax;
-        //else if (tile.element.WoodValue == tile.element.FireValue)
-        //    state = TileElementState.FireWoodEqual;
-        return state;
-    }
+    //TileElementState GetTileElementState(PATile tile)
+    //{
+    //    if (tile == null)
+    //        return TileElementState.None;
+    //    TileElementState state = TileElementState.None;
+    //    //if (tile.element.FireValue == tile.element.WoodValue && tile.element.FireValue == 0)
+    //    //    state = TileElementState.Zero;
+    //    //else 
+    //    if (tile.element.FireValue > 0 && tile.element.WoodValue == 0)
+    //        state = TileElementState.TotalFire;
+    //    else if (tile.element.WoodValue > 0 && tile.element.FireValue == 0)
+    //        state = TileElementState.TotalWood;
+    //    //else if (tile.element.FireValue > tile.element.WoodValue)
+    //    //    state = TileElementState.FireMax;
+    //    //else if (tile.element.WoodValue > tile.element.FireValue)
+    //    //    state = TileElementState.WoodMax;
+    //    //else if (tile.element.WoodValue == tile.element.FireValue)
+    //    //    state = TileElementState.FireWoodEqual;
+    //    return state;
+    //}
 
     //通过周围8格计算当前格子该使用哪种属性进行融合
     QtrTileElementType GetQtrTileElementType(PATile[] nTiles)
@@ -196,10 +196,11 @@ public partial class PATileTerrain
                 //if (index++ % 2 == 0)
                 //    continue;
 
-                TileElementState tileElementState = GetTileElementState(tile);
-                if (tileElementState == TileElementState.TotalFire)
+                //TileElementState tileElementState = GetTileElementState(tile);
+                TileElementType tileElementType = tile.element.GetTileElementType();
+                if (tileElementType == TileElementType.Fire)
                     return QtrTileElementType.Fire;
-                else if (tileElementState == TileElementState.TotalWood)
+                else if (tileElementType == TileElementType.Wood)
                     return QtrTileElementType.Wood;
             } 
         }
@@ -260,10 +261,16 @@ public partial class PATileTerrain
         else if (qtrTileElementType == QtrTileElementType.Wood)
             t = WoodLevel1Brush;
 
-        TileElementState leftTopElementState = GetTileElementState(leftTopTile);
-        TileElementState leftBottomElementState = GetTileElementState(leftBottomTile);
-        TileElementState rightTopElementState = GetTileElementState(rightTopTile);
-        TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
+        //TileElementState leftTopElementState = GetTileElementState(leftTopTile);
+        //TileElementState leftBottomElementState = GetTileElementState(leftBottomTile);
+        //TileElementState rightTopElementState = GetTileElementState(rightTopTile);
+        //TileElementState rightBottomElementState = GetTileElementState(rightBottomTile);
+
+        TileElementType leftTopElementType = PATileElement.GetTileElementType(leftTopTile);
+        TileElementType leftBottomElementType = PATileElement.GetTileElementType(leftBottomTile);
+        TileElementType rightTopElementType = PATileElement.GetTileElementType(rightTopTile);
+        TileElementType rightBottomElementType = PATileElement.GetTileElementType(rightBottomTile);
+
 
         if (PATile.IsSingleElement(leftTopTile) &&
             PATile.IsSingleElement(leftTile) &&
@@ -273,12 +280,12 @@ public partial class PATileTerrain
             PATile.IsTileSetType(leftTile,TileSetType.Full) &&
             PATile.IsTileSetType(topTile,TileSetType.Full))
         {
-            if (leftTopElementState == TileElementState.TotalFire)
+            if (leftTopElementType == TileElementType.Fire)
             {
                 qtrTileElementType = QtrTileElementType.Fire;
                 t = FireLevel1Brush;
             }
-            else if (leftTopElementState == TileElementState.TotalWood)
+            else if (leftTopElementType == TileElementType.Wood)
             {
                 qtrTileElementType = QtrTileElementType.Wood;
                 t = WoodLevel1Brush;
@@ -296,12 +303,12 @@ public partial class PATileTerrain
             PATile.IsTileSetType(rightTile,TileSetType.Full) &&
             PATile.IsTileSetType(topTile,TileSetType.Full) )
         {
-            if (rightTopElementState == TileElementState.TotalFire)
+            if (rightTopElementType == TileElementType.Fire)
             {
                 qtrTileElementType = QtrTileElementType.Fire;
                 t = FireLevel1Brush;
             }
-            else if (rightTopElementState == TileElementState.TotalWood)
+            else if (rightTopElementType == TileElementType.Wood)
             {
                 qtrTileElementType = QtrTileElementType.Wood;
                 t = WoodLevel1Brush;
@@ -320,12 +327,12 @@ public partial class PATileTerrain
             PATile.IsTileSetType(bottomTile,TileSetType.Full))
         {
 
-            if (leftBottomElementState == TileElementState.TotalFire)
+            if (leftBottomElementType == TileElementType.Fire)
             {
                 qtrTileElementType = QtrTileElementType.Fire;
                 t = FireLevel1Brush;
             }
-            else if (leftBottomElementState == TileElementState.TotalWood)
+            else if (leftBottomElementType == TileElementType.Wood)
             {
                 qtrTileElementType = QtrTileElementType.Wood;
                 t = WoodLevel1Brush;
@@ -344,12 +351,12 @@ public partial class PATileTerrain
             PATile.IsTileSetType(bottomTile,TileSetType.Full))
         {
 
-            if (rightBottomElementState == TileElementState.TotalFire)
+            if (rightTopElementType == TileElementType.Fire)
             {
                 qtrTileElementType = QtrTileElementType.Fire;
                 t = FireLevel1Brush;
             }
-            else if (rightBottomElementState == TileElementState.TotalWood)
+            else if (rightTopElementType == TileElementType.Wood)
             {
                 qtrTileElementType = QtrTileElementType.Wood;
                 t = WoodLevel1Brush;
@@ -423,7 +430,7 @@ public partial class PATileTerrain
         bool needPostProcess = false;
         foreach (var nTile in nTiles)
         {
-            if (PATileElement.IsMultiElemenTile(nTile))
+            if (PATile.IsMultiElement(nTile))
                 needPostProcess = true;
         }
         if (needPostProcess)
@@ -431,16 +438,10 @@ public partial class PATileTerrain
 
         int t = 0;
         int elementValue = 0;
-        int fireValue = tile.element.FireValue;
-        int woodValue = tile.element.WoodValue;
         QtrTileElementType qtrTileElementType = QtrTileElementType.Base;
         QtrTileElementType mixQtrTileElementType = QtrTileElementType.Base;
 
-        TileElementType elementType = TileElementType.None;
-        if (fireValue > 0)
-            elementType = TileElementType.Fire;
-        else if (woodValue > 0)
-            elementType = TileElementType.Wood;
+        TileElementType elementType = tile.element.GetTileElementType();
 
         t = elementValue = tile.element.GetSingleElementPaintBrushType(elementType);
         if (leftBottomTile != null)

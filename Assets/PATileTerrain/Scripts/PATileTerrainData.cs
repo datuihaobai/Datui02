@@ -148,7 +148,11 @@ public partial class PATileTerrain
 
         public bool IsMultiElement()
         {
-            return FireValue > 0 && WoodValue > 0;
+            bool result = FireValue > 0 && WoodValue > 0;
+            //if (Mathf.Abs(FireValue - WoodValue) >
+            //    TerrainManager.instance.GetMinIgnoreElementValue())
+            //    result = false;
+            return result;
         }
 
         public bool IsEqualElement()
@@ -219,7 +223,7 @@ public partial class PATileTerrain
 
         public DecalSuitTileType GetDecalSuitTileType()
         {
-            if (FireValue > 0 && WoodValue > 0)
+            if (IsMultiElement())
                 return DecalSuitTileType.Sand;
             else if (FireValue > 0 && WoodValue == 0)
                 return DecalSuitTileType.Fire;
@@ -228,12 +232,26 @@ public partial class PATileTerrain
 
             return DecalSuitTileType.None;
         }
-
-        public static bool IsMultiElemenTile(PATile tile)
+    
+        public TileElementType GetTileElementType()
         {
-            if (tile != null && tile.element.IsMultiElement())
-                return true;
-            return false;
+            if (FireValue - WoodValue > TerrainManager.instance.GetMinIgnoreElementValue())
+                return TileElementType.Fire;
+            else if (WoodValue - FireValue > TerrainManager.instance.GetMinIgnoreElementValue())
+                return TileElementType.Wood;
+            else if (FireValue > 0)
+                return TileElementType.Fire;
+            else if (WoodValue > 0)
+                return TileElementType.Wood;
+            else
+                return TileElementType.None;
+        }
+
+        public static TileElementType GetTileElementType(PATile tile)
+        {
+            if (tile != null)
+                tile.element.GetTileElementType();
+            return TileElementType.None;
         }
     }
 

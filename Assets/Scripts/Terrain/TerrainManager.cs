@@ -25,7 +25,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public Building.BuildingType selectBuildingType;
     public Shuijing selectShuijing;
 
-    public Building toPlaceBuilding = null; 
+    public Building toPlaceBuilding = null;
+
+    private int minIgnoreElementValue = -1;//配置缓存
+    private int minDistanceOfCrystal = -1;
 
     private bool isCrystalMode = false;
     private bool isOverUI = false;
@@ -145,20 +148,37 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return true;
     }
 
-    public float GetCrystalMinDistance()
+    public int GetTerrainCommon(TerrainCommonKey key)
     {
-        float minDistance = 0;
         foreach (var config in ConfigDataBase.instance.TerrainCommonConfigAsset.configs)
         {
-            if (config.key == (int)TerrainCommonKey.MinDistanceOfCrystal)
-                minDistance = config.value;
+            if (config.key == (int)key)
+                return config.value;
         }
-        return minDistance;
+
+        return -1;
+    }
+
+    public int GetMinIgnoreElementValue()
+    {
+        return 0;
+        //if (minIgnoreElementValue == -1)
+        //    minIgnoreElementValue = GetTerrainCommon(TerrainCommonKey.MinIgnoreElementValue);
+
+        //return minIgnoreElementValue;
+    }
+
+    public int GetMinDistanceOfCrystal()
+    {
+        if (minDistanceOfCrystal == -1)
+            minDistanceOfCrystal = GetTerrainCommon(TerrainCommonKey.MinDistanceOfCrystal);
+
+        return minDistanceOfCrystal;
     }
 
     bool CheckCrystalDistance(PATileTerrain.PATile newTile)
     {
-        float minDistance = GetCrystalMinDistance();
+        float minDistance = GetMinDistanceOfCrystal();
         foreach(var crystal in tileTerrain.settings.crystals)
         {
             PATileTerrain.PATile tile = tileTerrain.GetTile(crystal.id);
@@ -192,7 +212,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                if(!CheckCrystalDistance(buildingTile.keyTile))
+                if (toPlaceBuilding != null && !CheckCrystalDistance(buildingTile.keyTile))
                 {
                     Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
                     return;

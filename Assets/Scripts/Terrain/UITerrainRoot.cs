@@ -138,7 +138,8 @@ public class UITerrainRoot : MonoBehaviour
     {
         UICommonConfirm.ShowData showData = new UICommonConfirm.ShowData();
         showData.isHideCancel = true;
-        showData.text = string.Format("水晶之间至少要间隔{0}的距离", TerrainManager.instance.GetCrystalMinDistance());
+        showData.text = string.Format("水晶之间至少要间隔{0}的距离",
+            TerrainManager.instance.GetMinDistanceOfCrystal());
         commonConfirm.Show(showData);
     }
 
