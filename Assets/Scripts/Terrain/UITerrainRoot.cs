@@ -19,6 +19,7 @@ public class UITerrainRoot : MonoBehaviour
     void Awake()
     {
         Messenger.AddListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
+        Messenger.AddListener(UIEvent.UIEvent_CrystalDistanceTip, OnCrystalDistanceTip);
         Messenger.AddListener(TerrainManager.TerrainManagerEvent_PlaceBuilding,OnPlaceBuilding);
         UpdateSelectLevel();
         UpdateSelectElement();
@@ -27,6 +28,7 @@ public class UITerrainRoot : MonoBehaviour
     void OnDestroy()
     {
         Messenger.RemoveListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
+        Messenger.RemoveListener(UIEvent.UIEvent_CrystalDistanceTip, OnCrystalDistanceTip);
         Messenger.RemoveListener(TerrainManager.TerrainManagerEvent_PlaceBuilding, OnPlaceBuilding);
     }
 
@@ -91,9 +93,10 @@ public class UITerrainRoot : MonoBehaviour
 
     public void OnCrystalUpgrade()
     {
-        commonConfirm.gameObject.SetActive(true);
-        commonConfirm.confirmCallBack = OnConfirmUpgrade;
-        commonConfirm.SetText(TerrainManager.instance.GetUpgradeTips());
+        UICommonConfirm.ShowData showData = new UICommonConfirm.ShowData();
+        showData.text = TerrainManager.instance.GetUpgradeTips();
+        showData.confirmCallBack = OnConfirmUpgrade;
+        commonConfirm.Show(showData);
     }
 
     void OnConfirmUpgrade()
@@ -129,6 +132,14 @@ public class UITerrainRoot : MonoBehaviour
     void OnShowCrystalOption()
     {
         crystalOption.Show();
+    }
+
+    void OnCrystalDistanceTip()
+    {
+        UICommonConfirm.ShowData showData = new UICommonConfirm.ShowData();
+        showData.isHideCancel = true;
+        showData.text = string.Format("水晶之间至少要间隔{0}的距离", TerrainManager.instance.GetCrystalMinDistance());
+        commonConfirm.Show(showData);
     }
 
     void OnPlaceBuilding()

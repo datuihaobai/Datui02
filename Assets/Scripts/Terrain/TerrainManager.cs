@@ -145,20 +145,25 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return true;
     }
 
-    bool CheckCrystalDistance(PATileTerrain.PATile newTile)
+    public float GetCrystalMinDistance()
     {
         float minDistance = 0;
-        foreach(var config in ConfigDataBase.instance.TerrainCommonConfigAsset.configs)
+        foreach (var config in ConfigDataBase.instance.TerrainCommonConfigAsset.configs)
         {
             if (config.key == (int)TerrainCommonKey.MinDistanceOfCrystal)
                 minDistance = config.value;
         }
+        return minDistance;
+    }
 
+    bool CheckCrystalDistance(PATileTerrain.PATile newTile)
+    {
+        float minDistance = GetCrystalMinDistance();
         foreach(var crystal in tileTerrain.settings.crystals)
         {
             PATileTerrain.PATile tile = tileTerrain.GetTile(crystal.id);
-            float disrance = tile.Distance(newTile);
-            if (disrance < minDistance)
+            float distance = tile.Distance(newTile);
+            if (distance < minDistance)
                 return false;
         }
         
@@ -189,7 +194,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
                 if(!CheckCrystalDistance(buildingTile.keyTile))
                 {
-                    Debug.Log("!CheckCrystalDistance(buildingTile.keyTile) ");
+                    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
                     return;
                 }
                 if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
