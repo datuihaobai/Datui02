@@ -1271,7 +1271,7 @@ public partial class PATileTerrain: MonoBehaviour
                 meshCollider.sharedMesh = mesh;
 				meshRenderer.enabled = true;
 				meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-				meshRenderer.receiveShadows = false;
+				meshRenderer.receiveShadows = true;
 				meshRenderer.sharedMaterial = settings.tilesetMaterial;
 
                 crystalMeshFilter.sharedMesh = crystalMesh;
