@@ -7,6 +7,12 @@ using Game.Messenger;
 
 public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 {
+    public enum TerrainCommonKey
+    {
+        MinDistanceOfCrystal = 1,//水晶之间的最小距离
+        MinIgnoreElementValue = 2,//地表融合时忽略较小属性的最小差值
+    }
+
     public const string TerrainManagerEvent_PlaceBuilding = "TerrainManagerEvent_PlaceBuilding "; 
     public const int defaultBrushType = 0;
     public const string shuijingName = "shuij";
@@ -139,6 +145,26 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return true;
     }
 
+    bool CheckCrystalDistance(PATileTerrain.PATile newTile)
+    {
+        float minDistance = 0;
+        foreach(var config in ConfigDataBase.instance.TerrainCommonConfigAsset.configs)
+        {
+            if (config.key == (int)TerrainCommonKey.MinDistanceOfCrystal)
+                minDistance = config.value;
+        }
+
+        foreach(var crystal in tileTerrain.settings.crystals)
+        {
+            PATileTerrain.PATile tile = tileTerrain.GetTile(crystal.id);
+            float disrance = tile.Distance(newTile);
+            if (disrance < minDistance)
+                return false;
+        }
+        
+        return true;
+    }
+
     void EditCrystal()
     {
         if (!CheckEditCrystal())
@@ -161,6 +187,11 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
+                if(!CheckCrystalDistance(buildingTile.keyTile))
+                {
+                    Debug.Log("!CheckCrystalDistance(buildingTile.keyTile) ");
+                    return;
+                }
                 if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
                 {
                     if (toPlaceBuilding is Shuijing)

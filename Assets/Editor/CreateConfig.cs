@@ -41,6 +41,7 @@ public class CreateConfig
 
 		CreateConfigAsset<DecalConfigAsset> ();
 		CreateConfigAsset<TileMixConfigAsset> ();
+		CreateConfigAsset<TerrainCommonConfigAsset> ();
 		CreateConfigAsset<CrystalRangeConfigAsset> ();
 		CreateConfigAsset<TileBrushConfigAsset> ();
 	}

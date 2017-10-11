@@ -631,6 +631,11 @@ public partial class PATileTerrain
             else
                 return tile.tileSetType == tst;
         }
+    
+        public float Distance(PATile other)
+        {
+            return Vector2.Distance(new Vector2(x,y),new Vector2(other.x,other.y));
+        }
     }
 	
 	[System.Serializable]
