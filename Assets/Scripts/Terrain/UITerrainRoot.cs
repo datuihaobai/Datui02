@@ -15,6 +15,7 @@ public class UITerrainRoot : MonoBehaviour
     public UICommonConfirm commonConfirm;
     public UIBuildingSelectButton crystalButton;
     public UIBuildingSelectButton nestButton;
+    public UISelectBuilding uiSelectBuilding;
 
     void Awake()
     {
@@ -54,6 +55,11 @@ public class UITerrainRoot : MonoBehaviour
         TerrainManager.instance.CreateToPlaceBuilding();
     }
     
+    public void OnClickBuilding()
+    {
+        uiSelectBuilding.Show();
+    }
+
     public void OnClickSave()
     {
         TerrainManager.instance.SaveTerrain();

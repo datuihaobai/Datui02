@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 4336c1fa5c0339547935dbb7bfbf34ef
+timeCreated: 1503900069
+licenseType: Free
+ShaderImporter:
+  defaultTextures:
+  - _v_volcano_02: {fileID: 2800000, guid: dda302f57806a4a4cb1f3b7a0c277899, type: 3}
+  - _v: {fileID: 2800000, guid: dc217e17e7ecef74ea9ba6ad2c943091, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

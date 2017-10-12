@@ -40,6 +40,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private int buildingLayerMask;
     private int toPlaceBuildingLayer;
     private int toPlaceBuildingLayerMask;
+    private int animalsLayerMask;
 
     void Start()
     {
@@ -51,6 +52,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         toPlaceBuildingLayer = LayerMask.NameToLayer("ToPlaceBuilding");
         toPlaceBuildingLayerMask = 1 << toPlaceBuildingLayer;
+
+        animalsLayerMask = LayerMask.NameToLayer("Animals");
+        animalsLayerMask = 1 << animalsLayerMask;
 
         editCrystalLayerMask = terrainChunkLayermask | buildingLayerMask;
 
@@ -90,7 +94,18 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         if (Input.GetMouseButtonUp(0))
         {
+            CheckSelectAnimals();
             EditCrystal();
+        }
+    }
+
+    void CheckSelectAnimals()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, animalsLayerMask))
+        {
+            Messenger.Broadcast(UIEvent.UIEvent_ShowSelectDragon);
         }
     }
 
