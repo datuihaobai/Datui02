@@ -334,10 +334,26 @@ public partial class PATileTerrain
             qtrTiles[3] = rb;
         }
 
+        //fire fire2 fire2 认为是相同的   wood wood2 wood3 认为是相同的
+        bool IsQtrElementEqual(QtrTileElementType qte0 , QtrTileElementType qte1)
+        {
+            if (qte0 == qte1)
+                return true;
+            else if ((qte0 == QtrTileElementType.Fire || qte0 == QtrTileElementType.Fire2 || qte0 == QtrTileElementType.Fire3) 
+                && (qte1 == QtrTileElementType.Fire || qte1 == QtrTileElementType.Fire2 || qte1 == QtrTileElementType.Fire3))
+                return true;
+            else if ((qte0 == QtrTileElementType.Wood || qte0 == QtrTileElementType.Wood2|| qte0 == QtrTileElementType.Wood3)
+                && (qte1 == QtrTileElementType.Wood|| qte1 == QtrTileElementType.Wood2|| qte1 == QtrTileElementType.Wood3))
+                return true;
+            return false;
+        }
+
         // 四个qtrtile属性相同
         public bool IsElementFull()
         {
-            if (qtrTiles[0] == qtrTiles[1] && qtrTiles[0] == qtrTiles[2] && qtrTiles[0] == qtrTiles[3])
+            if (IsQtrElementEqual(qtrTiles[0], qtrTiles[1]) && 
+                IsQtrElementEqual(qtrTiles[0], qtrTiles[2]) && 
+                IsQtrElementEqual(qtrTiles[0], qtrTiles[3]))
                 return true;
             return false;
         }

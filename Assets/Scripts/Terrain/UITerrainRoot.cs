@@ -46,6 +46,12 @@ public class UITerrainRoot : MonoBehaviour
         crystalRoot.SetActive(false);
         crystalOption.Hide();
         buildingTypeSelect.value = 0;
+
+        crystalButton.SetSelect(false);
+        nestButton.SetSelect(false);
+        TerrainManager.instance.SetSelectShuijing(null);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.None;
+        TerrainManager.instance.CreateToPlaceBuilding();
     }
     
     public void OnClickSave()

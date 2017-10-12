@@ -212,15 +212,17 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                if (toPlaceBuilding != null && !CheckCrystalDistance(buildingTile.keyTile))
-                {
-                    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
-                    return;
-                }
+                
                 if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
                 {
                     if (toPlaceBuilding is Shuijing)
                     {
+                        if (!CheckCrystalDistance(buildingTile.keyTile))
+                        {
+                            Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
+                            return;
+                        }
+
                         Shuijing shuijing = toPlaceBuilding as Shuijing;
                         PlaceCrystal(shuijing, buildingTile);
                         RepaintAllCrystals();
