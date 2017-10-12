@@ -1,0 +1,24 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 12.10.2017 16:18:35
+
+#
+# object v1_volcano_02
+#
+
+v  0.9705 0.0098 -0.9705
+v  -0.9705 0.0098 -0.9705
+v  -0.9705 0.0098 0.9705
+v  0.9705 0.0098 0.9705
+# 4 vertices
+
+vt 0.0005 0.0005 0.5000
+vt 0.9995 0.0005 0.5000
+vt 0.0005 0.9995 0.5000
+vt 0.9995 0.9995 0.5000
+# 4 texture coords
+
+g v1_volcano_02
+s 1
+f 1/1 2/2 3/4 4/3 
+# 1 polygons
+
