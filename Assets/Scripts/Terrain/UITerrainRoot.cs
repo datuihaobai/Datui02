@@ -53,6 +53,8 @@ public class UITerrainRoot : MonoBehaviour
         //nestButton.SetSelect(false);
         TerrainManager.instance.SetSelectShuijing(null);
         TerrainManager.instance.RemoveToPlaceBuilding();
+        //save
+        TerrainManager.instance.SaveTerrain();
     }
     
     public void OnClickBuilding()

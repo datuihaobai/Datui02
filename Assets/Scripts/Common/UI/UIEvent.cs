@@ -9,4 +9,6 @@ public class UIEvent
 
     public const string UIEvent_ShowSelectDragon = "UIEvent_ShowSelectDragon";
     public const string UIEvent_ShowSelectNest = "UIEvent_ShowSelectNest";
+
+    public const string UIEvent_ShowSelectCrystal = "UIEvent_ShowSelectCrystal";
 }

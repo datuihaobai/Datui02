@@ -248,12 +248,15 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                     else if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
                     {
                         NestBuilding nest = toPlaceBuilding as NestBuilding;
-                        PlaceNest(nest,buildingTile);
+                        PlaceNest(nest, buildingTile);
                         toPlaceBuilding = null;
                         Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                     }
                 }
-                SetSelectShuijing(buildingTile.keyTile.shuijing);
+                else
+                {
+                    SetSelectShuijing(buildingTile.keyTile.shuijing);
+                }
             }
             else if (hitShuijing != null && toPlaceBuilding == null)
             {
