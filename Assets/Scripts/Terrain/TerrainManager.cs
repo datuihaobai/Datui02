@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PathologicalGames;
 using Game.Messenger;
+using DG.Tweening;
 
 public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 {
@@ -20,6 +21,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public const int crystalLevelMax = 3;
 
     public PATileTerrain tileTerrain;
+    public Transform mainCameraRoot;
+    public Transform mainCameraZoom;
     public int selectLevel;
     public PATileTerrain.TileElementType selectElementType;
     public Building.BuildingType selectBuildingType;
@@ -30,7 +33,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private int minIgnoreElementValue = -1;//配置缓存
     private int minDistanceOfCrystal = -1;
 
-    //private bool isCrystalMode = false;
+    private bool isCrystalMode = false;
     private bool isOverUI = false;
     private bool isStarted = false;
 
@@ -96,6 +99,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             CheckSelectAnimals();
             EditCrystal();
+            EditBuilding();
         }
     }
 
@@ -112,7 +116,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public void ShowCrystal(bool isShow)
     {
         tileTerrain.ShowCrystal(isShow);
-        //isCrystalMode = isShow;
+        isCrystalMode = isShow;
         if (!isShow)
             SetSelectShuijing(null);
     }
@@ -157,8 +161,20 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             return false;
         if (TBPan.isMoving)
             return false;
-        //if (!isCrystalMode)
-        //    return false;
+        if (!isCrystalMode)
+            return false;
+
+        return true;
+    }
+
+    bool CheckEditBuilding()
+    {
+        if (isOverUI)
+            return false;
+        if (TBPan.isMoving)
+            return false;
+        if (isCrystalMode)
+            return false;
 
         return true;
     }
@@ -205,6 +221,23 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return true;
     }
 
+    void EditBuilding()
+    {
+        if (!CheckEditBuilding())
+            return;
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildingLayerMask))
+        {
+            NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
+            if (hitNest != null && toPlaceBuilding == null)
+            {
+                Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
+            }
+        }
+    }
+
     void EditCrystal()
     {
         if (!CheckEditCrystal())
@@ -219,7 +252,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             Shuijing hitShuijing = hit.transform.GetComponent<Shuijing>();
-            NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
             if (tt != null)
             {
                 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
@@ -228,46 +260,82 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
+                if (!CheckCrystalDistance(buildingTile.keyTile))
                 {
-                    if (toPlaceBuilding is Shuijing)
-                    {
-                        if (!CheckCrystalDistance(buildingTile.keyTile))
-                        {
-                            Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
-                            return;
-                        }
-
-                        Shuijing shuijing = toPlaceBuilding as Shuijing;
-                        PlaceCrystal(shuijing, buildingTile);
-                        RepaintAllCrystals();
-                        shuijing.CreateBuildings(tileTerrain);
-                        toPlaceBuilding = null;
-                        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
-                    }
-                    else if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
-                    {
-                        NestBuilding nest = toPlaceBuilding as NestBuilding;
-                        PlaceNest(nest, buildingTile);
-                        toPlaceBuilding = null;
-                        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
-                    }
+                    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
+                    return;
                 }
                 else
                 {
-                    SetSelectShuijing(buildingTile.keyTile.shuijing);
+                    Messenger<PATileTerrain.PATile>.Broadcast(UIEvent.UIEvent_ShowSelectCrystal, buildingTile.keyTile);
                 }
+
+                //if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
+                //{
+                //    if (toPlaceBuilding is Shuijing)
+                //    {
+                //        if (!CheckCrystalDistance(buildingTile.keyTile))
+                //        {
+                //            Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
+                //            return;
+                //        }
+
+                //        Shuijing shuijing = toPlaceBuilding as Shuijing;
+                //        PlaceCrystal(shuijing, buildingTile);
+                //        RepaintAllCrystals();
+                //        shuijing.CreateBuildings(tileTerrain);
+                //        toPlaceBuilding = null;
+                //        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
+                //    }
+                //    else if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
+                //    {
+                //        NestBuilding nest = toPlaceBuilding as NestBuilding;
+                //        PlaceNest(nest, buildingTile);
+                //        toPlaceBuilding = null;
+                //        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
+                //    }
+                //}
+                //SetSelectShuijing(buildingTile.keyTile.shuijing);
+                //if (buildingTile.keyTile.shuijing != null)
+                //{
+                //    MoveCameraToPos(buildingTile.keyTile.shuijing.transform, MoveToCrystalCallBack);
+                //}
             }
             else if (hitShuijing != null && toPlaceBuilding == null)
             {
                 SetSelectShuijing(hitShuijing);
-            }
-            else if (hitNest != null && toPlaceBuilding == null)
-            {
-                Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
+                MoveCameraToPos(hitShuijing.transform, MoveToCrystalCallBack);
             }
             else
+            {
                 SetSelectShuijing(null);
+            }
+        }
+    }
+
+    void MoveToCrystalCallBack()
+    {
+        Messenger.Broadcast(UIEvent.UIEvent_ShowCrystalOption);
+    }
+
+    public delegate void MoveCallBack();
+
+    void MoveCameraToPos(Transform targetTrans,MoveCallBack moveCallBack = null)
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, terrainChunkLayermask))
+        {
+            //Camera.main.transform.position = targetTrans.position + (-Camera.main.transform.forward * hit.distance);
+            Vector3 targetPos = targetTrans.position + 
+                (-Camera.main.transform.forward * (hit.distance + mainCameraZoom.localPosition.z));
+            targetPos.y = mainCameraRoot.position.y;
+            mainCameraRoot.DOMove(targetPos, 0.2f).
+                OnComplete(() => {
+                    if (moveCallBack != null)
+                        moveCallBack();
+            });
         }
     }
 
@@ -355,7 +423,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         selectShuijing = shuijing;
         if (selectShuijing != null)
             selectShuijing.SetSelectTag(true);
-        Messenger.Broadcast(UIEvent.UIEvent_ShowCrystalOption);
+        else
+            Messenger.Broadcast(UIEvent.UIEvent_ShowCrystalOption);
     }
 
     public void UpgradeSelectShuijing()
@@ -367,11 +436,20 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         PATileTerrain.TileElementType elementType = selectShuijing.elementType;
         RemoveSelectShuijing();
 
-        Shuijing newShuijing = CreateCrystal(tile, newLevel,elementType);
-        //PaintCrystal(newShuijing);
+        //Shuijing newShuijing = CreateCrystal(tile, newLevel,elementType);
+        //RepaintAllCrystals();
+        //newShuijing.CreateBuildings(tileTerrain);
+        //SetSelectShuijing(null);
+        CreateNewCrystal(tile,newLevel,elementType);
+        //SetSelectShuijing(newShuijing);
+    }
+
+    public void CreateNewCrystal(PATileTerrain.PATile tile,int level ,PATileTerrain.TileElementType elementType)
+    {
+        Shuijing newShuijing = CreateCrystal(tile, level, elementType);
         RepaintAllCrystals();
         newShuijing.CreateBuildings(tileTerrain);
-        SetSelectShuijing(newShuijing);
+        SetSelectShuijing(null);
     }
 
     public void RemoveSelectShuijing()

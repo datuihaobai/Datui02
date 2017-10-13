@@ -7,13 +7,13 @@ public class UITerrainRoot : MonoBehaviour
 {
     public GameObject crystalRoot;
     public GameObject crystalOnGo;
-    public Dropdown crystalLevelSelect;
-    public Dropdown crystalElementSelect;
+    //public Dropdown crystalLevelSelect;
+    //public Dropdown crystalElementSelect;
     public GameObject buildButtonRootGo;
 
     public UICrystalOption crystalOption;
     public UICommonConfirm commonConfirm;
-    public UIBuildingSelectButton crystalButton;
+    //public UIBuildingSelectButton crystalButton;
     //public UIBuildingSelectButton nestButton;
     public UISelectBuilding uiSelectBuilding;
 
@@ -49,7 +49,7 @@ public class UITerrainRoot : MonoBehaviour
         crystalOption.Hide();
         buildButtonRootGo.SetActive(true);
 
-        crystalButton.SetSelect(false);
+        //crystalButton.SetSelect(false);
         //nestButton.SetSelect(false);
         TerrainManager.instance.SetSelectShuijing(null);
         TerrainManager.instance.RemoveToPlaceBuilding();
@@ -84,7 +84,7 @@ public class UITerrainRoot : MonoBehaviour
 
     public void OnSelectBuildingCrystal()
     {
-        crystalButton.SetSelect(true);
+        //crystalButton.SetSelect(true);
         //nestButton.SetSelect(false);
         TerrainManager.instance.SetSelectShuijing(null);
         TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
@@ -93,7 +93,7 @@ public class UITerrainRoot : MonoBehaviour
 
     public void OnSelectBuildingNest()
     {
-        crystalButton.SetSelect(false);
+        //crystalButton.SetSelect(false);
         //nestButton.SetSelect(true);
         TerrainManager.instance.SetSelectShuijing(null);
         TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
@@ -106,12 +106,13 @@ public class UITerrainRoot : MonoBehaviour
         showData.text = TerrainManager.instance.GetUpgradeTips();
         showData.confirmCallBack = OnConfirmUpgrade;
         commonConfirm.Show(showData);
+        crystalOption.Hide();
     }
 
     void OnConfirmUpgrade()
     {
         TerrainManager.instance.UpgradeSelectShuijing();
-        crystalOption.Show();
+        crystalOption.Hide();
     }
 
     public void OnCrystalRemove()
@@ -122,14 +123,14 @@ public class UITerrainRoot : MonoBehaviour
 
     void UpdateSelectLevel()
     {
-        TerrainManager.instance.selectLevel = crystalLevelSelect.value + 1;
-        TerrainManager.instance.CreateToPlaceBuilding();
+        //TerrainManager.instance.selectLevel = crystalLevelSelect.value + 1;
+        //TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     void UpdateSelectElement()
     {
-        TerrainManager.instance.selectElementType = (PATileTerrain.TileElementType)(crystalElementSelect.value + 1);
-        TerrainManager.instance.CreateToPlaceBuilding();
+        //TerrainManager.instance.selectElementType = (PATileTerrain.TileElementType)(crystalElementSelect.value + 1);
+        //TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     void OnShowCrystalOption()
@@ -149,7 +150,7 @@ public class UITerrainRoot : MonoBehaviour
     void OnPlaceBuilding()
     {
         //buildingTypeSelect.value = 0;
-        crystalButton.SetSelect(false);
+        //crystalButton.SetSelect(false);
         //nestButton.SetSelect(false);
         TerrainManager.instance.RemoveToPlaceBuilding();
     }
