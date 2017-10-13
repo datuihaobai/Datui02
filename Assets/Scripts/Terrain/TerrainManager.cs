@@ -30,7 +30,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private int minIgnoreElementValue = -1;//配置缓存
     private int minDistanceOfCrystal = -1;
 
-    private bool isCrystalMode = false;
+    //private bool isCrystalMode = false;
     private bool isOverUI = false;
     private bool isStarted = false;
 
@@ -84,7 +84,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 isOverUI = false;
         }
 
-        if (isCrystalMode && toPlaceBuilding != null)
+        if (toPlaceBuilding != null)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -112,12 +112,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     public void ShowCrystal(bool isShow)
     {
         tileTerrain.ShowCrystal(isShow);
-        isCrystalMode = isShow;
+        //isCrystalMode = isShow;
         if (!isShow)
             SetSelectShuijing(null);
     }
 
-    void RemoveToPlaceBuilding()
+    public void RemoveToPlaceBuilding()
     {
         if (toPlaceBuilding == null)
             return;
@@ -157,8 +157,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             return false;
         if (TBPan.isMoving)
             return false;
-        if (!isCrystalMode)
-            return false;
+        //if (!isCrystalMode)
+        //    return false;
 
         return true;
     }
@@ -227,7 +227,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
 
-                
                 if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
                 {
                     if (toPlaceBuilding is Shuijing)

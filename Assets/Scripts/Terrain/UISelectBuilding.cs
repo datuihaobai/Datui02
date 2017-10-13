@@ -20,6 +20,7 @@ public class UISelectBuilding : MonoBehaviour
     public void Show()
     {
         root.SetActive(true);
+        Init();
     }
 
     public void Hide()
@@ -60,5 +61,21 @@ public class UISelectBuilding : MonoBehaviour
     public void OnClickSelectWood()
     {
         SelectWood();
+    }
+
+    public void OnSelectBuildingFire()
+    {
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
+        TerrainManager.instance.selectElementType = PATileTerrain.TileElementType.Fire;
+        TerrainManager.instance.CreateToPlaceBuilding();
+        Hide();
+    }
+
+    public void OnSelectBuildingWood()
+    {
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
+        TerrainManager.instance.selectElementType = PATileTerrain.TileElementType.Wood;
+        TerrainManager.instance.CreateToPlaceBuilding();
+        Hide();
     }
 }
