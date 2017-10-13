@@ -219,6 +219,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             Shuijing hitShuijing = hit.transform.GetComponent<Shuijing>();
+            NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
             if (tt != null)
             {
                 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
@@ -257,6 +258,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             else if (hitShuijing != null && toPlaceBuilding == null)
             {
                 SetSelectShuijing(hitShuijing);
+            }
+            else if (hitNest != null && toPlaceBuilding == null)
+            {
+                Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
             }
             else
                 SetSelectShuijing(null);

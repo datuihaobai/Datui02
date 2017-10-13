@@ -8,4 +8,5 @@ public class UIEvent
     public const string UIEvent_CrystalDistanceTip = "UIEvent_CrystalDistanceTip";
 
     public const string UIEvent_ShowSelectDragon = "UIEvent_ShowSelectDragon";
+    public const string UIEvent_ShowSelectNest = "UIEvent_ShowSelectNest";
 }

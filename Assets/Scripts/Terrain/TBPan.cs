@@ -81,6 +81,8 @@ public class TBPan : MonoBehaviour
         Vector3 mousePosition = Input.mousePosition;
         if (Input.GetMouseButtonDown(0))
         {
+            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+                return;
             //Debug.Log("GetMouseButtonDown mousePosition " + mousePosition);
             mousePosStart = mousePosition;
             vCamRootPosStart = trCameraRoot.position;
@@ -95,6 +97,9 @@ public class TBPan : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
+            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+                return;
+
             if (Vector3.Distance(mousePosition, mousePosStart) > 5f)
             {
                 ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -112,6 +117,8 @@ public class TBPan : MonoBehaviour
         }
         else if(Input.GetMouseButtonUp(0))
         {
+            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+                return;
             if (inertiaSpeed.magnitude > 0.01f)
                 inertiaActive = true;
         }
