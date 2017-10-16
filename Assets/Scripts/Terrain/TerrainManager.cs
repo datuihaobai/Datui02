@@ -228,10 +228,29 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildingLayerMask))
+        Vector3 pos;
+        int x, y;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, editCrystalLayerMask))
         {
+            PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
-            if (hitNest != null && toPlaceBuilding == null)
+            if (tt != null)
+            {
+                pos = tileTerrain.transform.InverseTransformPoint(hit.point);
+                x = (int)Mathf.Abs(pos.x / tileTerrain.tileSize);
+                y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
+                PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
+                PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
+            
+                if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
+                {
+                    NestBuilding nest = toPlaceBuilding as NestBuilding;
+                    PlaceNest(nest, buildingTile);
+                    toPlaceBuilding = null;
+                    //Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
+                }
+            }
+            else if (hitNest != null && toPlaceBuilding == null)
             {
                 Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
             }
@@ -245,7 +264,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         Vector3 pos;
         int x, y;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, editCrystalLayerMask))

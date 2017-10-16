@@ -21,7 +21,7 @@ public class UITerrainRoot : MonoBehaviour
     {
         Messenger.AddListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
         Messenger.AddListener(UIEvent.UIEvent_CrystalDistanceTip, OnCrystalDistanceTip);
-        Messenger.AddListener(TerrainManager.TerrainManagerEvent_PlaceBuilding,OnPlaceBuilding);
+        //Messenger.AddListener(TerrainManager.TerrainManagerEvent_PlaceBuilding,OnPlaceBuilding);
         UpdateSelectLevel();
         UpdateSelectElement();
     }
@@ -30,7 +30,7 @@ public class UITerrainRoot : MonoBehaviour
     {
         Messenger.RemoveListener(UIEvent.UIEvent_ShowCrystalOption, OnShowCrystalOption);
         Messenger.RemoveListener(UIEvent.UIEvent_CrystalDistanceTip, OnCrystalDistanceTip);
-        Messenger.RemoveListener(TerrainManager.TerrainManagerEvent_PlaceBuilding, OnPlaceBuilding);
+        //Messenger.RemoveListener(TerrainManager.TerrainManagerEvent_PlaceBuilding, OnPlaceBuilding);
     }
 
     public void OnClickCrystalOn()
@@ -147,11 +147,11 @@ public class UITerrainRoot : MonoBehaviour
         commonConfirm.Show(showData);
     }
 
-    void OnPlaceBuilding()
-    {
-        //buildingTypeSelect.value = 0;
-        //crystalButton.SetSelect(false);
-        //nestButton.SetSelect(false);
-        TerrainManager.instance.RemoveToPlaceBuilding();
-    }
+    //void OnPlaceBuilding()
+    //{
+    //    //buildingTypeSelect.value = 0;
+    //    //crystalButton.SetSelect(false);
+    //    //nestButton.SetSelect(false);
+    //    TerrainManager.instance.RemoveToPlaceBuilding();
+    //}
 }
