@@ -6,7 +6,7 @@ using Game.Messenger;
 public class UISelectCrystal : MonoBehaviour 
 {
     public GameObject root;
-    private PATileTerrain.PATile selectTile;
+    //private PATileTerrain.PATile selectTile;
 
     void Awake()
     {
@@ -21,7 +21,7 @@ public class UISelectCrystal : MonoBehaviour
 
     void OnShow(PATileTerrain.PATile tile)
     {
-        this.selectTile = tile;
+        //this.selectTile = tile;
         Show();
     }
 
@@ -37,17 +37,25 @@ public class UISelectCrystal : MonoBehaviour
 
     public void OnSelectFire()
     {
-        if (selectTile == null)
-            return;
-        TerrainManager.instance.CreateNewCrystal(selectTile,1,PATileTerrain.TileElementType.Fire);
+        //if (selectTile == null)
+        //    return;
+        //TerrainManager.instance.CreateNewCrystal(selectTile,1,PATileTerrain.TileElementType.Fire);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
+        TerrainManager.instance.selectElementType = PATileTerrain.TileElementType.Fire;
+        TerrainManager.instance.selectLevel = 1;
+        TerrainManager.instance.CreateToPlaceBuilding();
         Hide();
     }
     
     public void OnSelectWood()
     {
-        if (selectTile == null)
-            return;
-        TerrainManager.instance.CreateNewCrystal(selectTile, 1, PATileTerrain.TileElementType.Wood);
+        //if (selectTile == null)
+        //    return;
+        //TerrainManager.instance.CreateNewCrystal(selectTile, 1, PATileTerrain.TileElementType.Wood);
+        TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
+        TerrainManager.instance.selectElementType = PATileTerrain.TileElementType.Wood;
+        TerrainManager.instance.selectLevel = 1;
+        TerrainManager.instance.CreateToPlaceBuilding();
         Hide();
     }
 }

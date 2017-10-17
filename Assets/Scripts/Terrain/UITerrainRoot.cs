@@ -86,18 +86,18 @@ public class UITerrainRoot : MonoBehaviour
     {
         //crystalButton.SetSelect(true);
         //nestButton.SetSelect(false);
-        TerrainManager.instance.SetSelectShuijing(null);
-        TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
-        TerrainManager.instance.CreateToPlaceBuilding();
+        //TerrainManager.instance.SetSelectShuijing(null);
+        //TerrainManager.instance.selectBuildingType = Building.BuildingType.Shuijing;
+        //TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     public void OnSelectBuildingNest()
     {
         //crystalButton.SetSelect(false);
         //nestButton.SetSelect(true);
-        TerrainManager.instance.SetSelectShuijing(null);
-        TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
-        TerrainManager.instance.CreateToPlaceBuilding();
+        //TerrainManager.instance.SetSelectShuijing(null);
+        //TerrainManager.instance.selectBuildingType = Building.BuildingType.Nest;
+        //TerrainManager.instance.CreateToPlaceBuilding();
     }
 
     public void OnCrystalUpgrade()

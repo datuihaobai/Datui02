@@ -31,6 +31,8 @@ public class VirtualPoint : MonoBehaviour
 
     public Transform CreateBuilding(Transform parent)
     {
+        if (buildings.Count == 0)
+            return null;
         int randomValue = RandomManager.instance.Range(0,buildings.Count);
         Transform building = null;
         if (Application.isPlaying)

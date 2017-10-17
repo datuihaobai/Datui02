@@ -67,7 +67,9 @@ public class Shuijing : Building
                 continue;
             if (!point.CheckElementType(pointTile))
                 continue;
-            buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
+            Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+            if(building != null)
+                buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }
 
         if(Application.isPlaying)
@@ -77,7 +79,9 @@ public class Shuijing : Building
         {
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
                 continue;
-            buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
+            Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+            if (building != null)
+                buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }
     }
 

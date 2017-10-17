@@ -272,21 +272,41 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             Shuijing hitShuijing = hit.transform.GetComponent<Shuijing>();
             if (tt != null)
             {
-                pos = tileTerrain.transform.InverseTransformPoint(hit.point);
-                x = (int)Mathf.Abs(pos.x / tileTerrain.tileSize);
-                y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
-                PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
-                PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
-
-                if (!CheckCrystalDistance(buildingTile.keyTile))
+                if(toPlaceBuilding == null)
                 {
-                    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
-                    return;
+                    SetSelectShuijing(null);
+                    Messenger<PATileTerrain.PATile>.Broadcast(UIEvent.UIEvent_ShowSelectCrystal, null);
                 }
                 else
                 {
-                    Messenger<PATileTerrain.PATile>.Broadcast(UIEvent.UIEvent_ShowSelectCrystal, buildingTile.keyTile);
+                    pos = tileTerrain.transform.InverseTransformPoint(hit.point);
+                    x = (int)Mathf.Abs(pos.x / tileTerrain.tileSize);
+                    y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
+                    PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
+                    PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
+                
+                    if (!CheckCrystalDistance(buildingTile.keyTile))
+                    {
+                        Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
+                        return;
+                    }
+
+                    Shuijing shuijing = toPlaceBuilding as Shuijing;
+                    PlaceCrystal(shuijing, buildingTile);
+                    RepaintAllCrystals();
+                    toPlaceBuilding = null;
+                    SetSelectShuijing(shuijing);
+                    Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                 }
+                //if (!CheckCrystalDistance(buildingTile.keyTile))
+                //{
+                //    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
+                //    return;
+                //}
+                //else
+                //{
+                //    Messenger<PATileTerrain.PATile>.Broadcast(UIEvent.UIEvent_ShowSelectCrystal, buildingTile.keyTile);
+                //}
 
                 //if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
                 //{
