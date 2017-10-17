@@ -69,7 +69,7 @@ public class Shuijing : Building
                 continue;
             Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
             if(building != null)
-                buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
+                buildings.Add(building);
         }
 
         if(Application.isPlaying)
@@ -81,7 +81,7 @@ public class Shuijing : Building
                 continue;
             Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
             if (building != null)
-                buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
+                buildings.Add(building);
         }
     }
 
