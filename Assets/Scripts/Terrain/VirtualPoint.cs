@@ -18,8 +18,16 @@ public class VirtualPoint : MonoBehaviour
         Animals,
     }
 
+    public enum ElementType
+    {
+        Fire,
+        Wood,
+        Sand,
+    }
+
     public List<BuildingData> buildings = new List<BuildingData>();
     public VirtualPointType virtualPointType;
+    public ElementType elementType;
 
     public Transform CreateBuilding(Transform parent)
     {
@@ -37,5 +45,19 @@ public class VirtualPoint : MonoBehaviour
             building.localRotation = Quaternion.Euler(0, buildings[randomValue].rotateY, 0);
         
         return building;
+    }
+
+    public bool CheckElementType(PATileTerrain.PATile checkTile)
+    {
+        if (checkTile == null)
+            return false;
+
+        if (elementType == ElementType.Sand && checkTile.element.IsMultiElement())
+            return true;
+        else if (elementType == ElementType.Fire && checkTile.element.FireValue > 0 && checkTile.element.WoodValue == 0)
+            return true;
+        else if (elementType == ElementType.Wood && checkTile.element.FireValue == 0 && checkTile.element.WoodValue > 0)
+            return true;
+        return false;
     }
 }

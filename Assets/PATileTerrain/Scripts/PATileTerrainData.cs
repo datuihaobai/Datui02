@@ -24,8 +24,8 @@ public partial class PATileTerrain
     public EditorSettings editorSettings = new EditorSettings();
 	
     /// <summary>
-    /// 水晶格子
-    /// 四个小格子组成一个水晶格子
+    /// 建筑格子，一个建筑可能占据若干个格子
+    /// 水晶占据的格子是2*2
     /// </summary>
     [System.Serializable]
     public class PABuildingTile
@@ -669,6 +669,11 @@ public partial class PATileTerrain
         public float Distance(PATile other)
         {
             return Vector2.Distance(new Vector2(x,y),new Vector2(other.x,other.y));
+        }
+    
+        public Vector3 WorldPos(Transform parentTrans)
+        {
+            return parentTrans.TransformPoint(position);
         }
     }
 	

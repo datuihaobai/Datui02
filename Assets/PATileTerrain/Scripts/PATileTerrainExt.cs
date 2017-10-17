@@ -51,7 +51,7 @@ public partial class PATileTerrain
     {
         string content = settings.ToJson().ToString();
         string path = Application.persistentDataPath + "/datui_terrain";
-        Debug.Log(path);
+        Debug.Log("Saved at " + path);
         File.Delete(path);
         if (string.IsNullOrEmpty(content))
             return;
@@ -69,7 +69,7 @@ public partial class PATileTerrain
     public void LoadTerrain()
     {
         string path = Application.persistentDataPath + "/datui_terrain";
-        Debug.Log(path);
+        Debug.Log("Load from " + path);
         if (File.Exists(path))
         {
             FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read);
@@ -967,5 +967,40 @@ public partial class PATileTerrain
 
         foreach (var tile in postProcessSingleElementTiles)
             PaintPostProcessSingleElementTile(tile);
+    }
+
+    //根据埋点距离水晶tile的距离计算出埋点所处的tile
+    public PATile GetTileByPoint(PATile tile,Transform vPoint)
+    {
+        return null;
+        //Debug.Log("GetTileByPoint tile.x " + tile.x + " tile.y " + tile.y + " vPoint " + vPoint);
+        //Vector3 v0 = vPoint.position - tile.WorldPos(transform);
+        //float distance = Vector3.Distance(tile.WorldPos(transform), vPoint.position);
+        ////Debug.Log("GetTileByPoint distance " + distance);
+        //int intDistance = (int)(distance + 0.5f);
+        //if (intDistance % 2 == 0)
+        //    intDistance += 1;
+        ////Debug.Log("GetTileByPoint intDistance " + intDistance);
+        //PATile[] checkTiles = GetNeighboringTilesNxN(tile, intDistance);
+        //float minAngle= float.PositiveInfinity;
+        //int minIndex = 0;
+        //for (int i = 0; i < checkTiles.Length; i ++)
+        //{
+        //    if (checkTiles[i] == null)
+        //        continue;
+        //    Vector3 v1 = checkTiles[i].WorldPos(transform) - tile.WorldPos(transform);
+        //    float angle = Vector3.Angle(v0,v1);
+        //    //Debug.Log("GetTileByPoint angle" + angle);
+        //    if(angle < minAngle)
+        //    {
+        //        minAngle = angle;
+        //        minIndex = i;
+        //    }
+        //}
+
+        //if (minAngle < 10f)
+        //    return checkTiles[minIndex];
+        //else 
+        //    return null;
     }
 }

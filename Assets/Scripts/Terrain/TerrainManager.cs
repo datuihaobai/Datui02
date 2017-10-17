@@ -452,27 +452,22 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         PATileTerrain.PATile tile = selectShuijing.tile;
         int newLevel = selectShuijing.level + 1;
         PATileTerrain.TileElementType elementType = selectShuijing.elementType;
-        RemoveSelectShuijing();
-
-        //Shuijing newShuijing = CreateCrystal(tile, newLevel,elementType);
-        //RepaintAllCrystals();
-        //newShuijing.CreateBuildings(tileTerrain);
-        //SetSelectShuijing(null);
+        RemoveCrystal(selectShuijing);
         CreateNewCrystal(tile,newLevel,elementType);
-        //SetSelectShuijing(newShuijing);
     }
 
     public void CreateNewCrystal(PATileTerrain.PATile tile,int level ,PATileTerrain.TileElementType elementType)
     {
         Shuijing newShuijing = CreateCrystal(tile, level, elementType);
         RepaintAllCrystals();
-        newShuijing.CreateBuildings(tileTerrain);
+        //newShuijing.CreateBuildings(tileTerrain);
         SetSelectShuijing(null);
     }
 
-    public void RemoveSelectShuijing()
+    public void RemoveSelectShuijingAndRepaintAll()
     {
         RemoveCrystal(selectShuijing);
+        RepaintAllCrystals();
     }
 
     public void ClearTerrain()
@@ -501,7 +496,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
         shuijing.tile.shuijing = null;
-        RepaintAllCrystals();
+        //RepaintAllCrystals();
     }
 
     bool CalTileElement(PATileTerrain.PATile tile, Vector2 crystalPos, float centerValue, float atten,PATileTerrain.TileElementType elementType)
@@ -542,7 +537,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         CalTileElement(shuijing.tile, crystalPos, centerValue, atten, shuijing.elementType);
         if (!collectTiles.Contains(shuijing.tile))
             collectTiles.Add(shuijing.tile);
-        shuijing.affectTiles.Add(shuijing.tile);
+        if (!shuijing.affectTiles.Contains(shuijing.tile))
+            shuijing.affectTiles.Add(shuijing.tile);
         shuijing.tile.affectShuijing = shuijing;
         while(true)
         {
@@ -557,11 +553,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 {
                     if (!collectTiles.Contains(tile))
                         collectTiles.Add(tile);
-                    if (tile.affectShuijing == null)
-                    {
+                    if (!shuijing.affectTiles.Contains(tile))
                         shuijing.affectTiles.Add(tile);
+                    if (tile.affectShuijing == null)
                         tile.affectShuijing = shuijing;
-                    }
                     outOfRange = false;
                 } 
             }
@@ -610,10 +605,11 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         List<PATileTerrain.PATile> collectTiles = new List<PATileTerrain.PATile>();
         // 设置属性值
         foreach (var crystal in tileTerrain.settings.crystals)
-            PaintElement(crystal.shuijing,ref collectTiles);
+        {
+            crystal.shuijing.RemoveBuildings();
+            PaintElement(crystal.shuijing, ref collectTiles);
+        } 
 
-        //foreach(var crystal in tileTerrain.settings.crystals)
-        //    PaintCrystal(crystal.shuijing);
         //设置地表贴图
         tileTerrain.PaintTiles(ref collectTiles);
 
@@ -623,6 +619,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             RandomManager.instance.SetSeed(crystal.randomSeed);
             foreach (var tile in crystal.shuijing.affectTiles)
                 tileTerrain.PaintATileDecal(tile);
+            crystal.shuijing.CreateBuildings(tileTerrain);
         }
     }
 

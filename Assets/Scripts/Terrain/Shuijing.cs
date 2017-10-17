@@ -31,6 +31,26 @@ public class Shuijing : Building
         }
     }
 
+    PATileTerrain.PATile GetTileByPoint(PATileTerrain tileTerrain, Transform vPointTrans)
+    {
+        float minDistance = float.PositiveInfinity;
+        PATileTerrain.PATile pointTile = null;
+        foreach(var affectTile in affectTiles)
+        {
+            float distance = Vector3.Distance(affectTile.WorldPos(tileTerrain.transform),vPointTrans.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                pointTile = affectTile;
+            }
+        }
+
+        if (minDistance < 2f)
+            return pointTile;
+        else
+            return null;
+    }
+
     public void CreateBuildings(PATileTerrain tileTerrain)
     {
         //return;
@@ -39,7 +59,13 @@ public class Shuijing : Building
 
         foreach (var point in vPoints)
         {
+            PATileTerrain.PATile pointTile = GetTileByPoint(tileTerrain,point.transform);
+            if (pointTile == null)
+                continue;
+            Debug.Log("pointTile.x " + pointTile.x + " pointTile.y " + pointTile.y + " point " + point.transform);
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
+                continue;
+            if (!point.CheckElementType(pointTile))
                 continue;
             buildings.Add(point.CreateBuilding(chunk.settings.decoratesRoot));
         }

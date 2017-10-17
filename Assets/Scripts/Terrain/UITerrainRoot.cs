@@ -117,7 +117,7 @@ public class UITerrainRoot : MonoBehaviour
 
     public void OnCrystalRemove()
     {
-        TerrainManager.instance.RemoveSelectShuijing();
+        TerrainManager.instance.RemoveSelectShuijingAndRepaintAll();
         crystalOption.Hide();
     }
 

@@ -1309,7 +1309,7 @@ public partial class PATileTerrain: MonoBehaviour
                 theTile.shuijing = shuijing;
                 shuijing.tile = theTile;
                 crystal.shuijing = shuijing;
-                shuijing.CreateBuildings(this);
+                //shuijing.CreateBuildings(this);
 
                 foreach (var buildingData in crystal.buildings)
                 {
