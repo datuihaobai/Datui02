@@ -36,6 +36,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private bool isCrystalMode = false;
     private bool isOverUI = false;
     private bool isStarted = false;
+    private bool isOverToPlaceBuilding = false;
 
     private int terrainChunkLayermask;
     private int editCrystalLayerMask;
@@ -74,8 +75,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         isStarted = true;
     }
 
+    //float logTimer = 0f;
+
     void Update()
     {
+        //logTimer += Time.deltaTime;
+
         if (!isStarted)
             return;
 
@@ -85,14 +90,24 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 isOverUI = true;
             else
                 isOverUI = false;
+            if (IsPointerOverToPlaceBuilding())
+                isOverToPlaceBuilding = true;
+            else
+                isOverToPlaceBuilding = false;
         }
 
-        if (toPlaceBuilding != null)
+        if (Input.GetMouseButton(0) && isOverToPlaceBuilding && toPlaceBuilding != null)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out hit, Mathf.Infinity, terrainChunkLayermask);
             toPlaceBuilding.transform.position = hit.point;
+        
+            //if(logTimer > 3f)
+            //{ 
+            //    logTimer = 0;
+            //    Debug.Log("hit.point " + hit.point);
+            //}
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -298,46 +313,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                     SetSelectShuijing(shuijing);
                     Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                 }
-                //if (!CheckCrystalDistance(buildingTile.keyTile))
-                //{
-                //    Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
-                //    return;
-                //}
-                //else
-                //{
-                //    Messenger<PATileTerrain.PATile>.Broadcast(UIEvent.UIEvent_ShowSelectCrystal, buildingTile.keyTile);
-                //}
-
-                //if (toPlaceBuilding != null && buildingTile.keyTile.shuijing == null)
-                //{
-                //    if (toPlaceBuilding is Shuijing)
-                //    {
-                //        if (!CheckCrystalDistance(buildingTile.keyTile))
-                //        {
-                //            Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
-                //            return;
-                //        }
-
-                //        Shuijing shuijing = toPlaceBuilding as Shuijing;
-                //        PlaceCrystal(shuijing, buildingTile);
-                //        RepaintAllCrystals();
-                //        shuijing.CreateBuildings(tileTerrain);
-                //        toPlaceBuilding = null;
-                //        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
-                //    }
-                //    else if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
-                //    {
-                //        NestBuilding nest = toPlaceBuilding as NestBuilding;
-                //        PlaceNest(nest, buildingTile);
-                //        toPlaceBuilding = null;
-                //        Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
-                //    }
-                //}
-                //SetSelectShuijing(buildingTile.keyTile.shuijing);
-                //if (buildingTile.keyTile.shuijing != null)
-                //{
-                //    MoveCameraToPos(buildingTile.keyTile.shuijing.transform, MoveToCrystalCallBack);
-                //}
             }
             else if (hitShuijing != null && toPlaceBuilding == null)
             {
@@ -345,9 +320,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 MoveCameraToPos(hitShuijing.transform, MoveToCrystalCallBack);
             }
             else
-            {
                 SetSelectShuijing(null);
-            }
         }
     }
 
@@ -400,6 +373,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         shuijing.elementType = elementType;
         shuijing.prefabName = shuijingPrefabName;
         shuijing.SetSelectTag(true);
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2,0));
+        Physics.Raycast(ray, out hit, Mathf.Infinity, terrainChunkLayermask);
+        shuijing.transform.position = hit.point;
+
         return shuijing;
     }
 
@@ -432,6 +411,12 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         NestBuilding nest = nestGo.GetComponent<NestBuilding>();
         nest.elementType = elementType;
         nest.prefabName = nestPrefabName;
+
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Physics.Raycast(ray, out hit, Mathf.Infinity, terrainChunkLayermask);
+        nest.transform.position = hit.point;
+
         return nest;
     }
 
@@ -648,5 +633,15 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         if (selectShuijing == null || selectShuijing.level >= 3)
             return "";
         return string.Format("是否用5个level{0}晶核将其升级到level{1}晶核", selectShuijing.level, selectShuijing.level + 1);
+    }
+
+    public bool IsPointerOverToPlaceBuilding()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, toPlaceBuildingLayerMask))
+            return true;
+
+        return false;
     }
 }

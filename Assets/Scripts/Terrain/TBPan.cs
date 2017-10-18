@@ -63,6 +63,7 @@ public class TBPan : MonoBehaviour
     private bool inertiaActive;
     private float inertiaAge;
     private Vector3 inertiaSpeed;
+    private bool isPointerOverToPlaceBuilding = false;
 
     void Update()
     {
@@ -83,6 +84,13 @@ public class TBPan : MonoBehaviour
         {
             if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
                 return;
+            if (TerrainManager.instance.IsPointerOverToPlaceBuilding())
+            {
+                isPointerOverToPlaceBuilding = true;
+                return;
+            }
+            else
+                isPointerOverToPlaceBuilding = false;
             //Debug.Log("GetMouseButtonDown mousePosition " + mousePosition);
             mousePosStart = mousePosition;
             vCamRootPosStart = trCameraRoot.position;
@@ -99,6 +107,11 @@ public class TBPan : MonoBehaviour
         {
             if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
                 return;
+            if (isPointerOverToPlaceBuilding)
+            {
+                isMoving = false;
+                return;
+            } 
 
             if (Vector3.Distance(mousePosition, mousePosStart) > 5f)
             {
@@ -118,6 +131,8 @@ public class TBPan : MonoBehaviour
         else if(Input.GetMouseButtonUp(0))
         {
             if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+                return;
+            if (isPointerOverToPlaceBuilding)
                 return;
             if (inertiaSpeed.magnitude > 0.01f)
                 inertiaActive = true;

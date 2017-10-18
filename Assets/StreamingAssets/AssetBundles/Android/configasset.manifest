@@ -1,18 +1,22 @@
 ManifestFileVersion: 0
-CRC: 731509027
+CRC: 381496475
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3054f9fc493db6460e5738a2f71f13db
+    Hash: d5249f562d3aa486d8694fdf5b71e283
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 849b054ae87290d95a2713371439d9eb
+    Hash: 2357ce7056c718eb6435865097a84552
 HashAppended: 0
 ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: ad45ead06aa8cb94f84ecc6c6c8b2173, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 633b68411ab408441ba13e42dafdd94d, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 8eeea8f11eb128841a8f64843ef854f9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a6b76c83dbb84d240ab4cf88a197c1cf, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: e5f2f1df55add9b4ea4e6d00fa4ce55c, type: 3}
 - Class: 115
@@ -21,4 +25,6 @@ Assets:
 - Assets/WorkAssets/ConfigAsset/DecalConfig.asset
 - Assets/WorkAssets/ConfigAsset/TileBrushConfig.asset
 - Assets/WorkAssets/ConfigAsset/CrystalRangeConfig.asset
+- Assets/WorkAssets/ConfigAsset/TileMixConfig.asset
+- Assets/WorkAssets/ConfigAsset/TerrainCommonConfig.asset
 Dependencies: []
