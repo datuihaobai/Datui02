@@ -62,7 +62,7 @@ public class Shuijing : Building
             PATileTerrain.PATile pointTile = GetTileByPoint(tileTerrain,point.transform);
             if (pointTile == null)
                 continue;
-            Debug.Log("pointTile.x " + pointTile.x + " pointTile.y " + pointTile.y + " point " + point.transform);
+            //Debug.Log("pointTile.x " + pointTile.x + " pointTile.y " + pointTile.y + " point " + point.transform);
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
                 continue;
             if (!point.CheckElementType(pointTile))
@@ -98,5 +98,10 @@ public class Shuijing : Building
     public void SetSelectTag(bool isSelect)
     {
         selectTag.SetActive(isSelect);
+    }
+
+    void OnLongPress( LongPressGesture gesture )
+    {
+        //Debug.Log("Long press");
     }
 }

@@ -16,6 +16,8 @@ public class Building : MonoBehaviour
     public PATileTerrain.TileElementType elementType;
     [HideInInspector]
     public string prefabName;
+
+    public int buildingId;
     //[HideInInspector]
     //public Shuijing belongShuijing;
 }
