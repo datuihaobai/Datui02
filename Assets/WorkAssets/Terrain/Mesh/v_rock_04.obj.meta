@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: v_rock_04
     100002: //RootNode
+    100004: default
     400000: v_rock_04
     400002: //RootNode
+    400004: default
     2300000: v_rock_04
+    2300002: default
     3300000: v_rock_04
+    3300002: default
     4300000: v_rock_04
+    4300002: default
   materials:
     importMaterials: 0
     materialName: 0
