@@ -32,12 +32,12 @@ public class VirtualPoint : MonoBehaviour
     public Transform building;
     public PATileTerrain.PATile closeTile; //距离最近的tile
 
-    //void Awake()
-    //{
-    //    closeTile = null;
-    //}
+    void Awake()
+    {
+        Reset();
+    }
 
-    void OnEnable()
+    public void Reset()
     {
         building = null;
         closeTile = null;

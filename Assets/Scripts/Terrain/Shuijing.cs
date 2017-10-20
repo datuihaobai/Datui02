@@ -101,6 +101,12 @@ public class Shuijing : Building
         }
     }
 
+    public void Reset()
+    {
+        for (int i = 0; i < vPoints.Count; i++ )
+            vPoints[i].Reset();
+    }
+
     public void RemoveBuildings()
     {
         if (buildings.Count == 0)

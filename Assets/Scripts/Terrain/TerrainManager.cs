@@ -223,11 +223,14 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return minDistanceOfCrystal;
     }
 
-    bool CheckCrystalDistance(PATileTerrain.PATile newTile)
+    bool CheckCrystalDistance(PATileTerrain.PATile newTile,Shuijing shuijing)
     {
         float minDistance = GetMinDistanceOfCrystal();
         foreach(var crystal in tileTerrain.settings.crystals)
         {
+            if (crystal.shuijing.elementType == shuijing.elementType)
+                continue;
+
             PATileTerrain.PATile tile = tileTerrain.GetTile(crystal.id);
             float distance = tile.Distance(newTile);
             if (distance < minDistance)
@@ -300,19 +303,20 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                     y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
                     PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                     PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
-                
-                    if (!CheckCrystalDistance(buildingTile.keyTile))
+
+                    Shuijing shuijing = toPlaceBuilding as Shuijing;
+                    if (!CheckCrystalDistance(buildingTile.keyTile,shuijing))
                     {
                         Messenger.Broadcast(UIEvent.UIEvent_CrystalDistanceTip);
                         return;
                     }
 
-                    Shuijing shuijing = toPlaceBuilding as Shuijing;
                     PlaceCrystal(shuijing, buildingTile);
+                    shuijing.SetSelectTag(false);
                     RepaintAllCrystals();
                     //PaintCrystal(shuijing);
                     toPlaceBuilding = null;
-                    SetSelectShuijing(shuijing);
+                    //SetSelectShuijing(shuijing);
                     Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
                 }
             }
@@ -374,6 +378,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         shuijing.level = level;
         shuijing.elementType = elementType;
         shuijing.prefabName = shuijingPrefabName;
+        shuijing.Reset();
         //shuijing.SetSelectTag(true);
 
         RaycastHit hit;
