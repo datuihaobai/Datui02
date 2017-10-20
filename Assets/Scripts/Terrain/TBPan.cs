@@ -69,7 +69,7 @@ public class TBPan : MonoBehaviour
     {
         if (Input.touchCount > 1)
         {
-            Debug.Log("Input.touchCount " + Input.touchCount);
+            //Debug.Log("Input.touchCount " + Input.touchCount);
             return;
         }
 
