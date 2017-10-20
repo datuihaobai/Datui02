@@ -20,4 +20,8 @@ public class Building : MonoBehaviour
     public int buildingId;
     //[HideInInspector]
     //public Shuijing belongShuijing;
+
+    public virtual void SetSelectTag(bool isSelect)
+    {
+    }
 }

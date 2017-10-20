@@ -152,6 +152,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         else if (selectBuildingType == Building.BuildingType.Shuijing)
         {
             toPlaceBuilding = CreateCrystal(selectLevel,selectElementType);
+            toPlaceBuilding.SetSelectTag(true);
         }
         else if (selectBuildingType == Building.BuildingType.Nest)
         {
@@ -308,8 +309,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
                     Shuijing shuijing = toPlaceBuilding as Shuijing;
                     PlaceCrystal(shuijing, buildingTile);
-                    //RepaintAllCrystals();
-                    PaintCrystal(shuijing);
+                    RepaintAllCrystals();
+                    //PaintCrystal(shuijing);
                     toPlaceBuilding = null;
                     SetSelectShuijing(shuijing);
                     Messenger.Broadcast(TerrainManagerEvent_PlaceBuilding);
@@ -373,7 +374,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         shuijing.level = level;
         shuijing.elementType = elementType;
         shuijing.prefabName = shuijingPrefabName;
-        shuijing.SetSelectTag(true);
+        //shuijing.SetSelectTag(true);
 
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2,0));
@@ -459,7 +460,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         int newLevel = selectShuijing.level + 1;
         PATileTerrain.TileElementType elementType = selectShuijing.elementType;
         RemoveCrystal(selectShuijing);
-        CreateCrystal(tile,newLevel,elementType);
+        Shuijing shuijing =  CreateCrystal(tile,newLevel,elementType);
+        //PaintCrystal(shuijing);
         RepaintAllCrystals();
         SetSelectShuijing(null);
     }
@@ -609,22 +611,22 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     //    //shuijing.CreateBuildings(tileTerrain);
     //}
 
-    public void PaintCrystal(Shuijing shuijing)
-    {
-        Dictionary<int, PATileTerrain.PATile> collectTiles = new Dictionary<int, PATileTerrain.PATile>();
-        // 设置属性值
-        PaintElement(shuijing, ref collectTiles,true);
+    //public void PaintCrystal(Shuijing shuijing)
+    //{
+    //    Dictionary<int, PATileTerrain.PATile> collectTiles = new Dictionary<int, PATileTerrain.PATile>();
+    //    // 设置属性值
+    //    PaintElement(shuijing, ref collectTiles,true);
 
-        //设置地表贴图
-        tileTerrain.PaintTiles(ref collectTiles,true);
+    //    //设置地表贴图
+    //    tileTerrain.PaintTiles(ref collectTiles,true);
 
-        //设置贴花
-        //RepaintAllDecalAndRebuildAll();
+    //    //设置贴花
+    //    //RepaintAllDecalAndRebuildAll();
 
-        PaintDecals(ref collectTiles);
-        shuijing.RemoveBuildings();
-        shuijing.CreateBuildings(tileTerrain);
-    }
+    //    PaintDecals(ref collectTiles);
+    //    shuijing.RemoveBuildings();
+    //    shuijing.CreateBuildings(tileTerrain);
+    //}
 
     public void RepaintAllCrystals()
     {
@@ -642,12 +644,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         RepaintAllDecalAndRebuildAll();
     }
 
-    void PaintDecals(ref Dictionary<int, PATileTerrain.PATile> tiles)
-    {
-        foreach (var tile in tiles.Values)
-            tileTerrain.PaintATileDecal(tile);
-    }
-
     void RepaintAllDecalAndRebuildAll()
     {
         foreach (var crystal in tileTerrain.settings.crystals)
@@ -656,11 +652,17 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             foreach (var tile in crystal.shuijing.affectTiles.Values)
                 tileTerrain.PaintATileDecal(tile);
 
-            crystal.shuijing.RemoveBuildings();
+            //crystal.shuijing.RemoveBuildings();
             crystal.shuijing.CreateBuildings(tileTerrain);
         }
     }
 
+    //void PaintDecals(ref Dictionary<int, PATileTerrain.PATile> tiles)
+    //{
+    //    foreach (var tile in tiles.Values)
+    //        tileTerrain.PaintATileDecal(tile);
+    //}
+    
     public string GetUpgradeTips()
     {
         if (selectShuijing == null || selectShuijing.level >= 3)

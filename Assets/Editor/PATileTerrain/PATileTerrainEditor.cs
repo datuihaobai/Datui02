@@ -734,10 +734,10 @@ public class PATileTerrainEditor : Editor
 						GUILayout.Label("Id : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
 						selectedTile.id = EditorGUILayout.IntField(selectedTile.id);
 						GUILayout.EndHorizontal();
-						GUILayout.BeginHorizontal();
-						GUILayout.Label("Name : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
-						selectedTile.name = EditorGUILayout.TextField(selectedTile.name);
-						GUILayout.EndHorizontal();
+                        //GUILayout.BeginHorizontal();
+                        //GUILayout.Label("Name : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        //selectedTile.name = EditorGUILayout.TextField(selectedTile.name);
+                        //GUILayout.EndHorizontal();
 						GUILayout.BeginHorizontal();
 						GUILayout.Label("Walkability : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
 						selectedTile.walkability = EditorGUILayout.Toggle(selectedTile.walkability);

@@ -121,8 +121,8 @@ public partial class PATileTerrain
 
     public void ResetTile()
     {
-        foreach (var tile in tiles)
-            tile.Reset();
+        for (int i = 0; i < tiles.Length;i++)
+            tiles[i].Reset();
     }
 
     public void ShowCrystal(bool isShow)

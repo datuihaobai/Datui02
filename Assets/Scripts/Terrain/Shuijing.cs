@@ -33,23 +33,6 @@ public class Shuijing : Building
 
     PATileTerrain.PATile GetTileByPoint(PATileTerrain tileTerrain, Transform vPointTrans)
     {
-        //float minDistance = float.PositiveInfinity;
-        //PATileTerrain.PATile pointTile = null;
-        //foreach(var affectTile in affectTiles.Values)
-        //{
-        //    float distance = Vector3.Distance(affectTile.WorldPos(tileTerrain.transform),vPointTrans.position);
-        //    if (distance < minDistance)
-        //    {
-        //        minDistance = distance;
-        //        pointTile = affectTile;
-        //    }
-        //}
-
-        //if (minDistance < 2f)
-        //    return pointTile;
-        //else
-        //    return null;
-
         RaycastHit hit;
         Ray ray = new Ray(new Vector3(vPointTrans.position.x,vPointTrans.position.y + 100 , vPointTrans.position.z),Vector3.down);
         Physics.Raycast(ray, out hit, Mathf.Infinity, TerrainManager.instance.terrainChunkLayermask);
@@ -74,17 +57,32 @@ public class Shuijing : Building
 
         foreach (var point in vPoints)
         {
-            PATileTerrain.PATile pointTile = GetTileByPoint(tileTerrain,point.transform);
+            PATileTerrain.PATile pointTile = point.closeTile;
+            if(pointTile == null)
+                pointTile = GetTileByPoint(tileTerrain,point.transform);
             if (pointTile == null)
                 continue;
+            point.closeTile = pointTile;
             //Debug.Log("pointTile.x " + pointTile.x + " pointTile.y " + pointTile.y + " point " + point.transform);
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
                 continue;
             if (!point.CheckElementType(pointTile))
-                continue;
-            Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
-            if(building != null)
-                buildings.Add(building);
+            {
+                if(point.building != null)
+                {
+                    buildings.Remove(point.building);
+                    point.RemoveBuilding();
+                }
+            } 
+            else
+            {
+                if (point.building == null)
+                {
+                    Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+                    if (building != null)
+                        buildings.Add(building);
+                }
+            }
         }
 
         if(Application.isPlaying)
@@ -94,9 +92,12 @@ public class Shuijing : Building
         {
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
                 continue;
-            Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
-            if (building != null)
-                buildings.Add(building);
+            if(point.building == null)
+            {
+                Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+                if (building != null)
+                    buildings.Add(building);
+            }
         }
     }
 
@@ -110,7 +111,7 @@ public class Shuijing : Building
         buildings.Clear();
     }
 
-    public void SetSelectTag(bool isSelect)
+    public override void SetSelectTag(bool isSelect)
     {
         selectTag.SetActive(isSelect);
     }

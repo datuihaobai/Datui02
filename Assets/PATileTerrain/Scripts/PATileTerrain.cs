@@ -82,7 +82,7 @@ public partial class PATileTerrain: MonoBehaviour
 	
 	public void UpdateMesh()
 	{
-		RecalculateNormals();
+        //RecalculateNormals();
 		foreach (PATileTerrainChunk c in settings.chunks)
 		{
 			c.settings.mesh.RecalculateBounds();
@@ -1183,7 +1183,7 @@ public partial class PATileTerrain: MonoBehaviour
 					
 						settings.tiles[i] = new PATile();
 						tile = settings.tiles[i];
-						tile.name = i.ToString();
+                        //tile.name = i.ToString();
 						tile.id = i;
 						tile.chunkId = cId;
 						tile.x = sx;

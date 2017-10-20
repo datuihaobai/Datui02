@@ -29,24 +29,52 @@ public class VirtualPoint : MonoBehaviour
     public VirtualPointType virtualPointType;
     public ElementType elementType;
 
+    public Transform building;
+    public PATileTerrain.PATile closeTile; //距离最近的tile
+
+    //void Awake()
+    //{
+    //    closeTile = null;
+    //}
+
+    void OnEnable()
+    {
+        building = null;
+        closeTile = null;
+    }
+
     public Transform CreateBuilding(Transform parent)
     {
         if (buildings.Count == 0)
+        {
+            building = null;
             return null;
+        }
+            
         int randomValue = RandomManager.instance.Range(0,buildings.Count);
-        Transform building = null;
+        Transform newBuilding = null;
         if (Application.isPlaying)
-            building = PoolManager.Pools["Shuijing"].Spawn(buildings[randomValue].trans);
+            newBuilding = PoolManager.Pools["Shuijing"].Spawn(buildings[randomValue].trans);
         else
-            building = Object.Instantiate(buildings[randomValue].trans);
-        building.SetParent(parent,false);
-        building.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            newBuilding = Object.Instantiate(buildings[randomValue].trans);
+        newBuilding.SetParent(parent,false);
+        newBuilding.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         if (buildings[randomValue].rotateY.Equals(0f))
-            building.rotation = transform.rotation;
+            newBuilding.rotation = transform.rotation;
         else
-            building.localRotation = Quaternion.Euler(0, buildings[randomValue].rotateY, 0);
-        
-        return building;
+            newBuilding.localRotation = Quaternion.Euler(0, buildings[randomValue].rotateY, 0);
+
+        building = newBuilding;
+
+        return newBuilding;
+    }
+
+    public void RemoveBuilding()
+    {
+        if (building == null)
+            return;
+        PoolManager.Pools["Shuijing"].Despawn(building);
+        building = null;
     }
 
     public bool CheckElementType(PATileTerrain.PATile checkTile)

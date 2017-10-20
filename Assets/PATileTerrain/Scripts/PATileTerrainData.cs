@@ -71,9 +71,9 @@ public partial class PATileTerrain
 
     public enum TileElementType
     {
-        None = 0,
-        Fire = 1,
-        Wood = 2,
+        None = -1,
+        Fire = 0,
+        Wood = 1,
     }
 
     public class TileElementValue
@@ -121,13 +121,15 @@ public partial class PATileTerrain
     [System.Serializable]
     public class PATileElement
     {
-        private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
+        private float[] elements = new float[2]{0,0};// elements[0]表示火属性 elements[1]表示木属性
+        private int[] intElements = new int[2]{-1,-1};// elements[0]表示火属性 elements[1]表示木属性
+        //private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
         // cache
         private int fireValue = -1;
         private int woodValue = -1;
-        private TileElementType maxElementType = TileElementType.None;
+        //private TileElementType maxElementType = TileElementType.None;
         private int maxElementValue = -1;
-        private Dictionary<TileElementType, int> brushConfigDicCache = new Dictionary<TileElementType, int>();
+        //private Dictionary<TileElementType, int> brushConfigDicCache = new Dictionary<TileElementType, int>();
         private int fireBrush = -1;
         private int woodBrush = -1;
         // cache
@@ -153,20 +155,25 @@ public partial class PATileTerrain
 
         public PATileElement()
         {
-            elementsDic[TileElementType.Fire] = new TileElementValue();
-            elementsDic[TileElementType.Wood] = new TileElementValue();
+            //elementsDic[TileElementType.Fire] = new TileElementValue();
+            //elementsDic[TileElementType.Wood] = new TileElementValue();
             Reset();
         }
 
         public int GetElementValue(TileElementType elementType)
         {
-            return elementsDic[elementType].GetIntValue();
+            if (intElements[(int)elementType] == -1)
+                intElements[(int)elementType] = Mathf.CeilToInt(elements[(int)elementType]);
+            return intElements[(int)elementType];
+            //return elementsDic[elementType].GetIntValue();
         }
 
         public void Reset()
         {
-            foreach (var element in elementsDic.Values)
-                element.ResetValue();
+            for (int i = 0; i < elements.Length; i++)
+                elements[i] = 0;
+            //foreach (var element in elementsDic.Values)
+            //    element.ResetValue();
             //elementsDic[TileElementType.Fire].ResetValue();
             //elementsDic[TileElementType.Wood].ResetValue();
             InvalidCache();
@@ -176,11 +183,13 @@ public partial class PATileTerrain
         {
             fireValue = -1;
             woodValue = -1;
-            maxElementType = TileElementType.None;
+            //maxElementType = TileElementType.None;
             maxElementValue = -1;
-            brushConfigDicCache.Clear();
+            //brushConfigDicCache.Clear();
             fireBrush = -1;
             woodBrush = -1;
+            for (int i = 0; i < intElements.Length; i++)
+                intElements[i] = -1;
         }
 
         public bool Equals(PATileElement other)
@@ -223,7 +232,8 @@ public partial class PATileTerrain
 
         public void AddElement(TileElementType elementType,float addValue)
         {
-            elementsDic[elementType].AddValue(addValue);
+            //elementsDic[elementType].AddValue(addValue);
+            elements[(int)elementType] += addValue;
             InvalidCache();
         }
 
@@ -231,25 +241,36 @@ public partial class PATileTerrain
         {
             if (maxElementValue == -1)
             {
-                TileElementType maxElementType = GetMaxElementType();
-                maxElementValue = elementsDic[maxElementType].GetIntValue();
+                int maxIndex = 0;
+                float maxValue = elements[maxIndex];
+                for (int i = 1; i < elements.Length; i ++ )
+                {
+                    if(elements[i] > maxValue)
+                    {
+                        maxIndex = i;
+                        maxValue = elements[i];
+                    }
+                }
+                maxElementValue = Mathf.CeilToInt(maxValue);
+                //TileElementType maxElementType = GetMaxElementType();
+                //maxElementValue = elementsDic[maxElementType].GetIntValue();
             }
             return maxElementValue;
         }
 
-        public TileElementType GetMaxElementType()
-        {
-            if(maxElementType == TileElementType.None)
-            {
-                foreach (var elementType in elementsDic.Keys)
-                {
-                    if (!elementsDic.ContainsKey(maxElementType) || 
-                        elementsDic[elementType].GetIntValue() >= elementsDic[maxElementType].GetIntValue())
-                        maxElementType = elementType;
-                }
-            }
-            return maxElementType;
-        }
+        //public TileElementType GetMaxElementType()
+        //{
+        //    if(maxElementType == TileElementType.None)
+        //    {
+        //        foreach (var elementType in elementsDic.Keys)
+        //        {
+        //            if (!elementsDic.ContainsKey(maxElementType) || 
+        //                elementsDic[elementType].GetIntValue() >= elementsDic[maxElementType].GetIntValue())
+        //                maxElementType = elementType;
+        //        }
+        //    }
+        //    return maxElementType;
+        //}
 
         public int GetBrushFromConfig(TileElementType elementType)
         {
@@ -267,11 +288,17 @@ public partial class PATileTerrain
                 if (fireBrush == -1)
                 {
                     TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
-                    foreach (var config in tileBrushConfigAsset.configs)
+                    for (int i = 0; i < tileBrushConfigAsset.configs.Count; i ++)
                     {
-                        if (config.elementType == (int)elementType && config.level == FireValue)
-                            fireBrush = config.brush;
+                        if (tileBrushConfigAsset.configs[i].elementType == (int)elementType && 
+                            tileBrushConfigAsset.configs[i].level == FireValue)
+                            fireBrush = tileBrushConfigAsset.configs[i].brush;
                     }
+                    //foreach (var config in tileBrushConfigAsset.configs)
+                    //{
+                    //    if (config.elementType == (int)elementType && config.level == FireValue)
+                    //        fireBrush = config.brush;
+                    //}
                 }
                 return fireBrush;
             }
@@ -280,11 +307,17 @@ public partial class PATileTerrain
                 if (woodBrush == -1)
                 {
                     TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
-                    foreach (var config in tileBrushConfigAsset.configs)
+                    for (int i = 0; i < tileBrushConfigAsset.configs.Count; i++)
                     {
-                        if (config.elementType == (int)elementType && config.level == WoodValue)
-                            woodBrush = config.brush;
+                        if (tileBrushConfigAsset.configs[i].elementType == (int)elementType &&
+                            tileBrushConfigAsset.configs[i].level == WoodValue)
+                            woodBrush = tileBrushConfigAsset.configs[i].brush;
                     }
+                    //foreach (var config in tileBrushConfigAsset.configs)
+                    //{
+                    //    if (config.elementType == (int)elementType && config.level == WoodValue)
+                    //        woodBrush = config.brush;
+                    //}
                 } 
                 return woodBrush;
             }
@@ -380,7 +413,7 @@ public partial class PATileTerrain
 		public int cx = -1; //[read only] X in the chunk
 		public int cy = -1; //[read only] Y in the chunk
 		public int cId = -1;
-		public string name; //tile name
+        //public string name; //tile name
 		
 		public Vector3 position; //helper position
 		
