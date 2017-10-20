@@ -78,21 +78,33 @@ public partial class PATileTerrain
 
     public class TileElementValue
     {
-        public float value;
+        private float value;
+
+        //cache
+        private int intValue = -1; 
+
+        void InvalidCache()
+        {
+            intValue = -1;
+        }
 
         public void ResetValue()
         {
             value = 0f;
+            InvalidCache();
         }
 
         public void AddValue(float addValue)
         {
             value += addValue;
+            InvalidCache();
         }
 
         public int GetIntValue()
         {
-            return Mathf.CeilToInt(value);
+            if(intValue == -1)
+                intValue = Mathf.CeilToInt(value);
+            return intValue;
         }
     }
 
@@ -110,15 +122,33 @@ public partial class PATileTerrain
     public class PATileElement
     {
         private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
-
+        // cache
+        private int fireValue = -1;
+        private int woodValue = -1;
+        private TileElementType maxElementType = TileElementType.None;
+        private int maxElementValue = -1;
+        private Dictionary<TileElementType, int> brushConfigDicCache = new Dictionary<TileElementType, int>();
+        private int fireBrush = -1;
+        private int woodBrush = -1;
+        // cache
         public int FireValue
         {
-            get { return GetElementValue(TileElementType.Fire); }
+            get 
+            { 
+                if(fireValue == -1)
+                    fireValue = GetElementValue(TileElementType.Fire);
+                return fireValue;
+            }
         }
 
         public int WoodValue
         {
-            get { return GetElementValue(TileElementType.Wood); }
+            get 
+            { 
+                if(woodValue == -1)
+                    woodValue = GetElementValue(TileElementType.Wood);
+                return woodValue;
+            }
         }
 
         public PATileElement()
@@ -135,8 +165,22 @@ public partial class PATileTerrain
 
         public void Reset()
         {
-            foreach(var element in elementsDic.Values)
+            foreach (var element in elementsDic.Values)
                 element.ResetValue();
+            //elementsDic[TileElementType.Fire].ResetValue();
+            //elementsDic[TileElementType.Wood].ResetValue();
+            InvalidCache();
+        }
+
+        void InvalidCache()
+        {
+            fireValue = -1;
+            woodValue = -1;
+            maxElementType = TileElementType.None;
+            maxElementValue = -1;
+            brushConfigDicCache.Clear();
+            fireBrush = -1;
+            woodBrush = -1;
         }
 
         public bool Equals(PATileElement other)
@@ -165,7 +209,7 @@ public partial class PATileTerrain
             return IsMultiElement() && IsEqualElement();
         }
 
-        bool IsBaseElement()
+        public bool IsBaseElement()
         {
             return FireValue == 0 && WoodValue == 0;
         }
@@ -180,45 +224,89 @@ public partial class PATileTerrain
         public void AddElement(TileElementType elementType,float addValue)
         {
             elementsDic[elementType].AddValue(addValue);
+            InvalidCache();
         }
 
         public int GetMaxElementValue()
         {
-            TileElementType maxElementType = GetMaxElementType();
-            return elementsDic[maxElementType].GetIntValue();
+            if (maxElementValue == -1)
+            {
+                TileElementType maxElementType = GetMaxElementType();
+                maxElementValue = elementsDic[maxElementType].GetIntValue();
+            }
+            return maxElementValue;
         }
 
         public TileElementType GetMaxElementType()
         {
-            TileElementType maxElementType = TileElementType.Fire;
-            foreach(var elementType in elementsDic.Keys)
+            if(maxElementType == TileElementType.None)
             {
-                if (elementsDic[elementType].GetIntValue() >= elementsDic[maxElementType].GetIntValue())
-                    maxElementType = elementType;
+                foreach (var elementType in elementsDic.Keys)
+                {
+                    if (!elementsDic.ContainsKey(maxElementType) || 
+                        elementsDic[elementType].GetIntValue() >= elementsDic[maxElementType].GetIntValue())
+                        maxElementType = elementType;
+                }
             }
             return maxElementType;
         }
 
-        public int GetBrushFromConfig(TileElementType elementType, int value)
+        public int GetBrushFromConfig(TileElementType elementType)
         {
-            foreach (var config in ConfigDataBase.instance.TileBrushConfigAsset.configs)
+            //TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
+            //foreach (var config in tileBrushConfigAsset.configs)
+            //{
+            //    if (config.elementType == (int)elementType && config.level == value)
+            //        return config.brush;  
+            //}
+
+            //return -1;
+            
+            if(elementType == TileElementType.Fire)
             {
-                if (config.elementType == (int)elementType && config.level == value)
-                    return config.brush;  
+                if (fireBrush == -1)
+                {
+                    TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
+                    foreach (var config in tileBrushConfigAsset.configs)
+                    {
+                        if (config.elementType == (int)elementType && config.level == FireValue)
+                            fireBrush = config.brush;
+                    }
+                }
+                return fireBrush;
+            }
+            else if (elementType == TileElementType.Wood)
+            {
+                if (woodBrush == -1)
+                {
+                    TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
+                    foreach (var config in tileBrushConfigAsset.configs)
+                    {
+                        if (config.elementType == (int)elementType && config.level == WoodValue)
+                            woodBrush = config.brush;
+                    }
+                } 
+                return woodBrush;
             }
             return -1;
+
+            //if(!brushConfigDicCache.ContainsKey(elementType))
+            //{
+            //    brushConfigDicCache[elementType] = -1;
+            //    TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
+            //    foreach (var config in tileBrushConfigAsset.configs)
+            //    {
+            //        if (config.elementType == (int)elementType && config.level == elementsDic[elementType].GetIntValue())
+            //            brushConfigDicCache[elementType] = config.brush;
+            //    }
+            //}
+
+            //return brushConfigDicCache[elementType];
         }
 
-        //根据属性值返回地表贴图
-        public int GetMaxElementPaintBrushType()
+        public int GetElementPaintBrushType(TileElementType elementType)
         {
-            TileElementType maxElementType = GetMaxElementType();
-            return GetBrushFromConfig(maxElementType, elementsDic[maxElementType].GetIntValue());
-        }
-
-        public int GetSingleElementPaintBrushType(TileElementType elementType)
-        {
-            return GetBrushFromConfig(elementType, elementsDic[elementType].GetIntValue());
+            return GetBrushFromConfig(elementType);
         }
 
         public DecalSuitTileType GetDecalSuitTileType()
@@ -309,7 +397,7 @@ public partial class PATileTerrain
 
         public QtrTileElementType[] qtrTiles = null;//四分之一tile列表 顺序为leftBottom leftTop rightTop rightBottom
 
-        public float distance = -1f;//距离水晶中心的距离
+        //public float distance = -1f;//距离水晶中心的距离
         public int decalTilesetIndex = -1;//贴花地格图index
         //public bool isFull;//true贴图全格，false贴图边角
         public TileSetType tileSetType;
@@ -370,7 +458,7 @@ public partial class PATileTerrain
             rotateType = UVRotateType.None;
             element.Reset();
             decalTilesetIndex = -1;
-            distance = -1;
+            //distance = -1;
             affectShuijing = null;
         }
 
@@ -556,7 +644,7 @@ public partial class PATileTerrain
         public int GetSingleElementPaintBrushType(TileElementType elementType)
         {
             if (element.IsSingleElement())
-                return element.GetSingleElementPaintBrushType(elementType);
+                return element.GetElementPaintBrushType(elementType);
             else if (element.IsMultiElement())
             {
                 if (elementType == TileElementType.Fire)

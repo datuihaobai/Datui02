@@ -5,7 +5,7 @@ using PathologicalGames;
 
 public class Shuijing : Building
 {
-    public int brushType;
+    //public int brushType;
     public Transform vPointRoot;
     public GameObject selectTag;
     
@@ -16,7 +16,7 @@ public class Shuijing : Building
     [HideInInspector]
     public List<VirtualPoint> vPoints = new List<VirtualPoint>();
     [HideInInspector]
-    public List<PATileTerrain.PATile> affectTiles = new List<PATileTerrain.PATile>();//水晶影响的tile列表，用来绘制贴花
+    public Dictionary<int,PATileTerrain.PATile> affectTiles = new Dictionary<int,PATileTerrain.PATile>();//水晶影响的tile列表，用来绘制贴花
 
     void Awake()
     {
@@ -33,22 +33,37 @@ public class Shuijing : Building
 
     PATileTerrain.PATile GetTileByPoint(PATileTerrain tileTerrain, Transform vPointTrans)
     {
-        float minDistance = float.PositiveInfinity;
-        PATileTerrain.PATile pointTile = null;
-        foreach(var affectTile in affectTiles)
-        {
-            float distance = Vector3.Distance(affectTile.WorldPos(tileTerrain.transform),vPointTrans.position);
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                pointTile = affectTile;
-            }
-        }
+        //float minDistance = float.PositiveInfinity;
+        //PATileTerrain.PATile pointTile = null;
+        //foreach(var affectTile in affectTiles.Values)
+        //{
+        //    float distance = Vector3.Distance(affectTile.WorldPos(tileTerrain.transform),vPointTrans.position);
+        //    if (distance < minDistance)
+        //    {
+        //        minDistance = distance;
+        //        pointTile = affectTile;
+        //    }
+        //}
 
-        if (minDistance < 2f)
-            return pointTile;
-        else
+        //if (minDistance < 2f)
+        //    return pointTile;
+        //else
+        //    return null;
+
+        RaycastHit hit;
+        Ray ray = new Ray(new Vector3(vPointTrans.position.x,vPointTrans.position.y + 100 , vPointTrans.position.z),Vector3.down);
+        Physics.Raycast(ray, out hit, Mathf.Infinity, TerrainManager.instance.terrainChunkLayermask);
+
+        PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
+        if (tt == null)
             return null;
+
+        Vector3 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
+        int x = (int)Mathf.Abs(pos.x / tileTerrain.tileSize);
+        int y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
+        PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
+
+        return tile;
     }
 
     public void CreateBuildings(PATileTerrain tileTerrain)

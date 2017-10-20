@@ -67,6 +67,12 @@ public class TBPan : MonoBehaviour
 
     void Update()
     {
+        if (Input.touchCount > 1)
+        {
+            Debug.Log("Input.touchCount " + Input.touchCount);
+            return;
+        }
+
         if (this.inertiaActive && (this.inertiaSpeed.magnitude > 0.01f))
         {
             this.SetCameraPosition(this.trCameraRoot.position - this.inertiaSpeed);

@@ -443,7 +443,7 @@ public partial class PATileTerrain
 
         TileElementType elementType = tile.element.GetTileElementType();
 
-        t = elementValue = tile.element.GetSingleElementPaintBrushType(elementType);
+        t = elementValue = tile.element.GetElementPaintBrushType(elementType);
         if (leftBottomTile != null)
             leftBottomValue = leftBottomTile.GetSingleElementPaintBrushType(elementType);
         if (leftTile != null)
@@ -931,14 +931,18 @@ public partial class PATileTerrain
         }
     }
 
-    public void PaintTiles(ref List<PATile> tiles)
+    //checkBaseTile == true时会检测是否是base（所有属性都是0）的tile,为了优化计算 有时收集的tile里面会包含base
+    public void PaintTiles(ref Dictionary<int, PATileTerrain.PATile> tiles,bool checkBaseTile = false)
     {
         //先处理单属性地格 多属性的后处理
         List<PATile> multiElementTiles = new List<PATile>();
         List<PATile> postProcessMultiElementTiles = new List<PATile>();
         List<PATile> postProcessSingleElementTiles = new List<PATile>();
-        foreach (var tile in tiles)
+        foreach (var tile in tiles.Values)
         {
+            if (checkBaseTile && tile.element.IsBaseElement())
+                continue;
+
             if (tile.element.IsMultiElement())
             {
                 multiElementTiles.Add(tile);
