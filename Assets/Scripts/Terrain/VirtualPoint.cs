@@ -25,11 +25,22 @@ public class VirtualPoint : MonoBehaviour
         Sand,
     }
 
+    //占地面积类型
+    public enum AreaType
+    {
+        Area1X1,
+        Area2X2,
+        Area3X3,
+    }
+
     public List<BuildingData> buildings = new List<BuildingData>();
     public VirtualPointType virtualPointType;
     public ElementType elementType;
+    public AreaType areaType;
 
+    [HideInInspector]
     public Transform building;
+    [HideInInspector]
     public PATileTerrain.PATile closeTile; //距离最近的tile
 
     void Awake()
@@ -88,6 +99,41 @@ public class VirtualPoint : MonoBehaviour
             return true;
         else if (elementType == ElementType.Wood && checkTile.element.FireValue == 0 && checkTile.element.WoodValue > 0)
             return true;
+        return false;
+    }
+
+    private bool CheckCloseTileElementType()
+    {
+        return CheckElementType(closeTile);
+    }
+
+    public bool CheckAreaType(PATileTerrain tileTerrain)
+    {
+        if (closeTile == null)
+            return false;
+        if (!CheckCloseTileElementType())
+            return false;
+        if (areaType == AreaType.Area1X1)
+            return true;
+
+        PATileTerrain.PATile[] nTiles = tileTerrain.GetNeighboringTilesNxN(closeTile, 1);
+        if(areaType == AreaType.Area2X2)
+        {
+            for (int i = 5; i < nTiles.Length; i++)
+            {
+                if (!CheckElementType(nTiles[i]))
+                    return false;
+            }
+        }
+        else if(areaType == AreaType.Area3X3)
+        {
+            for (int i = 0; i < nTiles.Length; i++ )
+            {
+                if (!CheckElementType(nTiles[i])) 
+                    return false;
+            }
+        }
+
         return false;
     }
 }

@@ -57,16 +57,14 @@ public class Shuijing : Building
 
         foreach (var point in vPoints)
         {
-            PATileTerrain.PATile pointTile = point.closeTile;
-            if(pointTile == null)
-                pointTile = GetTileByPoint(tileTerrain,point.transform);
-            if (pointTile == null)
+            if (point.closeTile == null)
+                point.closeTile = GetTileByPoint(tileTerrain, point.transform);
+            if (point.closeTile == null)
                 continue;
-            point.closeTile = pointTile;
             //Debug.Log("pointTile.x " + pointTile.x + " pointTile.y " + pointTile.y + " point " + point.transform);
             if (point.virtualPointType != VirtualPoint.VirtualPointType.Building)
                 continue;
-            if (!point.CheckElementType(pointTile))
+            if (!point.CheckAreaType(tileTerrain))
             {
                 if(point.building != null)
                 {
