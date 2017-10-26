@@ -810,8 +810,8 @@ public partial class PATileTerrain
                 continue;
             //float rate = (config.maxRate - tile.distance * config.atten);
             int rate = config.rate;
-            int randomValue =  RandomManager.instance.Range(0,100);
-            if (rate < randomValue)
+            int randomValue =  RandomManager.instance.Range(0,1000);
+            if (20 < randomValue)
                 continue;
             //int randomRotate = RandomManager.instance.Range(0,4);
             //UVRotateType rotateType = (UVRotateType)randomRotate;
