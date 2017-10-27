@@ -9,6 +9,7 @@ public class Building : MonoBehaviour
         None = 0,
         Shuijing = 1,
         Nest = 2,
+        Hatch = 3,
     }
     [HideInInspector]
     public PATileTerrain.PATile tile = null;
