@@ -12,6 +12,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     {
         MinDistanceOfCrystal = 1,//水晶之间的最小距离
         MinIgnoreElementValue = 2,//地表融合时忽略较小属性的最小差值
+        GenerateEggsCountPerDay = 3,//地图上每天随机生成蛋的数量
+        MaxEggsCount = 4,//地图上存在蛋的最大数量
     }
 
     public const string TerrainManagerEvent_PlaceBuilding = "TerrainManagerEvent_PlaceBuilding "; 
@@ -661,28 +663,49 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.PaintTiles(ref collectTiles);
 
         //设置贴花
-        RepaintAllDecalAndRebuildAll();
+        RepaintDecals();
+
+        //设置建筑
+        RecreateBuildings();
     }
 
-    void RepaintAllDecalAndRebuildAll()
+    void RepaintDecals()
     {
         foreach (var crystal in tileTerrain.settings.crystals)
         {
             RandomManager.instance.SetSeed(crystal.randomSeed);
             foreach (var tile in crystal.shuijing.affectTiles.Values)
                 tileTerrain.PaintATileDecal(tile);
-
-            //crystal.shuijing.RemoveBuildings();
-            crystal.shuijing.CreateBuildings(tileTerrain);
         }
     }
 
-    //void PaintDecals(ref Dictionary<int, PATileTerrain.PATile> tiles)
-    //{
-    //    foreach (var tile in tiles.Values)
-    //        tileTerrain.PaintATileDecal(tile);
-    //}
-    
+    void RecreateBuildings()
+    {
+        foreach (var crystal in tileTerrain.settings.crystals)
+            crystal.shuijing.CreateBuildings(tileTerrain);
+    }
+
+
+    public void GenerateEggs()
+    {
+        int generateMaxCount = GetTerrainCommon(TerrainCommonKey.GenerateEggsCountPerDay);
+        int generateCount = 0;
+
+        foreach (var crystal in tileTerrain.settings.crystals)
+        {
+            foreach (var tile in crystal.shuijing.affectTiles.Values)
+            {
+                int randomValue = RandomManager.instance.Range(0,100);
+                if (randomValue < 90)
+                    continue;
+                if(tile.IsFireTile())
+                {
+
+                }
+            }
+        }
+    }
+
     public string GetUpgradeTips()
     {
         if (selectShuijing == null || selectShuijing.level >= 3)

@@ -796,6 +796,16 @@ public partial class PATileTerrain
         {
             return parentTrans.TransformPoint(position);
         }
+    
+        public bool IsFireTile()
+        {
+            return element.FireValue > 0 && element.WoodValue == 0;
+        }
+
+        public bool IsWoodTile()
+        {
+            return element.WoodValue > 0 && element.FireValue== 0;
+        }
     }
 	
 	[System.Serializable]

@@ -18,6 +18,17 @@ public class EggData
     public int configId;
     public int remainTime;//剩余孵化时间,单位秒
 
+    public EggConfigAsset.EggConfig  ConfigData
+    {
+        get 
+        {
+            if (configData == null)
+                configData = ConfigDataBase.instance.EggConfigAsset.GetById(configId);
+            return configData;
+        }
+    }
+    private EggConfigAsset.EggConfig configData = null;
+
     public EggData()
     { }
 
@@ -25,7 +36,7 @@ public class EggData
     {
         uId = localLastUId++;
         this.configId = configId;
-        remainTime = ConfigDataBase.instance.EggConfigAsset.GetById(configId).time;
+        remainTime = ConfigData.time;
     }
 
     public JSONNode ToJson()
