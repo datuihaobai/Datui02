@@ -75,7 +75,15 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         isStarted = true;
     }
 
-    //float logTimer = 0f;
+    /// <summary>
+    /// 本地模拟初始化玩家数据，后面应该由服务器下发玩家数据
+    /// </summary>
+    void PlayerBorn()
+    {
+        bool isNewPlayer = !PlayerDataBase.instance.LocalLoad();
+        if (isNewPlayer)
+            PlayerDataBase.instance.LocalPlayerBorn();                                         
+    }
 
     void Update()
     {

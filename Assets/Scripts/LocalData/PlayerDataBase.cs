@@ -8,7 +8,11 @@ public class PlayerDataBase : SingletonObject<PlayerDataBase>
     public int playerId;
     public EggDataBase eggDataBase = new EggDataBase();
 
-
+    public void LocalPlayerBorn()
+    {
+        eggDataBase.LocalPlayerBorn();
+        LocalSave();
+    }
 
     public JSONNode ToJson()
     {
@@ -20,5 +24,15 @@ public class PlayerDataBase : SingletonObject<PlayerDataBase>
     public void FromJson(JSONNode jsnode)
     {
 
+    }
+
+    public void LocalSave()
+    {
+
+    }
+
+    public bool LocalLoad()
+    {
+        return false;
     }
 }

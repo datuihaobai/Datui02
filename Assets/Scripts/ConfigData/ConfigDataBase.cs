@@ -49,6 +49,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 	private void InitConfig()
 	{
 		configFileNames.Add ("DecalConfig");
+		configFileNames.Add ("EggConfig");
 		configFileNames.Add ("TileMixConfig");
 		configFileNames.Add ("TerrainCommonConfig");
 		configFileNames.Add ("CrystalRangeConfig");
@@ -73,6 +74,27 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				Debug.Log("Read Config DecalConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return decalConfigAsset;
+		}
+	}
+	private EggConfigAsset eggConfigAsset;
+	public EggConfigAsset EggConfigAsset
+	{
+		get
+		{
+			if(eggConfigAsset == null)
+			{
+				float startTime = Time.realtimeSinceStartup;
+				ConfigAssetBase asset = assetBundle.LoadAsset("EggConfig",typeof(ConfigAssetBase)) as ConfigAssetBase;
+				asset.readList();
+				eggConfigAsset = asset as EggConfigAsset;
+				readCount ++;
+				if(readCount == configFileNames.Count)
+				{
+					assetBundle.Unload(false);
+				}
+				Debug.Log("Read Config EggConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+			}
+			return eggConfigAsset;
 		}
 	}
 	private TileMixConfigAsset tileMixConfigAsset;

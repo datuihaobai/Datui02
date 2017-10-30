@@ -962,6 +962,7 @@ public partial class PATileTerrain
     {
         public int level;
         public int randomSeed;
+        public int eggUId = -1;
         public Shuijing shuijing = null;
         public List<PABuilding> buildings = new List<PABuilding>();//属于水晶的功能建筑列表
 
@@ -996,6 +997,7 @@ public partial class PATileTerrain
             JSONNode jsnode = base.ToJson();
             jsnode["level"] = level.ToString();
             jsnode["randomSeed"] = randomSeed.ToString();
+            jsnode["eggUId"] = eggUId.ToString();
             JSONNode buildingsNodeArray = new JSONArray();
             foreach (var building in buildings)
                 buildingsNodeArray.Add(building.ToJson());
@@ -1008,6 +1010,7 @@ public partial class PATileTerrain
             base.FromJson(jsnode);
             level = jsnode["level"].AsInt;
             randomSeed = jsnode["randomSeed"].AsInt;
+            eggUId = jsnode["eggUId"].AsInt;
             buildings.Clear();
             foreach (var buildingNode in jsnode["buildings"].Childs)
             {
