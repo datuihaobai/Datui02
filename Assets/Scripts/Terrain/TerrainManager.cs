@@ -253,6 +253,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
+            HatchBuilding hitHatch = hit.transform.GetComponent<HatchBuilding>();
             if (tt != null)
             {
                 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
@@ -260,7 +261,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 y = (int)Mathf.Abs(pos.z / tileTerrain.tileSize);
                 PATileTerrain.PATile tile = tileTerrain.GetTile(x, y);
                 PATileTerrain.PABuildingTile buildingTile = PATileTerrain.PABuildingTile.GetByTile(tileTerrain, tile);
-            
+
                 if (toPlaceBuilding is NestBuilding && buildingTile.keyTile.affectShuijing != null)
                 {
                     NestBuilding nest = toPlaceBuilding as NestBuilding;
@@ -270,9 +271,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 }
             }
             else if (hitNest != null && toPlaceBuilding == null)
-            {
                 Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
-            }
+            else if (hitHatch != null && toPlaceBuilding == null)
+                Debug.Log("hitHatch != null ");
         }
     }
 
