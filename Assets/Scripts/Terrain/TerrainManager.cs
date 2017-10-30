@@ -65,12 +65,18 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         StartCoroutine(ToStart());
     }
 
+    void OnDestroy()
+    {
+        PlayerDataBase.instance.LocalSave();
+    }
+
     IEnumerator ToStart()
     {
         ConfigDataBase.instance.StartLoad();
         if (!ConfigDataBase.instance.loadFinish)
             yield return null;
         //tileTerrain.GenerateTilePaintSamples();
+        PlayerBorn();
         tileTerrain.LoadTerrain();
         isStarted = true;
     }

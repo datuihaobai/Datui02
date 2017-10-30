@@ -18,24 +18,4 @@ public class SingletonAppMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviou
 			return classInstance;
 		}
 	}
-
-	protected virtual void Awake()
-	{
-		//CheckInstance();
-	}
-
-	protected bool CheckInstance()
-    {
-        if ( this == instance ) {
-			return true;
-		}
-        Debug.Log("****************************** DestroyImmediate instance");
-		DestroyImmediate(this);
-		return false;
-	}
-
-	protected virtual void OnDestroy()
-	{
-		//Destroy(gameObject);
-	}
 }
