@@ -1047,6 +1047,7 @@ public partial class PATileTerrain
 		
 		public PATileTerrainChunk[] chunks = null; //chunks
 		public PATile[] tiles = null; //array of all tiles
+        public Cloud[] clouds = null;
 		public PAPoint[] points = null; //helper point for edit the terrain
 		public int xCount, yCount; //number of tiles along the X and Y (X and Z in the Unity3d space)
 		public int chunkCountX, chunkCountY; //number of chunks along the X and Y

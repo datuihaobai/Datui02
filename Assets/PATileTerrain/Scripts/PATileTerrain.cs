@@ -1170,27 +1170,29 @@ public partial class PATileTerrain: MonoBehaviour
 				colors = new List<Color>();
 				tris = new List<int>();
 				normals = new List<Vector3>();
-				
-				for (y = 0; y < ch; ++y)	
-					for (x = 0; x < cw; ++x) 
-					{
-						//Tiles
-						sx = cx * settings.chunkSize + x;
-						sy = cy * settings.chunkSize + y;
-						
-						i = w * sy + sx;
-						li = cw * y + x;
-					
-						settings.tiles[i] = new PATile();
-						tile = settings.tiles[i];
+
+                int cloudLineCount = 0;
+                for (y = 0; y < ch; ++y)
+                {
+                    for (x = 0; x < cw; ++x)
+                    {
+                        //Tiles
+                        sx = cx * settings.chunkSize + x;
+                        sy = cy * settings.chunkSize + y;
+
+                        i = w * sy + sx;
+                        li = cw * y + x;
+
+                        settings.tiles[i] = new PATile();
+                        tile = settings.tiles[i];
                         //tile.name = i.ToString();
-						tile.id = i;
-						tile.chunkId = cId;
-						tile.x = sx;
-						tile.y = sy;
-						tile.cx = x;
-						tile.cy = y;
-						tile.cId = cw * y + x;
+                        tile.id = i;
+                        tile.chunkId = cId;
+                        tile.x = sx;
+                        tile.y = sy;
+                        tile.cx = x;
+                        tile.cy = y;
+                        tile.cId = cw * y + x;
 
                         if (jsnode == null)
                         {
@@ -1204,17 +1206,17 @@ public partial class PATileTerrain: MonoBehaviour
                             tile.type = TerrainManager.defaultBrushType;
                             tile.bits = 0;
                         }
-						
-						//Center of tile
-						tile.position = new Vector3(cx * settings.chunkSize * settings.tileSize, 0.0f, cy * settings.chunkSize * settings.tileSize) + 
-										new Vector3(x * tileSize + tileSize / 2, 0.0f, y * tileSize + tileSize / 2);
-				
-						//vertices
-						verts.Add(new Vector3(x * tileSize, 0.0f, y * tileSize));
-						verts.Add(new Vector3(x * tileSize, 0.0f, y * tileSize + tileSize));
-						verts.Add(new Vector3(x * tileSize + tileSize, 0.0f, y * tileSize + tileSize));
-						verts.Add(new Vector3(x * tileSize + tileSize, 0.0f, y * tileSize));
-						//uvs
+
+                        //Center of tile
+                        tile.position = new Vector3(cx * settings.chunkSize * settings.tileSize, 0.0f, cy * settings.chunkSize * settings.tileSize) +
+                                        new Vector3(x * tileSize + tileSize / 2, 0.0f, y * tileSize + tileSize / 2);
+
+                        //vertices
+                        verts.Add(new Vector3(x * tileSize, 0.0f, y * tileSize));
+                        verts.Add(new Vector3(x * tileSize, 0.0f, y * tileSize + tileSize));
+                        verts.Add(new Vector3(x * tileSize + tileSize, 0.0f, y * tileSize + tileSize));
+                        verts.Add(new Vector3(x * tileSize + tileSize, 0.0f, y * tileSize));
+                        //uvs
                         if (jsnode == null)
                         {
                             uvs.Add(new Vector2(0.0f, 1.0f));
@@ -1237,25 +1239,40 @@ public partial class PATileTerrain: MonoBehaviour
                         crystal_uvs.Add(new Vector2(1.0f, 1.0f));
                         crystal_uvs.Add(new Vector2(1.0f, 0.0f));
                         crystal_uvs.Add(new Vector2(0.0f, 0.0f));
-                        
-						//tris			
-						tris.Add(li * 4 + 0);
-						tris.Add(li * 4 + 1);
-						tris.Add(li * 4 + 2);
-						tris.Add(li * 4 + 0);
-						tris.Add(li * 4 + 2);
-						tris.Add(li * 4 + 3);
-						//normals 
-						normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
-						normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
-						normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
-						normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
-						//colors
-						colors.Add(Color.white);
-						colors.Add(Color.white);
-						colors.Add(Color.white);
-						colors.Add(Color.white);
-					}				
+
+                        //tris			
+                        tris.Add(li * 4 + 0);
+                        tris.Add(li * 4 + 1);
+                        tris.Add(li * 4 + 2);
+                        tris.Add(li * 4 + 0);
+                        tris.Add(li * 4 + 2);
+                        tris.Add(li * 4 + 3);
+                        //normals 
+                        normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
+                        normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
+                        normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
+                        normals.Add(new Vector3(0.0f, 1.0f, 0.0f));
+                        //colors
+                        colors.Add(Color.white);
+                        colors.Add(Color.white);
+                        colors.Add(Color.white);
+                        colors.Add(Color.white);
+
+                        if (tile.x % 2 == 0 && tile.y % 2 == 0)
+                        {
+                            GameObject cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                            cloudGo.transform.SetParent(decoratesRootGo.transform);
+                            Vector3 pos;
+                            if (cloudLineCount % 2 == 0)
+                                pos = new Vector3(tile.position.x + 0.5f, 3f, tile.position.z + 0.5f);
+                            else
+                                pos = new Vector3(tile.position.x - 0.5f, 3f, tile.position.z + 0.5f);
+                            cloudGo.transform.position = transform.TransformPoint(pos);
+                        }
+                    }
+                    if(y % 2 == 0)
+                        cloudLineCount++;
+                }
 								
 				mesh.vertices = verts.ToArray();
 				mesh.uv = uvs.ToArray();
