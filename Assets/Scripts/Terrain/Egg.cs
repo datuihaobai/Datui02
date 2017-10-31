@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Egg : MonoBehaviour 
 {
-    public int uId;
+    public EggData eggData;
 
 }

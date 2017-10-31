@@ -47,6 +47,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     private int toPlaceBuildingLayer;
     private int toPlaceBuildingLayerMask;
     private int animalsLayerMask;
+    private int eggLayerMask;
 
     void Start()
     {
@@ -61,6 +62,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         animalsLayerMask = LayerMask.NameToLayer("Animals");
         animalsLayerMask = 1 << animalsLayerMask;
+
+        eggLayerMask = LayerMask.NameToLayer("Egg");
+        eggLayerMask = 1 << eggLayerMask;
 
         editCrystalLayerMask = terrainChunkLayermask | buildingLayerMask;
 
@@ -128,6 +132,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
 
         if (Input.GetMouseButtonUp(0))
         {
+            CheckSelectEgg();
             CheckSelectAnimals();
             EditCrystal();
             EditBuilding();
@@ -141,6 +146,17 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, animalsLayerMask))
         {
             Messenger.Broadcast(UIEvent.UIEvent_ShowSelectDragon);
+        }
+    }
+
+    void CheckSelectEgg()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, eggLayerMask))
+        {
+            Egg selectEgg = hit.transform.GetComponent<Egg>();
+            Debug.Log("selectEgg.eggData.uId " + selectEgg.eggData.uId);
         }
     }
 
@@ -270,6 +286,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
             HatchBuilding hitHatch = hit.transform.GetComponent<HatchBuilding>();
+            Egg hitEgg = hit.transform.GetComponent<Egg>();
             if (tt != null)
             {
                 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
@@ -290,6 +307,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
             else if (hitHatch != null && toPlaceBuilding == null)
                 Debug.Log("hitHatch != null ");
+            else if (hitEgg != null && toPlaceBuilding == null)
+                Debug.Log("hitEgg != null ");
         }
     }
 
@@ -685,24 +704,46 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             crystal.shuijing.CreateBuildings(tileTerrain);
     }
 
+    public const int UniversalEggConfigId = 1;
+    public const int FireEggConfigId = 2;
+    public const int WoodEggConfigId = 3;
 
     public void GenerateEggs()
     {
         int generateMaxCount = GetTerrainCommon(TerrainCommonKey.GenerateEggsCountPerDay);
-        int generateCount = 0;
+        //int generateCount = 0;
 
+        List<PATileTerrain.PATile> allTiles = new List<PATileTerrain.PATile>();
         foreach (var crystal in tileTerrain.settings.crystals)
-        {
             foreach (var tile in crystal.shuijing.affectTiles.Values)
-            {
-                int randomValue = RandomManager.instance.Range(0,100);
-                if (randomValue < 90)
-                    continue;
-                if(tile.IsFireTile())
-                {
+                allTiles.Add(tile);
 
-                }
-            }
+        int tilesCount = allTiles.Count;
+        //Debug.Log("tilesCount " + tilesCount);
+        int beginIndex = RandomManager.instance.Range(0, tilesCount);
+        int step = RandomManager.instance.Range(0, tilesCount);
+        //Debug.Log("step " + step);
+        int index = beginIndex;
+        for (int i = 0; i < generateMaxCount; i++ )
+        {
+            index = index % tilesCount;
+            //Debug.Log("index " + index);
+            PATileTerrain.PATile tile = allTiles[index];
+            int eggConfigId = -1;
+            if (tile.IsFireTile())
+                eggConfigId = FireEggConfigId;
+            else if (tile.IsWoodTile())
+                eggConfigId = WoodEggConfigId;
+
+            EggData newEggData = new EggData(eggConfigId);
+            GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(newEggData.ConfigData.prefab).gameObject;
+            Egg newEgg = newEggGo.GetComponent<Egg>();
+            newEgg.eggData = newEggData;
+            PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
+            newEggGo.transform.SetParent(chunk.settings.buildingsRoot.transform);
+            newEggGo.transform.position = tile.WorldPos(tileTerrain.transform);
+
+            index += step;
         }
     }
 

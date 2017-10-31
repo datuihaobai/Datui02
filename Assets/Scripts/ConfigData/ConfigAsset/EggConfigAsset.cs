@@ -12,12 +12,14 @@ public class EggConfigAsset : ConfigAssetBase
 		
 		public int elementType;
 		public int time;
+		public string prefab;
 
 		public override void parse(ArrayList cells)
 		{
 			id = Int32.Parse(cells[0] as string);
 			elementType = Int32.Parse(GameUtility.toNumber(cells[1] as string));
 			time = Int32.Parse(GameUtility.toNumber(cells[2] as string));
+			prefab = cells[3] as string;
 		}
 	}
 

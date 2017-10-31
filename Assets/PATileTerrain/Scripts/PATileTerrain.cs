@@ -1352,6 +1352,7 @@ public partial class PATileTerrain: MonoBehaviour
 		settings.created = true;	
 		settings.finalized = false;
         TerrainManager.instance.RepaintAllCrystals();
+        TerrainManager.instance.GenerateEggs();
 		UpdateMesh();
 	}
 	
