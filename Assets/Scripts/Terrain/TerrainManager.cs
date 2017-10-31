@@ -156,7 +156,9 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, eggLayerMask))
         {
             Egg selectEgg = hit.transform.GetComponent<Egg>();
-            Debug.Log("selectEgg.eggData.uId " + selectEgg.eggData.uId);
+            //Debug.Log("selectEgg.eggData.uId " + selectEgg.eggData.uId);
+            PlayerDataBase.instance.eggDataBase.AddEgg(selectEgg.eggData);
+            PoolManager.Pools["Shuijing"].Despawn(selectEgg.transform);
         }
     }
 
@@ -197,11 +199,11 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         tileTerrain.SaveTerrain();
     }
 
-    public void NewTerrain()
-    {
-        tileTerrain.CreateTerrain();
-        tileTerrain.FillTerrain(1);
-    }
+    //public void NewTerrain()
+    //{
+    //    tileTerrain.CreateTerrain();
+    //    tileTerrain.FillTerrain(1);
+    //}
 
     bool CheckEditCrystal()
     {
@@ -286,7 +288,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
             NestBuilding hitNest = hit.transform.GetComponent<NestBuilding>();
             HatchBuilding hitHatch = hit.transform.GetComponent<HatchBuilding>();
-            Egg hitEgg = hit.transform.GetComponent<Egg>();
             if (tt != null)
             {
                 pos = tileTerrain.transform.InverseTransformPoint(hit.point);
@@ -307,8 +308,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
             else if (hitHatch != null && toPlaceBuilding == null)
                 Debug.Log("hitHatch != null ");
-            else if (hitEgg != null && toPlaceBuilding == null)
-                Debug.Log("hitEgg != null ");
         }
     }
 

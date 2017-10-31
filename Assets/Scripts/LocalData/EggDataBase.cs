@@ -53,7 +53,8 @@ public class EggData
         uId = jsnode["uId"].AsInt;
         configId = jsnode["configId"].AsInt;
         remainTime = jsnode["remainTime"].AsInt;
-        localLastUId = uId + 1;
+        if (localLastUId < uId + 1)
+            localLastUId = uId + 1;
     }
 }
 
@@ -62,6 +63,12 @@ public class EggDataBase
     private const int universalEggId = 1;
     List<EggData> eggs = new List<EggData>();
  
+
+    public void AddEgg(EggData addEggData)
+    {
+        eggs.Add(addEggData);
+    }
+
     public EggData GetEggByUId(int uId)
     {
         foreach(var egg in eggs)
