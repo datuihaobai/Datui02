@@ -786,6 +786,16 @@ public partial class PATileTerrain
             else
                 return tile.tileSetType == tst;
         }
+
+        public static bool IsBaseElement(PATile tile)
+        {
+            return tile != null && tile.element.IsBaseElement();
+        }
+
+        public static bool IsNotBaseElement(PATile tile)
+        {
+            return tile != null && !tile.element.IsBaseElement();
+        }
     
         public float Distance(PATile other)
         {
@@ -1047,7 +1057,7 @@ public partial class PATileTerrain
 		
 		public PATileTerrainChunk[] chunks = null; //chunks
 		public PATile[] tiles = null; //array of all tiles
-        public Cloud[] clouds = null;
+        public List<Cloud> clouds = new List<Cloud>();
 		public PAPoint[] points = null; //helper point for edit the terrain
 		public int xCount, yCount; //number of tiles along the X and Y (X and Z in the Unity3d space)
 		public int chunkCountX, chunkCountY; //number of chunks along the X and Y

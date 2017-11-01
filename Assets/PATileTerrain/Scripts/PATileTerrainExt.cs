@@ -973,38 +973,26 @@ public partial class PATileTerrain
             PaintPostProcessSingleElementTile(tile);
     }
 
-    //根据埋点距离水晶tile的距离计算出埋点所处的tile
-    public PATile GetTileByPoint(PATile tile,Transform vPoint)
+    public PATile GetTileByRay(Vector3 origin, Vector3 direction)
     {
-        return null;
-        //Debug.Log("GetTileByPoint tile.x " + tile.x + " tile.y " + tile.y + " vPoint " + vPoint);
-        //Vector3 v0 = vPoint.position - tile.WorldPos(transform);
-        //float distance = Vector3.Distance(tile.WorldPos(transform), vPoint.position);
-        ////Debug.Log("GetTileByPoint distance " + distance);
-        //int intDistance = (int)(distance + 0.5f);
-        //if (intDistance % 2 == 0)
-        //    intDistance += 1;
-        ////Debug.Log("GetTileByPoint intDistance " + intDistance);
-        //PATile[] checkTiles = GetNeighboringTilesNxN(tile, intDistance);
-        //float minAngle= float.PositiveInfinity;
-        //int minIndex = 0;
-        //for (int i = 0; i < checkTiles.Length; i ++)
-        //{
-        //    if (checkTiles[i] == null)
-        //        continue;
-        //    Vector3 v1 = checkTiles[i].WorldPos(transform) - tile.WorldPos(transform);
-        //    float angle = Vector3.Angle(v0,v1);
-        //    //Debug.Log("GetTileByPoint angle" + angle);
-        //    if(angle < minAngle)
-        //    {
-        //        minAngle = angle;
-        //        minIndex = i;
-        //    }
-        //}
+        RaycastHit hit;
+        Ray ray = new Ray(origin, direction);
+        Physics.Raycast(ray, out hit, Mathf.Infinity, TerrainManager.instance.terrainChunkLayermask);
 
-        //if (minAngle < 10f)
-        //    return checkTiles[minIndex];
-        //else 
-        //    return null;
+        PATileTerrain tt = IsTerrain(hit.transform);
+        if (tt == null)
+            return null;
+        Vector3 pos = transform.InverseTransformPoint(hit.point);
+        int x = (int)Mathf.Abs(pos.x / tileSize);
+        int y = (int)Mathf.Abs(pos.z / tileSize);
+        PATileTerrain.PATile tile = GetTile(x, y);
+
+        return tile;
+    }
+
+    public void CheckAllCloudShow()
+    {
+        for (int i = 0; i < settings.clouds.Count; i++)
+            settings.clouds[i].CheckShow(this);
     }
 }

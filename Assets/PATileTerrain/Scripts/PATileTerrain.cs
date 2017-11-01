@@ -1261,12 +1261,14 @@ public partial class PATileTerrain: MonoBehaviour
                         if (tile.x % 2 == 0 && tile.y % 2 == 0)
                         {
                             GameObject cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                            Cloud cloud = cloudGo.GetComponent<Cloud>();
+                            settings.clouds.Add(cloud);
                             cloudGo.transform.SetParent(decoratesRootGo.transform);
                             Vector3 pos;
                             if (cloudLineCount % 2 == 0)
-                                pos = new Vector3(tile.position.x + 0.5f, 3f, tile.position.z + 0.5f);
+                                pos = new Vector3(tile.position.x + 0.5f, tile.position.y, tile.position.z + 0.5f);
                             else
-                                pos = new Vector3(tile.position.x - 0.5f, 3f, tile.position.z + 0.5f);
+                                pos = new Vector3(tile.position.x - 0.5f, tile.position.y, tile.position.z + 0.5f);
                             cloudGo.transform.position = transform.TransformPoint(pos);
                         }
                     }
@@ -1370,6 +1372,7 @@ public partial class PATileTerrain: MonoBehaviour
 		settings.finalized = false;
         TerrainManager.instance.RepaintAllCrystals();
         TerrainManager.instance.GenerateEggs();
+        CheckAllCloudShow();
 		UpdateMesh();
 	}
 	
