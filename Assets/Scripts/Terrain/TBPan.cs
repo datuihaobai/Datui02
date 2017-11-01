@@ -64,6 +64,7 @@ public class TBPan : MonoBehaviour
     private float inertiaAge;
     private Vector3 inertiaSpeed;
     private bool isPointerOverToPlaceBuilding = false;
+    private Transform hitTrans = null;
 
     void Update()
     {
@@ -102,6 +103,9 @@ public class TBPan : MonoBehaviour
             vCamRootPosStart = trCameraRoot.position;
             ray = Camera.main.ScreenPointToRay(mousePosition);
             Physics.Raycast(ray, out hit, Mathf.Infinity, colliderLayerMask);
+            hitTrans = hit.transform;
+            if (hitTrans == null)
+                return;
             //Debug.Log("GetMouseButtonDown hit.point " + hit.point);
             vPickStart = hit.point - trCameraRoot.position;
             vPickOld = vPickStart;
@@ -117,7 +121,9 @@ public class TBPan : MonoBehaviour
             {
                 isMoving = false;
                 return;
-            } 
+            }
+            if (hitTrans == null)
+                return;
 
             if (Vector3.Distance(mousePosition, mousePosStart) > 5f)
             {
@@ -139,6 +145,8 @@ public class TBPan : MonoBehaviour
             if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
                 return;
             if (isPointerOverToPlaceBuilding)
+                return;
+            if (hitTrans == null)
                 return;
             if (inertiaSpeed.magnitude > 0.01f)
                 inertiaActive = true;

@@ -1270,6 +1270,144 @@ public partial class PATileTerrain: MonoBehaviour
                             else
                                 pos = new Vector3(tile.position.x - 0.5f, tile.position.y, tile.position.z + 0.5f);
                             cloudGo.transform.position = transform.TransformPoint(pos);
+
+                            if (tile.x % settings.xCount == 0)
+                            {
+                                //每行的第一个向左边多创建extraCount个云遮罩
+                                int extraCount = 10;
+                                int cloudWidth = 2;
+                                float startX = tile.position.x - extraCount * cloudWidth;
+                                for (int k = 0; k < extraCount; k++)
+                                {
+                                    cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                    if (cloudLineCount % 2 == 0)
+                                        pos = new Vector3(startX + 0.5f, tile.position.y, tile.position.z + 0.5f);
+                                    else
+                                        pos = new Vector3(startX - 0.5f, tile.position.y, tile.position.z + 0.5f);
+                                    cloudGo.transform.position = transform.TransformPoint(pos);
+                                    startX += cloudWidth;
+                                }
+                            }
+                            else if ((tile.x + 2) % settings.xCount == 0)
+                            {
+                                //每行的最后一个向右边多创建extraCount个云遮罩
+                                int extraCount = 10;
+                                int cloudWidth = 2;
+                                float startX = tile.position.x + extraCount * cloudWidth;
+                                for (int k = 0; k < extraCount; k++)
+                                {
+                                    cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                    if (cloudLineCount % 2 == 0)
+                                        pos = new Vector3(startX + 0.5f, tile.position.y, tile.position.z + 0.5f);
+                                    else
+                                        pos = new Vector3(startX - 0.5f, tile.position.y, tile.position.z + 0.5f);
+                                    cloudGo.transform.position = transform.TransformPoint(pos);
+                                    startX -= cloudWidth;
+                                }
+                            }
+
+                            if (tile.y % settings.yCount == 0)
+                            {
+                                //每列的最下面一个向下边多创建extraCount个云遮罩
+                                int extraCount = 8;
+                                int cloudHeight = 2;
+                                float startY = tile.position.z - extraCount * cloudHeight;
+                                for (int k = 0; k < extraCount; k++)
+                                {
+                                    cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                    if (k % 2 == 0)
+                                        pos = new Vector3(tile.position.x + 0.5f, tile.position.y, startY + 0.5f);
+                                    else
+                                        pos = new Vector3(tile.position.x - 0.5f, tile.position.y, startY + 0.5f);
+                                    cloudGo.transform.position = transform.TransformPoint(pos);
+                                
+                                    if(tile.x == 0)
+                                    {
+                                        int extraXCount = 10;
+                                        int cloudWidth = 2;
+                                        float startX = tile.position.x - extraXCount * cloudWidth;
+                                        for (int l = 0; l < extraXCount; l++)
+                                        {
+                                            cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                            if (k % 2 == 0)
+                                                pos = new Vector3(startX + 0.5f, tile.position.y, startY + 0.5f);
+                                            else
+                                                pos = new Vector3(startX - 0.5f, tile.position.y, startY + 0.5f);
+                                            cloudGo.transform.position = transform.TransformPoint(pos);
+                                            startX += cloudWidth;
+                                        }
+                                    }
+                                    else if(tile.x + 2 == settings.xCount)
+                                    {
+                                        int extraXCount = 10;
+                                        int cloudWidth = 2;
+                                        float startX = tile.position.x + extraXCount * cloudWidth;
+                                        for (int l = 0; l < extraXCount; l++)
+                                        {
+                                            cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                            if (k % 2 == 0)
+                                                pos = new Vector3(startX + 0.5f, tile.position.y, startY + 0.5f);
+                                            else
+                                                pos = new Vector3(startX - 0.5f, tile.position.y, startY + 0.5f);
+                                            cloudGo.transform.position = transform.TransformPoint(pos);
+                                            startX -= cloudWidth;
+                                        }
+                                    }
+
+                                    startY += cloudHeight;
+                                }
+                            }
+                            else if ((tile.y + 2) % settings.yCount == 0)
+                            {
+                                //每列的最上面一个向上边多创建extraCount个云遮罩
+                                int extraCount = 11;
+                                int cloudHeight = 2;
+                                float startY = tile.position.z + extraCount * cloudHeight;
+                                for (int k = 0; k < extraCount; k++)
+                                {
+                                    cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                    if (k % 2 == 0)
+                                        pos = new Vector3(tile.position.x + 0.5f, tile.position.y, startY + 0.5f);
+                                    else
+                                        pos = new Vector3(tile.position.x - 0.5f, tile.position.y, startY + 0.5f);
+                                    cloudGo.transform.position = transform.TransformPoint(pos);
+
+                                    if (tile.x == 0)
+                                    {
+                                        int extraXCount = 10;
+                                        int cloudWidth = 2;
+                                        float startX = tile.position.x - extraXCount * cloudWidth;
+                                        for (int l = 0; l < extraXCount; l++)
+                                        {
+                                            cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                            if (k % 2 == 0)
+                                                pos = new Vector3(startX + 0.5f, tile.position.y, startY + 0.5f);
+                                            else
+                                                pos = new Vector3(startX - 0.5f, tile.position.y, startY + 0.5f);
+                                            cloudGo.transform.position = transform.TransformPoint(pos);
+                                            startX += cloudWidth;
+                                        }
+                                    }
+                                    else if (tile.x + 2 == settings.xCount)
+                                    {
+                                        int extraXCount = 10;
+                                        int cloudWidth = 2;
+                                        float startX = tile.position.x + extraXCount * cloudWidth;
+                                        for (int l = 0; l < extraXCount; l++)
+                                        {
+                                            cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
+                                            if (k % 2 == 0)
+                                                pos = new Vector3(startX + 0.5f, tile.position.y, startY + 0.5f);
+                                            else
+                                                pos = new Vector3(startX - 0.5f, tile.position.y, startY + 0.5f);
+                                            cloudGo.transform.position = transform.TransformPoint(pos);
+                                            startX -= cloudWidth;
+                                        }
+                                    }
+
+                                    startY -= cloudHeight;
+                                }
+                            }
                         }
                     }
                     if(y % 2 == 0)

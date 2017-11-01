@@ -74,6 +74,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     void OnDestroy()
     {
         PlayerDataBase.instance.LocalSave();
+        SaveTerrain();
     }
 
     IEnumerator ToStart()
@@ -761,5 +762,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             return true;
 
         return false;
+    }
+
+    public void CheckAllCloudShow()
+    {
+        tileTerrain.CheckAllCloudShow();
     }
 }
