@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PathologicalGames;
+using Game.Messenger;
 
 public class Shuijing : Building
 {
@@ -28,6 +29,33 @@ public class Shuijing : Building
         {
             Transform vPointTrans = vPointRoot.GetChild(i);
             vPoints.Add(vPointTrans.GetComponent<VirtualPoint>());
+        }
+
+        Messenger<int>.AddListener(UIEvent.UIEvent_HatchEgg,OnHatchEgg);
+    }
+
+    void OnDestroy()
+    {
+        Messenger<int>.RemoveListener(UIEvent.UIEvent_HatchEgg, OnHatchEgg);
+    }
+
+    void OnHatchEgg(int hatchId)
+    {
+        if (hatchId != tile.id)
+            return;
+
+        PATileTerrainChunk chunk = TerrainManager.instance.tileTerrain.GetChunk(tile.chunkId);
+        foreach (var point in vPoints)
+        {
+            if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
+                continue;
+            if (point.building == null)
+            {
+                Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+                if (building != null)
+                    buildings.Add(building);
+                break;
+            }
         }
     }
 

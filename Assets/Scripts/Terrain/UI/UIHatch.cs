@@ -45,7 +45,7 @@ public class UIHatch : MonoBehaviour
             finished = true;
         }
         else
-            remainTimeText.text = GameUtility.GetTimeStringMMSS(selectEggData.remainTime * 1000f);
+            remainTimeText.text = GameUtility.GetTimeStringHHMMSS(selectEggData.remainTime * 1000f);
     }
 
     public void Show(int hatchId)
@@ -106,6 +106,7 @@ public class UIHatch : MonoBehaviour
         if (selectEggData.remainTime > 0)
             return;
         PlayerDataBase.instance.eggDataBase.FinishHatch(selectEggData);
+        Messenger<int>.Broadcast(UIEvent.UIEvent_HatchEgg,currentHatchId);
         selectEggData = null;
         Refresh();
     }
