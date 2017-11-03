@@ -308,7 +308,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             else if (hitNest != null && toPlaceBuilding == null)
                 Messenger.Broadcast(UIEvent.UIEvent_ShowSelectNest);
             else if (hitHatch != null && toPlaceBuilding == null)
-                Messenger.Broadcast(UIEvent.UIEvent_ShowHatch);
+                Messenger<int>.Broadcast(UIEvent.UIEvent_ShowHatch,hitHatch.hatchId);
         }
     }
 

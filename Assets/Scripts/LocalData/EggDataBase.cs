@@ -16,7 +16,8 @@ public class EggData
 
     public int uId;
     public int configId;
-    public int remainTime;//剩余孵化时间,单位秒
+    public float remainTime;//剩余孵化时间,单位秒
+    public int hatchId;//孵化器id
 
     public EggConfigAsset.EggConfig  ConfigData
     {
@@ -36,6 +37,13 @@ public class EggData
     {
         uId = localLastUId++;
         this.configId = configId;
+        remainTime = -1;
+        hatchId = -1;
+    }
+
+    public void Hatch(int hatchId)
+    {
+        this.hatchId = hatchId;
         remainTime = ConfigData.time;
     }
 
@@ -44,7 +52,8 @@ public class EggData
         JSONNode jsnode = new JSONClass();
         jsnode["uId"] = uId.ToString();
         jsnode["configId"] = configId.ToString();
-        jsnode["remainTime"] = remainTime.ToString();
+        jsnode["remainTime"] = ((int)remainTime).ToString();
+        jsnode["hatchId"] = hatchId.ToString();
         return jsnode;
     }
 
@@ -53,6 +62,7 @@ public class EggData
         uId = jsnode["uId"].AsInt;
         configId = jsnode["configId"].AsInt;
         remainTime = jsnode["remainTime"].AsInt;
+        hatchId = jsnode["hatchId"].AsInt;
         if (localLastUId < uId + 1)
             localLastUId = uId + 1;
     }
@@ -61,9 +71,8 @@ public class EggData
 public class EggDataBase
 {
     private const int universalEggId = 1;
-    List<EggData> eggs = new List<EggData>();
+    public List<EggData> eggs = new List<EggData>();
  
-
     public void AddEgg(EggData addEggData)
     {
         eggs.Add(addEggData);

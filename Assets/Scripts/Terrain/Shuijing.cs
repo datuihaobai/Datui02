@@ -77,6 +77,9 @@ public class Shuijing : Building
                 if (point.building == null)
                 {
                     Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+                    HatchBuilding hatch = building.GetComponent<HatchBuilding>();
+                    if (hatch != null)
+                        hatch.hatchId = tile.id; 
                     if (building != null)
                         buildings.Add(building);
                 }
@@ -86,17 +89,17 @@ public class Shuijing : Building
         if(Application.isPlaying)
             LocalNavMeshBuilder.instance.UpdateNavMesh();
 
-        foreach (var point in vPoints)
-        {
-            if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
-                continue;
-            if(point.building == null)
-            {
-                Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
-                if (building != null)
-                    buildings.Add(building);
-            }
-        }
+        //foreach (var point in vPoints)
+        //{
+        //    if (point.virtualPointType != VirtualPoint.VirtualPointType.Animals)
+        //        continue;
+        //    if(point.building == null)
+        //    {
+        //        Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
+        //        if (building != null)
+        //            buildings.Add(building);
+        //    }
+        //}
     }
 
     public void Reset()
