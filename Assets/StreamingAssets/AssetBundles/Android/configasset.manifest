@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 556710021
+CRC: 1686084260
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 130f3317332cf03aec28a6ea9c2833b2
+    Hash: 0983db8c64539e16246d8871254cef13
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 2357ce7056c718eb6435865097a84552
+    Hash: bf13e10a52759509b5d7f00f173c53f7
 HashAppended: 0
 ClassTypes:
 - Class: 114
@@ -18,6 +18,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: a6b76c83dbb84d240ab4cf88a197c1cf, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: a6722c166b494054ca3263828b10f287, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: e5f2f1df55add9b4ea4e6d00fa4ce55c, type: 3}
 - Class: 115
   Script: {instanceID: 0}
@@ -27,4 +29,5 @@ Assets:
 - Assets/WorkAssets/ConfigAsset/CrystalRangeConfig.asset
 - Assets/WorkAssets/ConfigAsset/TileMixConfig.asset
 - Assets/WorkAssets/ConfigAsset/TerrainCommonConfig.asset
+- Assets/WorkAssets/ConfigAsset/EggConfig.asset
 Dependencies: []

@@ -719,6 +719,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 allTiles.Add(tile);
 
         int tilesCount = allTiles.Count;
+        if (tilesCount == 0)
+            return;
         //Debug.Log("tilesCount " + tilesCount);
         int beginIndex = RandomManager.instance.Range(0, tilesCount);
         int step = RandomManager.instance.Range(0, tilesCount);

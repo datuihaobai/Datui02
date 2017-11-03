@@ -56,7 +56,7 @@ public class UITerrainRoot : MonoBehaviour
 
         TerrainManager.instance.CheckAllCloudShow();
         //save
-        //TerrainManager.instance.SaveTerrain();
+        TerrainManager.instance.SaveTerrain();
     }
     
     public void OnClickBuilding()
