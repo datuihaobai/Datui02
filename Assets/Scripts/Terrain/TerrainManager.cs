@@ -540,6 +540,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
         shuijing.tile.shuijing = null;
+        shuijing.tile = null;
         //RepaintAllCrystals();
     }
 

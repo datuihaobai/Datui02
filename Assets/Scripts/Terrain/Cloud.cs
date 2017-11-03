@@ -7,6 +7,11 @@ public class Cloud : MonoBehaviour
     public GameObject root;
     public Transform boxBoundLB;//云遮罩的范围，左下leftbottom
     public Transform boxBoundRT;//云遮罩的范围，右上righttop
+    public GameObject normal;
+    public List<GameObject> edges;
+
+    public int indexX;
+    public int indexY;
 
     public void CheckShow(PATileTerrain tileTerrain)
     {
@@ -30,9 +35,33 @@ public class Cloud : MonoBehaviour
 
     }
 
+    public void CheckEdge(PATileTerrain tileTerrain)
+    {
+        if (!root.activeInHierarchy)
+            return;
+        Cloud[] neighborClouds = tileTerrain.GetNeighboringCloudsNxN(indexX, indexY, 1);
+
+        for (int i = 0; i < neighborClouds.Length ; i++ )
+        {
+            Cloud neighborCloud = neighborClouds[i];
+            if (neighborCloud == null)
+                continue;
+            if(!neighborCloud.root.activeInHierarchy)
+            {
+                int randomIndex = RandomManager.instance.Range(0,edges.Count);
+                edges[randomIndex].SetActive(true);
+                normal.SetActive(false);
+                return;
+            }
+        }
+    }
+
     void Show()
     {
         root.SetActive(true);
+        normal.SetActive(true);
+        foreach(var edge in edges)
+            edge.SetActive(false);
     }
 
     void Hide()

@@ -992,7 +992,18 @@ public partial class PATileTerrain
 
     public void CheckAllCloudShow()
     {
-        for (int i = 0; i < settings.clouds.Count; i++)
+        for (int i = 0; i < settings.clouds.Length; i++)
+        {
+            if (settings.clouds[i] == null)
+                continue;
             settings.clouds[i].CheckShow(this);
+        }
+
+        for (int i = 0; i < settings.clouds.Length; i++)
+        {
+            if (settings.clouds[i] == null)
+                continue;
+            settings.clouds[i].CheckEdge(this);
+        } 
     }
 }

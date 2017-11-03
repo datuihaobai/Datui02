@@ -116,8 +116,8 @@ public class UIHatch : MonoBehaviour
         if (selectEggData == null)
             return;
 
-        //selectEggData.CancelHatch();
-        //selectEggData = null;
-        //Refresh();
+        selectEggData.CancelHatch();
+        selectEggData = null;
+        Refresh();
     }
 }

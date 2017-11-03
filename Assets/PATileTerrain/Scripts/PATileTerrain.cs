@@ -15,7 +15,9 @@ public partial class PATileTerrain: MonoBehaviour
 	public PATile GetTile(int index) { return settings.tiles[index]; }
 	public PATileTerrainChunk GetChunk(int x, int y) { return settings.chunks[settings.chunkCountX * y + x]; }
 	public PATileTerrainChunk GetChunk(int index) { return settings.chunks[index]; }
-	
+
+    public Cloud GetCloud(int x, int y) { return settings.clouds[settings.xCount / 2 * y + x]; }
+
 	public float GetHeight(Vector3 pos)
 	{
 		pos = pos - transform.position;
@@ -586,6 +588,67 @@ public partial class PATileTerrain: MonoBehaviour
 		return t;
 	}
 
+    public Cloud[] GetNeighboringCloudsNxN(int x, int y, int n) //n must be 1,3,5,7,9,11... etc
+    {
+        int i;
+        int nc = n + 2;
+        int ct = nc * nc - n * n;
+        int m = (nc - 1) / 2, s;
+
+        Cloud[] t = new Cloud[ct];
+        for (i = 0; i < ct; ++i) t[i] = null;
+
+        //up
+        if (x > (m - 1))
+        {
+            //left and center
+            for (i = -1; i < m; ++i)
+                if (y > i) t[m - (i + 1)] = GetCloud(x - m, y - (i + 1));
+            //right
+            for (i = 1; i <= m; ++i)
+                if (y < settings.yCount/2 - i) t[m + i] = GetCloud(x - m, y + i);
+        }
+
+        //bottom
+        if (x < settings.xCount/2 - m)
+        {
+            //right and center
+            s = nc + n;
+            for (i = m; i >= 0; --i)
+                if (y < settings.yCount/2 - i) t[s + m - i] = GetCloud(x + m, y + i);
+            //left
+            s += m + 1;
+            for (i = 0; i < m; ++i)
+                if (y > i) t[s + i] = GetCloud(x + m, y - (i + 1));
+        }
+
+        //right
+        if (y < settings.yCount/2 - m)
+        {
+            //up
+            for (i = m - 2; i >= -1; --i)
+                if (x > i) t[n + m - i] = GetCloud(x - (i + 1), y + m);
+            //bottom
+            for (i = 1; i < m; ++i)
+                if (x < settings.xCount/2 - i) t[nc + m + i - 1] = GetCloud(x + i, y + m);
+        }
+
+        //left
+        if (y > m - 1)
+        {
+            //bottom
+            s = ct - n;
+            for (i = m - 1; i >= 0; --i)
+                if (x < settings.xCount/2 - i) t[s + m - 1 - i] = GetCloud(x + i, y - m);
+            //up
+            s = ct - m + 1;
+            for (i = 0; i < m - 1; ++i)
+                if (x > i) t[s + i] = GetCloud(x - (i + 1), y - m);
+        }
+
+        return t;
+    }
+
 	protected void CheckTile(PATile tile)
 	{
 		if (tile != null && tile.type >= settings.tsTypes.Count) { tile.type = -1; tile.bits = 0; }
@@ -1095,6 +1158,7 @@ public partial class PATileTerrain: MonoBehaviour
 		
 		settings.chunks = new PATileTerrainChunk[chunkCountX * chunkCountY];
 		settings.tiles = new PATile[w * h];
+        settings.clouds = new Cloud[w/2 * h/2];
 		settings.points = new PAPoint[(w + 1) * (h + 1)];
         if(jsnode == null)
         {
@@ -1262,7 +1326,11 @@ public partial class PATileTerrain: MonoBehaviour
                         {
                             GameObject cloudGo = PoolManager.Pools["Shuijing"].Spawn("cloud_03").gameObject;
                             Cloud cloud = cloudGo.GetComponent<Cloud>();
-                            settings.clouds.Add(cloud);
+                            cloud.indexX = tile.x / 2;
+                            cloud.indexY = tile.y / 2;
+                            int cloudIndex = cloud.indexY * w / 2 + cloud.indexX;
+                            settings.clouds[cloudIndex] = cloud;
+                            //settings.clouds.Add(cloud);
                             cloudGo.transform.SetParent(decoratesRootGo.transform);
                             Vector3 pos;
                             if (cloudLineCount % 2 == 0)

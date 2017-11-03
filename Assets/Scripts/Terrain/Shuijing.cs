@@ -31,7 +31,7 @@ public class Shuijing : Building
             vPoints.Add(vPointTrans.GetComponent<VirtualPoint>());
         }
 
-        Messenger<int>.AddListener(UIEvent.UIEvent_HatchEgg,OnHatchEgg);
+        Messenger<int>.AddListener(UIEvent.UIEvent_HatchEgg, OnHatchEgg);
     }
 
     void OnDestroy()
@@ -41,7 +41,7 @@ public class Shuijing : Building
 
     void OnHatchEgg(int hatchId)
     {
-        if (hatchId != tile.id)
+        if (tile == null || hatchId != tile.id)
             return;
 
         PATileTerrainChunk chunk = TerrainManager.instance.tileTerrain.GetChunk(tile.chunkId);
