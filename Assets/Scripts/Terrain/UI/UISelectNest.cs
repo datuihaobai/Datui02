@@ -9,13 +9,13 @@ public class UISelectNest : MonoBehaviour
 
     void Awake()
     {
-        root.SetActive(false);
-        Messenger.AddListener(UIEvent.UIEvent_ShowSelectNest, OnShowSelectNest);
+        Hide();
+        Messenger.AddListener(UIEvent.UIEvent_ShowSelectNest, Show);
     }
 
     void OnDestroy()
     {
-        Messenger.RemoveListener(UIEvent.UIEvent_ShowSelectNest, OnShowSelectNest);
+        Messenger.RemoveListener(UIEvent.UIEvent_ShowSelectNest, Show);
     }
 
     public void Show()
