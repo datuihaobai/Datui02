@@ -14,6 +14,7 @@ public class UIHatch : MonoBehaviour
 
     private EggData selectEggData = null;
     private int currentHatchId = -1;
+    private bool finished = false;
 
     void Awake()
     {
@@ -31,12 +32,20 @@ public class UIHatch : MonoBehaviour
         if (selectEggData == null)
             return;
 
-        if (selectEggData.remainTime.Equals(0f))
+        if (finished)
             return;
 
         selectEggData.remainTime -= Time.deltaTime;
         if (selectEggData.remainTime < 0)
             selectEggData.remainTime = 0;
+
+        if (selectEggData.remainTime.Equals(0f))
+        {
+            remainTimeText.text = "点击孵化按钮";
+            finished = true;
+        }
+        else
+            remainTimeText.text = GameUtility.GetTimeStringMMSS(selectEggData.remainTime * 1000f);
     }
 
     public void Show(int hatchId)
@@ -69,10 +78,6 @@ public class UIHatch : MonoBehaviour
         {
             selectEggImg.gameObject.SetActive(true);
             selectEggImg.sprite = Resources.Load<Sprite>(GameDefine.UITerrainSpritePath + selectEggData.ConfigData.icon);
-            if (selectEggData.remainTime == 0)
-                remainTimeText.text = "点击孵化按钮";
-            else
-                remainTimeText.text = GameUtility.GetTimeStringMMSS(selectEggData.remainTime * 1000f);
         }
     }
 
@@ -97,6 +102,11 @@ public class UIHatch : MonoBehaviour
 
     public void OnClickCancel()
     {
+        if (selectEggData == null)
+            return;
 
+        //selectEggData.CancelHatch();
+        //selectEggData = null;
+        //Refresh();
     }
 }

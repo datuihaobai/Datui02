@@ -47,6 +47,12 @@ public class EggData
         remainTime = ConfigData.time;
     }
 
+    public void CancelHatch()
+    {
+        hatchId = -1;
+        remainTime = -1;
+    }
+
     public JSONNode ToJson()
     {
         JSONNode jsnode = new JSONClass();
