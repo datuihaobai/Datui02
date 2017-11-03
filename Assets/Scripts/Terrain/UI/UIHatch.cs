@@ -73,7 +73,10 @@ public class UIHatch : MonoBehaviour
         }
 
         if (selectEggData == null)
+        {
             remainTimeText.text = "选择一个蛋来孵化";
+            selectEggImg.gameObject.SetActive(false);
+        }
         else
         {
             selectEggImg.gameObject.SetActive(true);
@@ -91,13 +94,20 @@ public class UIHatch : MonoBehaviour
         if (selectEggData != null)
             return;
         selectEggData = selectItem.eggData;
-        selectEggData.Hatch(currentHatchId);
+        selectEggData.StartHatch(currentHatchId);
         Refresh();
+        finished = false;
     }
 
     public void OnClickHatch()
     {
-
+        if (selectEggData == null)
+            return;
+        if (selectEggData.remainTime > 0)
+            return;
+        PlayerDataBase.instance.eggDataBase.FinishHatch(selectEggData);
+        selectEggData = null;
+        Refresh();
     }
 
     public void OnClickCancel()

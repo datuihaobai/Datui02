@@ -41,7 +41,7 @@ public class EggData
         hatchId = -1;
     }
 
-    public void Hatch(int hatchId)
+    public void StartHatch(int hatchId)
     {
         this.hatchId = hatchId;
         remainTime = ConfigData.time;
@@ -102,6 +102,11 @@ public class EggDataBase
             EggData newEgg = new EggData(universalEggId);
             eggs.Add(newEgg);
         }
+    }
+
+    public void FinishHatch(EggData finishedEgg)
+    {
+        eggs.Remove(finishedEgg);
     }
 
     public JSONNode ToJson()
