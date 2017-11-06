@@ -41,9 +41,20 @@ public class Cloud : MonoBehaviour
             return;
         Cloud[] neighborClouds = tileTerrain.GetNeighboringCloudsNxN(indexX, indexY, 1);
 
-        for (int i = 0; i < neighborClouds.Length ; i++ )
+        Cloud leftCloud = neighborClouds[1];
+        Cloud topCloud = neighborClouds[3];
+        Cloud rightCloud = neighborClouds[5];
+        Cloud bottomCloud = neighborClouds[7];
+
+        List<Cloud> pointCloud = new List<Cloud>();
+        pointCloud.Add(leftCloud);
+        pointCloud.Add(topCloud);
+        pointCloud.Add(rightCloud);
+        pointCloud.Add(bottomCloud);
+
+        for (int i = 0; i < pointCloud.Count; i++)
         {
-            Cloud neighborCloud = neighborClouds[i];
+            Cloud neighborCloud = pointCloud[i];
             if (neighborCloud == null)
                 continue;
             if(!neighborCloud.root.activeInHierarchy)
@@ -51,6 +62,16 @@ public class Cloud : MonoBehaviour
                 int randomIndex = RandomManager.instance.Range(0,edges.Count);
                 edges[randomIndex].SetActive(true);
                 normal.SetActive(false);
+
+                if (!rightCloud.root.activeInHierarchy)
+                    edges[randomIndex].transform.localRotation = Quaternion.Euler(0, 180, 0);
+                else if (!topCloud.root.activeInHierarchy)
+                    edges[randomIndex].transform.localRotation = Quaternion.Euler(0, 90, 0);
+                else if (!bottomCloud.root.activeInHierarchy)
+                    edges[randomIndex].transform.localRotation = Quaternion.Euler(0, 270, 0);
+                else
+                    edges[randomIndex].transform.localRotation = Quaternion.identity;
+
                 return;
             }
         }
