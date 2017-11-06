@@ -120,4 +120,11 @@ public class UIHatch : MonoBehaviour
         selectEggData = null;
         Refresh();
     }
+
+    public void OnClickSpeedUp()
+    {
+        if (selectEggData == null)
+            return;
+        selectEggData.remainTime = selectEggData.remainTime * 0.8f;
+    }
 }

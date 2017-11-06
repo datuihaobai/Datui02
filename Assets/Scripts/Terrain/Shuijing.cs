@@ -65,8 +65,10 @@ public class Shuijing : Building
         Ray ray = new Ray(new Vector3(vPointTrans.position.x,vPointTrans.position.y + 100 , vPointTrans.position.z),Vector3.down);
         Physics.Raycast(ray, out hit, Mathf.Infinity, TerrainManager.instance.terrainChunkLayermask);
 
-        PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
-        if (tt == null)
+        //PATileTerrain tt = tileTerrain.IsTerrain(hit.transform);
+        //if (tt == null)
+        //    return null;
+        if (hit.transform == null)
             return null;
 
         Vector3 pos = tileTerrain.transform.InverseTransformPoint(hit.point);

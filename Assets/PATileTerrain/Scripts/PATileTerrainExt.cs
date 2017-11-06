@@ -979,9 +979,12 @@ public partial class PATileTerrain
         Ray ray = new Ray(origin, direction);
         Physics.Raycast(ray, out hit, Mathf.Infinity, TerrainManager.instance.terrainChunkLayermask);
 
-        PATileTerrain tt = IsTerrain(hit.transform);
-        if (tt == null)
+        //PATileTerrain tt = IsTerrain(hit.transform);
+        //if (tt == null)
+        //    return null;
+        if (hit.transform == null)
             return null;
+
         Vector3 pos = transform.InverseTransformPoint(hit.point);
         int x = (int)Mathf.Abs(pos.x / tileSize);
         int y = (int)Mathf.Abs(pos.z / tileSize);
