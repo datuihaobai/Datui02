@@ -18,10 +18,10 @@ public class HatchBuilding : Building
         EggData.ElementType eggElementType = (EggData.ElementType)checkEggData.ConfigData.elementType;
         if (eggElementType == EggData.ElementType.Universal)
             return true;
-        else if (eggElementType == EggData.ElementType.Fire || hatchType != HatchType.Fire)
-            return false;
-        else if (eggElementType == EggData.ElementType.Wood || hatchType != HatchType.Wood)
-            return false;
+        else if (eggElementType == EggData.ElementType.Fire && hatchType == HatchType.Fire)
+            return true;
+        else if (eggElementType == EggData.ElementType.Wood && hatchType == HatchType.Wood)
+            return true;
         return false;
     }
 }

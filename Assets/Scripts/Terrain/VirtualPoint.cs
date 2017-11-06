@@ -134,6 +134,6 @@ public class VirtualPoint : MonoBehaviour
             }
         }
 
-        return false;
+        return true;
     }
 }

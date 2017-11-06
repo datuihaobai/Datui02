@@ -1551,6 +1551,7 @@ public partial class PATileTerrain: MonoBehaviour
                     buildingGo.transform.SetParent(theChunk.settings.buildingsRoot.transform);
                     buildingGo.transform.position = buildingTile.GetBuildingPos(this);
                     GameUtility.SetLayerRecursive(buildingGo.transform, LayerMask.NameToLayer("Building"));
+                   
                     Building building = buildingGo.GetComponent<Building>();
                     building.elementType = buildingData.elementType;
                     building.tile = theTile;
@@ -1558,6 +1559,10 @@ public partial class PATileTerrain: MonoBehaviour
                     PATile belongShuijingTile = GetTile(buildingData.belongShuijingId);
                     Shuijing belongShuijing = belongShuijingTile.shuijing;
                     belongShuijing.buildings.Add(building.transform);
+
+                    HatchBuilding hatchBuilding = buildingGo.GetComponent<HatchBuilding>();
+                    if (hatchBuilding != null)
+                        belongShuijing.hatch = hatchBuilding;
                 }
             }
         }

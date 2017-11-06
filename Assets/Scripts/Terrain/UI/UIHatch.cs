@@ -97,7 +97,7 @@ public class UIHatch : MonoBehaviour
         HatchBuilding hatch = TerrainManager.instance.tileTerrain.GetHatchById(currentHatchId);
         if (hatch == null)
             return;
-        if (hatch.CheckHatchEgg(selectItem.eggData))
+        if (!hatch.CheckHatchEgg(selectItem.eggData))
             return;
 
         selectEggData = selectItem.eggData;

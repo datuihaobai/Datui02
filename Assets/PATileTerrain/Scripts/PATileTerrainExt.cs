@@ -1014,7 +1014,7 @@ public partial class PATileTerrain
     {
         foreach(var crystal in settings.crystals)
         {
-            if (crystal.shuijing == null || crystal.shuijing.hatch)
+            if (crystal.shuijing == null || crystal.shuijing.hatch == null)
                 continue;
             if (crystal.shuijing.hatch.hatchId == getHatchId)
                 return crystal.shuijing.hatch;
