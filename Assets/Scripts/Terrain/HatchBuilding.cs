@@ -23,14 +23,22 @@ public class HatchBuilding : Building
         this.hatchEgg = hatchEgg;
         GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(hatchEgg.ConfigData.prefab).gameObject;
         newEggGo.transform.SetParent(eggPos,false);
+        newEggGo.GetComponent<Egg>().hatchEffect.SetActive(true);
     }
 
     public void FinishOrCancelHatch()
     {
         if (hatchEgg == null)
             return;
-        for (int i = 0; i < eggPos.childCount; i++ )
-            PoolManager.Pools["Shuijing"].Despawn(eggPos.GetChild(i));
+        for (int i = 0; i < eggPos.childCount; i++)
+        {
+            Transform child = eggPos.GetChild(i);
+            Egg egg = child.GetComponent<Egg>();
+            if (egg == null)
+                continue;
+            egg.hatchEffect.SetActive(false);
+            PoolManager.Pools["Shuijing"].Despawn(child);
+        } 
         hatchEgg = null;
     }
 
