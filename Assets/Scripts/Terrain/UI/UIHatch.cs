@@ -93,6 +93,13 @@ public class UIHatch : MonoBehaviour
     {
         if (selectEggData != null)
             return;
+
+        HatchBuilding hatch = TerrainManager.instance.tileTerrain.GetHatchById(currentHatchId);
+        if (hatch == null)
+            return;
+        if (hatch.CheckHatchEgg(selectItem.eggData))
+            return;
+
         selectEggData = selectItem.eggData;
         selectEggData.StartHatch(currentHatchId);
         Refresh();

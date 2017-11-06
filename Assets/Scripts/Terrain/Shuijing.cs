@@ -18,6 +18,8 @@ public class Shuijing : Building
     public List<VirtualPoint> vPoints = new List<VirtualPoint>();
     [HideInInspector]
     public Dictionary<int,PATileTerrain.PATile> affectTiles = new Dictionary<int,PATileTerrain.PATile>();//水晶影响的tile列表，用来绘制贴花
+    [HideInInspector]
+    public HatchBuilding hatch = null;
 
     void Awake()
     {
@@ -107,9 +109,12 @@ public class Shuijing : Building
                 if (point.building == null)
                 {
                     Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
-                    HatchBuilding hatch = building.GetComponent<HatchBuilding>();
-                    if (hatch != null)
-                        hatch.hatchId = tile.id; 
+                    HatchBuilding hatchBuilding = building.GetComponent<HatchBuilding>();
+                    if (hatchBuilding != null)
+                    {
+                        hatchBuilding.hatchId = tile.id;
+                        this.hatch = hatchBuilding;
+                    }                     
                     if (building != null)
                         buildings.Add(building);
                 }

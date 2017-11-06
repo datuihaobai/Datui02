@@ -1009,4 +1009,16 @@ public partial class PATileTerrain
             settings.clouds[i].CheckEdge(this);
         } 
     }
+
+    public HatchBuilding GetHatchById(int getHatchId)
+    {
+        foreach(var crystal in settings.crystals)
+        {
+            if (crystal.shuijing == null || crystal.shuijing.hatch)
+                continue;
+            if (crystal.shuijing.hatch.hatchId == getHatchId)
+                return crystal.shuijing.hatch;
+        }
+        return null;
+    }
 }
