@@ -14,6 +14,7 @@ public class UIHatch : MonoBehaviour
 
     private EggData selectEggData = null;
     private int currentHatchId = -1;
+    private HatchBuilding currentHatchBuilding = null;
     private bool finished = false;
 
     void Awake()
@@ -51,6 +52,7 @@ public class UIHatch : MonoBehaviour
     public void Show(int hatchId)
     {
         this.currentHatchId = hatchId;
+        this.currentHatchBuilding = TerrainManager.instance.tileTerrain.GetHatchById(currentHatchId);
         root.SetActive(true);
         Refresh();
     }
@@ -94,14 +96,14 @@ public class UIHatch : MonoBehaviour
         if (selectEggData != null)
             return;
 
-        HatchBuilding hatch = TerrainManager.instance.tileTerrain.GetHatchById(currentHatchId);
-        if (hatch == null)
+        if (currentHatchBuilding == null)
             return;
-        if (!hatch.CheckHatchEgg(selectItem.eggData))
+        if (!currentHatchBuilding.CheckHatchEgg(selectItem.eggData))
             return;
-
+        
         selectEggData = selectItem.eggData;
         selectEggData.StartHatch(currentHatchId);
+        currentHatchBuilding.StartHatch(selectEggData);
         Refresh();
         finished = false;
     }
@@ -113,6 +115,7 @@ public class UIHatch : MonoBehaviour
         if (selectEggData.remainTime > 0)
             return;
         PlayerDataBase.instance.eggDataBase.FinishHatch(selectEggData);
+        currentHatchBuilding.FinishOrCancelHatch();
         Messenger<int>.Broadcast(UIEvent.UIEvent_HatchEgg,currentHatchId);
         selectEggData = null;
         Refresh();
@@ -125,6 +128,7 @@ public class UIHatch : MonoBehaviour
 
         selectEggData.CancelHatch();
         selectEggData = null;
+        currentHatchBuilding.FinishOrCancelHatch();
         Refresh();
     }
 

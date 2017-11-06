@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PathologicalGames;
 
 public class HatchBuilding : Building 
 {
@@ -9,9 +10,29 @@ public class HatchBuilding : Building
         Fire,
         Wood,
     }
-
     public int hatchId = -1;
     public HatchType hatchType;
+    public Transform eggPos;
+
+    public EggData hatchEgg = null;
+
+    public void StartHatch(EggData hatchEgg)
+    {
+        if (hatchEgg == null)
+            return;
+        this.hatchEgg = hatchEgg;
+        GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(hatchEgg.ConfigData.prefab).gameObject;
+        newEggGo.transform.SetParent(eggPos,false);
+    }
+
+    public void FinishOrCancelHatch()
+    {
+        if (hatchEgg == null)
+            return;
+        for (int i = 0; i < eggPos.childCount; i++ )
+            PoolManager.Pools["Shuijing"].Despawn(eggPos.GetChild(i));
+        hatchEgg = null;
+    }
 
     public bool CheckHatchEgg(EggData checkEggData)
     {
