@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using LitJson;
+using System.IO;
 
 public partial class PATileTerrain
 {
@@ -1083,6 +1084,8 @@ public partial class PATileTerrain
 
         public List<PACrystalBuilding> crystals = new List<PACrystalBuilding>();
 
+        private bool invalid = false;
+
         public void RemoveCrystal(int id)
         {
             foreach(var crystal in crystals)
@@ -1092,9 +1095,16 @@ public partial class PATileTerrain
                     crystal.ClearBuildings();
                     crystal.shuijing = null;
                     crystals.Remove(crystal);
+                    invalid = true;
                     return;
                 }
             }
+        }
+
+        public void AddCrystal(PACrystalBuilding addCrystal)
+        {
+            crystals.Add(addCrystal);
+            invalid = true;
         }
 
         public void ClearCrystal()
@@ -1105,6 +1115,7 @@ public partial class PATileTerrain
                 crystal.shuijing = null;
             } 
             crystals.Clear();
+            invalid = true;
         }
 
         public PACrystalBuilding GetCrystalBuilding(int id)
@@ -1193,8 +1204,29 @@ public partial class PATileTerrain
             {
                 PACrystalBuilding crystalBuilding = new PACrystalBuilding();
                 crystalBuilding.FromJson(crystalNode);
-                crystals.Add(crystalBuilding);
+                AddCrystal(crystalBuilding);
             }
+        }
+
+        public void Save()
+        {
+            if (!invalid)
+                return;
+            string content = ToJson().ToString();
+            string path = Application.persistentDataPath + "/datui_terrain";
+#if UNITY_EDITOR
+            Debug.Log("Saved at " + path);
+#endif
+            File.Delete(path);
+            if (string.IsNullOrEmpty(content))
+                return;
+            FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs);
+            sw.Flush();
+            sw.BaseStream.Seek(0, SeekOrigin.Begin);
+            sw.Write(content);
+            sw.Close();
+            invalid = false;
         }
 	}
 

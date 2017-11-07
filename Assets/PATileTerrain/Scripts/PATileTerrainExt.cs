@@ -49,18 +49,7 @@ public partial class PATileTerrain
     /// </summary>
     public void SaveTerrain()
     {
-        string content = settings.ToJson().ToString();
-        string path = Application.persistentDataPath + "/datui_terrain";
-        Debug.Log("Saved at " + path);
-        File.Delete(path);
-        if (string.IsNullOrEmpty(content))
-            return;
-        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
-        StreamWriter sw = new StreamWriter(fs);
-        sw.Flush();
-        sw.BaseStream.Seek(0, SeekOrigin.Begin);
-        sw.Write(content);
-        sw.Close();
+        settings.Save();
     }
 
     /// <summary>
@@ -69,7 +58,9 @@ public partial class PATileTerrain
     public void LoadTerrain()
     {
         string path = Application.persistentDataPath + "/datui_terrain";
+#if UNITY_EDITOR
         Debug.Log("Load from " + path);
+#endif
         if (File.Exists(path))
         {
             FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Read);

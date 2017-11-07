@@ -74,7 +74,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
     void OnDestroy()
     {
         PlayerDataBase.instance.LocalSave();
-        SaveTerrain();
+        //SaveTerrain();
     }
 
     IEnumerator ToStart()
@@ -436,7 +436,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         PATileTerrain.PACrystalBuilding crystalBuildingData = new PATileTerrain.PACrystalBuilding(
             buildingTile.keyTile.id, shuijing.level, shuijing.elementType, shuijing.prefabName, RandomManager.NewSeed());
         crystalBuildingData.shuijing = shuijing;
-        tileTerrain.settings.crystals.Add(crystalBuildingData);
+        tileTerrain.settings.AddCrystal(crystalBuildingData);
 
         return shuijing;
     }
