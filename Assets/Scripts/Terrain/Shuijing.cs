@@ -20,6 +20,8 @@ public class Shuijing : Building
     public Dictionary<int,PATileTerrain.PATile> affectTiles = new Dictionary<int,PATileTerrain.PATile>();//水晶影响的tile列表，用来绘制贴花
     [HideInInspector]
     public HatchBuilding hatch = null;
+    [HideInInspector]
+    public List<Egg> eggs = new List<Egg>();//在水晶范围内刷新出来的蛋
 
     void Awake()
     {
@@ -143,7 +145,13 @@ public class Shuijing : Building
             vPoints[i].Reset();
     }
 
-    public void RemoveBuildings()
+    public void RemoveBelonging()
+    {
+        RemoveBuildings();
+        RemoveEggs();
+    }
+
+    void RemoveBuildings()
     {
         if (buildings.Count == 0)
             return;
@@ -151,6 +159,16 @@ public class Shuijing : Building
         foreach(var building in buildings)
             PoolManager.Pools["Shuijing"].Despawn(building);
         buildings.Clear();
+    }
+
+    void RemoveEggs()
+    {
+        if (eggs.Count == 0)
+            return;
+        
+        foreach(var egg in eggs)
+            PoolManager.Pools["Shuijing"].Despawn(egg.transform);
+        eggs.Clear();
     }
 
     public override void SetSelectTag(bool isSelect)

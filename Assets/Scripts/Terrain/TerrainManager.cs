@@ -522,7 +522,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         {
             if (crystal.shuijing == null)
                 continue;
-            crystal.shuijing.RemoveBuildings();
+            crystal.shuijing.RemoveBelonging();
             PoolManager.Pools["Shuijing"].Despawn(crystal.shuijing.transform);
             crystal.shuijing.tile.shuijing = null;
         }
@@ -536,7 +536,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             return;
 
         //tileTerrain.FillTerrain(defaultBrushType);
-        shuijing.RemoveBuildings();
+        shuijing.RemoveBelonging();
         PoolManager.Pools["Shuijing"].Despawn(shuijing.transform);
         tileTerrain.settings.RemoveCrystal(shuijing.tile.id);
         shuijing.tile.shuijing = null;
@@ -745,7 +745,10 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
             PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
             newEggGo.transform.SetParent(chunk.settings.buildingsRoot.transform);
             newEggGo.transform.position = tile.WorldPos(tileTerrain.transform);
-
+            
+            if(tile.affectShuijing != null)
+                tile.affectShuijing.eggs.Add(newEgg);
+            
             index += step;
         }
     }
