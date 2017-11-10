@@ -157,6 +157,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, eggLayerMask))
         {
             Egg selectEgg = hit.transform.GetComponent<Egg>();
+            if (selectEgg.eggData.hatchId != -1)
+                return;
             //Debug.Log("selectEgg.eggData.uId " + selectEgg.eggData.uId);
             PlayerDataBase.instance.eggDataBase.AddEgg(selectEgg.eggData);
             PoolManager.Pools["Shuijing"].Despawn(selectEgg.transform);

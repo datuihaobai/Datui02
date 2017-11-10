@@ -16,6 +16,7 @@ public class UIHatch : MonoBehaviour
     private int currentHatchId = -1;
     private HatchBuilding currentHatchBuilding = null;
     private bool finished = false;
+    private int cacheRemainTime = -1;
 
     void Awake()
     {
@@ -46,7 +47,13 @@ public class UIHatch : MonoBehaviour
             finished = true;
         }
         else
-            remainTimeText.text = GameUtility.GetTimeStringHHMMSS(selectEggData.remainTime * 1000f);
+        {
+            if (cacheRemainTime != (int)selectEggData.remainTime)
+            {
+                cacheRemainTime = (int)selectEggData.remainTime;
+                remainTimeText.text = GameUtility.GetTimeStringHHMMSS(selectEggData.remainTime * 1000f);
+            } 
+        }
     }
 
     public void Show(int hatchId)
@@ -106,6 +113,7 @@ public class UIHatch : MonoBehaviour
         currentHatchBuilding.StartHatch(selectEggData);
         Refresh();
         finished = false;
+        cacheRemainTime = -1;
     }
 
     public void OnClickHatch()

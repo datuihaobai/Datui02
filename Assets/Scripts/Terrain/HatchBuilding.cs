@@ -14,21 +14,23 @@ public class HatchBuilding : Building
     public HatchType hatchType;
     public Transform eggPos;
 
-    public EggData hatchEgg = null;
+    public EggData hatchEggData = null;
 
-    public void StartHatch(EggData hatchEgg)
+    public void StartHatch(EggData hatchEggData)
     {
-        if (hatchEgg == null)
+        if (hatchEggData == null)
             return;
-        this.hatchEgg = hatchEgg;
-        GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(hatchEgg.ConfigData.prefab).gameObject;
+        this.hatchEggData = hatchEggData;
+        GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(hatchEggData.ConfigData.prefab).gameObject;
         newEggGo.transform.SetParent(eggPos,false);
-        newEggGo.GetComponent<Egg>().hatchEffect.SetActive(true);
+        Egg newEgg = newEggGo.GetComponent<Egg>();
+        newEgg.eggData = hatchEggData;
+        newEgg.hatchEffect.SetActive(true);
     }
 
     public void FinishOrCancelHatch()
     {
-        if (hatchEgg == null)
+        if (hatchEggData == null)
             return;
         for (int i = 0; i < eggPos.childCount; i++)
         {
@@ -39,7 +41,7 @@ public class HatchBuilding : Building
             egg.hatchEffect.SetActive(false);
             PoolManager.Pools["Shuijing"].Despawn(child);
         } 
-        hatchEgg = null;
+        hatchEggData = null;
     }
 
     public bool CheckHatchEgg(EggData checkEggData)

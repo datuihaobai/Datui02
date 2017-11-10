@@ -56,6 +56,7 @@ public class TBPan : MonoBehaviour
     public LayerMask colliderLayerMask;
 
     private Ray ray;
+    RaycastHit hit;
     private Vector3 mousePosStart = Vector3.zero;
     private Vector3 vCamRootPosStart = Vector3.zero;
     private Vector3 vPickOld;
@@ -65,12 +66,42 @@ public class TBPan : MonoBehaviour
     private Vector3 inertiaSpeed;
     private bool isPointerOverToPlaceBuilding = false;
     private Transform hitTrans = null;
+    private int preMultiTouchCount;
+
+    void MouseButtonDown()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        if (ClickIsOverUI.instance.IsPointerOverUIObject(mousePosition))
+            return;
+        if (TerrainManager.instance.IsPointerOverToPlaceBuilding())
+        {
+            isPointerOverToPlaceBuilding = true;
+            return;
+        }
+        else
+            isPointerOverToPlaceBuilding = false;
+        //Debug.Log("GetMouseButtonDown mousePosition " + mousePosition);
+        mousePosStart = mousePosition;
+        vCamRootPosStart = trCameraRoot.position;
+        ray = Camera.main.ScreenPointToRay(mousePosition);
+        Physics.Raycast(ray, out hit, Mathf.Infinity, colliderLayerMask);
+        hitTrans = hit.transform;
+        if (hitTrans == null)
+            return;
+        //Debug.Log("GetMouseButtonDown hit.point " + hit.point);
+        vPickStart = hit.point - trCameraRoot.position;
+        vPickOld = vPickStart;
+        inertiaActive = false;
+        inertiaAge = 0f;
+        inertiaSpeed = Vector3.zero;
+    }
 
     void Update()
     {
         if (Input.touchCount > 1)
         {
             //Debug.Log("Input.touchCount " + Input.touchCount);
+            preMultiTouchCount = Input.touchCount;
             return;
         }
 
@@ -85,37 +116,20 @@ public class TBPan : MonoBehaviour
             this.inertiaActive = false;
         }
 
-        RaycastHit hit;
+        
         Vector3 mousePosition = Input.mousePosition;
         if (Input.GetMouseButtonDown(0))
         {
-            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
-                return;
-            if (TerrainManager.instance.IsPointerOverToPlaceBuilding())
-            {
-                isPointerOverToPlaceBuilding = true;
-                return;
-            }
-            else
-                isPointerOverToPlaceBuilding = false;
-            //Debug.Log("GetMouseButtonDown mousePosition " + mousePosition);
-            mousePosStart = mousePosition;
-            vCamRootPosStart = trCameraRoot.position;
-            ray = Camera.main.ScreenPointToRay(mousePosition);
-            Physics.Raycast(ray, out hit, Mathf.Infinity, colliderLayerMask);
-            hitTrans = hit.transform;
-            if (hitTrans == null)
-                return;
-            //Debug.Log("GetMouseButtonDown hit.point " + hit.point);
-            vPickStart = hit.point - trCameraRoot.position;
-            vPickOld = vPickStart;
-            inertiaActive = false;
-            inertiaAge = 0f;
-            inertiaSpeed = Vector3.zero;
+            MouseButtonDown();
         }
         else if (Input.GetMouseButton(0))
         {
-            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+            if (preMultiTouchCount > 1)
+            {
+                MouseButtonDown();
+                preMultiTouchCount = 0;
+            } 
+            if (ClickIsOverUI.instance.IsPointerOverUIObject(mousePosition))
                 return;
             if (isPointerOverToPlaceBuilding)
             {
@@ -142,7 +156,7 @@ public class TBPan : MonoBehaviour
         }
         else if(Input.GetMouseButtonUp(0))
         {
-            if (ClickIsOverUI.instance.IsPointerOverUIObject(Input.mousePosition))
+            if (ClickIsOverUI.instance.IsPointerOverUIObject(mousePosition))
                 return;
             if (isPointerOverToPlaceBuilding)
                 return;
