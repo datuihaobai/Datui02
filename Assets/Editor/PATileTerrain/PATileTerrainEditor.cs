@@ -711,6 +711,25 @@ public class PATileTerrainEditor : Editor
                         GUILayout.Label(selectedTile.element.GetElementValue(PATileTerrain.TileElementType.Wood).ToString() + " (read only)");
                         GUILayout.EndHorizontal();
                         GUILayout.BeginHorizontal();
+                        GUILayout.Label("Fire float : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.element.GetElementValueFloat(PATileTerrain.TileElementType.Fire).ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Wood float : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        GUILayout.Label(selectedTile.element.GetElementValueFloat(PATileTerrain.TileElementType.Wood).ToString() + " (read only)");
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Single Or Multi : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
+                        if (selectedTile.element.IsMultiElement())
+                            GUILayout.Label(" Multi (read only)");
+                        else if (selectedTile.element.IsSingleElement())
+                            GUILayout.Label(" Single (read only)");
+                        else
+                            GUILayout.Label(" Unknown (read only)");
+                        GUILayout.EndHorizontal();
+
+                        GUILayout.BeginHorizontal();
                         GUILayout.Label("TileSetType : ", EditorStyles.boldLabel, GUILayout.MaxWidth(96));
                         GUILayout.Label(selectedTile.tileSetType.ToString() + " (read only)");
                         GUILayout.EndHorizontal();

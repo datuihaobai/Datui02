@@ -85,7 +85,7 @@ public class Shuijing : Building
 
     public void CreateBuildings(PATileTerrain tileTerrain)
     {
-        //return;
+        return;
         RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystalBuilding(tile.id).randomSeed);
         PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
 
@@ -111,14 +111,16 @@ public class Shuijing : Building
                 if (point.building == null)
                 {
                     Transform building = point.CreateBuilding(chunk.settings.decoratesRoot);
-                    HatchBuilding hatchBuilding = building.GetComponent<HatchBuilding>();
-                    if (hatchBuilding != null)
-                    {
-                        hatchBuilding.hatchId = tile.id;
-                        this.hatch = hatchBuilding;
-                    }                     
                     if (building != null)
+                    {
+                        HatchBuilding hatchBuilding = building.GetComponent<HatchBuilding>();
+                        if (hatchBuilding != null)
+                        {
+                            hatchBuilding.hatchId = tile.id;
+                            this.hatch = hatchBuilding;
+                        }
                         buildings.Add(building);
+                    }
                 }
             }
         }

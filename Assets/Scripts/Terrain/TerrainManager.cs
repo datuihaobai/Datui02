@@ -562,7 +562,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         return false;
     }
     // includeMore == true 为了优化结算 多收集一圈tile 
-    void PaintElement(Shuijing shuijing, ref Dictionary<int, PATileTerrain.PATile> collectTiles,bool includeMore = false)
+    void PaintElement(Shuijing shuijing, ref Dictionary<int, PATileTerrain.PATile> collectTiles)
     {
         shuijing.affectTiles.Clear();
         CrystalRangeConfigAsset.CrystalRangeConfig configData = null;
@@ -608,11 +608,6 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                         tile.affectShuijing = shuijing;
                     outOfRange = false;
                 } 
-                else
-                {
-                    if (includeMore && !collectTiles.ContainsKey(tile.id))
-                        collectTiles.Add(tile.id, tile);
-                }
             }
             if (outOfRange)
                 break;
@@ -737,6 +732,8 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
                 eggConfigId = FireEggConfigId;
             else if (tile.IsWoodTile())
                 eggConfigId = WoodEggConfigId;
+            else
+                eggConfigId = UniversalEggConfigId;
 
             EggData newEggData = new EggData(eggConfigId);
             GameObject newEggGo = PoolManager.Pools["Shuijing"].Spawn(newEggData.ConfigData.prefab).gameObject;

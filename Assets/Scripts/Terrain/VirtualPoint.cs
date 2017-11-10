@@ -64,6 +64,8 @@ public class VirtualPoint : MonoBehaviour
             
         int randomValue = RandomManager.instance.Range(0,buildings.Count);
         Transform newBuilding = null;
+        if (buildings[randomValue].trans == null)
+            return null;
         if (Application.isPlaying)
             newBuilding = PoolManager.Pools["Shuijing"].Spawn(buildings[randomValue].trans);
         else
@@ -95,9 +97,9 @@ public class VirtualPoint : MonoBehaviour
 
         if (elementType == ElementType.Sand && checkTile.element.IsMultiElement())
             return true;
-        else if (elementType == ElementType.Fire && checkTile.element.FireValue > 0 && checkTile.element.WoodValue == 0)
+        else if (elementType == ElementType.Fire && checkTile.element.IsFire())
             return true;
-        else if (elementType == ElementType.Wood && checkTile.element.FireValue == 0 && checkTile.element.WoodValue > 0)
+        else if (elementType == ElementType.Wood && checkTile.element.IsWood())
             return true;
         return false;
     }

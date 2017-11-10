@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Game.Messenger;
-using Debug = Debugger;
+//using Debug = Debugger;
 
 public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 {
@@ -71,7 +71,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config DecalConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config DecalConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return decalConfigAsset;
 		}
@@ -92,7 +92,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config EggConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config EggConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return eggConfigAsset;
 		}
@@ -113,7 +113,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config TileMixConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config TileMixConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return tileMixConfigAsset;
 		}
@@ -134,7 +134,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config TerrainCommonConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config TerrainCommonConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return terrainCommonConfigAsset;
 		}
@@ -155,7 +155,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config CrystalRangeConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config CrystalRangeConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return crystalRangeConfigAsset;
 		}
@@ -176,7 +176,7 @@ public class ConfigDataBase : SingletonAppMonoBehaviour<ConfigDataBase>
 				{
 					assetBundle.Unload(false);
 				}
-				Debug.Log("Read Config TileBrushConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
+				//Debug.Log("Read Config TileBrushConfigAsset Cost Time " + (Time.realtimeSinceStartup - startTime));
 			}
 			return tileBrushConfigAsset;
 		}

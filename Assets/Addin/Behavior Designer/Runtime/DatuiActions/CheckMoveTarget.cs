@@ -33,14 +33,14 @@ public class CheckMoveTarget : Action
 
         if (animals.elementType == Animals.ElementType.Fire)
         {
-            if (tile.element.FireValue > 0 && tile.element.WoodValue == 0)
+            if (tile.element.IsFire())
                 return TaskStatus.Success;
             else
                 return TaskStatus.Failure;
         }
         else if (animals.elementType == Animals.ElementType.Wood)
         {
-            if (tile.element.WoodValue > 0 && tile.element.FireValue == 0)
+            if (tile.element.IsWood())
                 return TaskStatus.Success;
             else
                 return TaskStatus.Failure;

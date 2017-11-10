@@ -122,6 +122,8 @@ public partial class PATileTerrain
     [System.Serializable]
     public class PATileElement
     {
+        public const float MinIgnoreElementValue = 1f;
+
         private float[] elements = new float[2]{0,0};// elements[0]表示火属性 elements[1]表示木属性
         private int[] intElements = new int[2]{-1,-1};// elements[0]表示火属性 elements[1]表示木属性
         //private Dictionary<TileElementType, TileElementValue> elementsDic = new Dictionary<TileElementType, TileElementValue>();
@@ -154,6 +156,22 @@ public partial class PATileTerrain
             }
         }
 
+        public float FireValueFloat
+        {
+            get
+            {
+                return GetElementValueFloat(TileElementType.Fire);
+            }
+        }
+
+        public float WoodValueFloat
+        {
+            get
+            {
+                return GetElementValueFloat(TileElementType.Wood);
+            }
+        }
+
         public PATileElement()
         {
             //elementsDic[TileElementType.Fire] = new TileElementValue();
@@ -167,6 +185,17 @@ public partial class PATileTerrain
                 intElements[(int)elementType] = Mathf.CeilToInt(elements[(int)elementType]);
             return intElements[(int)elementType];
             //return elementsDic[elementType].GetIntValue();
+        }
+
+        ////获取第二大的元素属性的类型
+        //public TileElementType GetSecondTileElementType()
+        //{
+
+        //}
+
+        public float GetElementValueFloat(TileElementType elementType)
+        {
+            return elements[(int)elementType];
         }
 
         public void Reset()
@@ -193,35 +222,26 @@ public partial class PATileTerrain
                 intElements[i] = -1;
         }
 
-        public bool Equals(PATileElement other)
-        {
-            if (other.FireValue == FireValue && other.WoodValue == WoodValue)
-                return true;
-            return false;
-        }
+        //public bool Equals(PATileElement other)
+        //{
+        //    if (other.FireValue == FireValue && other.WoodValue == WoodValue)
+        //        return true;
+        //    return false;
+        //}
 
         public bool IsMultiElement()
         {
-            bool result = FireValue > 0 && WoodValue > 0;
-            //if (Mathf.Abs(FireValue - WoodValue) >
-            //    TerrainManager.instance.GetMinIgnoreElementValue())
-            //    result = false;
+            bool result = FireValueFloat > 0 && WoodValueFloat > 0;
+            if (Mathf.Abs(FireValueFloat - WoodValueFloat) > MinIgnoreElementValue)
+                result = false;
             return result;
+            //return FireValue == WoodValue && FireValue > 0;
         }
-
-        public bool IsEqualElement()
-        {
-            return FireValue == WoodValue;
-        }
-
-        public bool IsMultiAndEqualElement()
-        {
-            return IsMultiElement() && IsEqualElement();
-        }
-
+        
         public bool IsBaseElement()
         {
-            return FireValue == 0 && WoodValue == 0;
+            //return FireValue == 0 && WoodValue == 0;
+            return FireValueFloat.Equals(0f) && WoodValueFloat.Equals(0f);
         }
 
         public bool IsSingleElement()
@@ -275,15 +295,6 @@ public partial class PATileTerrain
 
         public int GetBrushFromConfig(TileElementType elementType)
         {
-            //TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
-            //foreach (var config in tileBrushConfigAsset.configs)
-            //{
-            //    if (config.elementType == (int)elementType && config.level == value)
-            //        return config.brush;  
-            //}
-
-            //return -1;
-            
             if(elementType == TileElementType.Fire)
             {
                 if (fireBrush == -1)
@@ -295,11 +306,6 @@ public partial class PATileTerrain
                             tileBrushConfigAsset.configs[i].level == FireValue)
                             fireBrush = tileBrushConfigAsset.configs[i].brush;
                     }
-                    //foreach (var config in tileBrushConfigAsset.configs)
-                    //{
-                    //    if (config.elementType == (int)elementType && config.level == FireValue)
-                    //        fireBrush = config.brush;
-                    //}
                 }
                 return fireBrush;
             }
@@ -314,28 +320,10 @@ public partial class PATileTerrain
                             tileBrushConfigAsset.configs[i].level == WoodValue)
                             woodBrush = tileBrushConfigAsset.configs[i].brush;
                     }
-                    //foreach (var config in tileBrushConfigAsset.configs)
-                    //{
-                    //    if (config.elementType == (int)elementType && config.level == WoodValue)
-                    //        woodBrush = config.brush;
-                    //}
                 } 
                 return woodBrush;
             }
             return -1;
-
-            //if(!brushConfigDicCache.ContainsKey(elementType))
-            //{
-            //    brushConfigDicCache[elementType] = -1;
-            //    TileBrushConfigAsset tileBrushConfigAsset = ConfigDataBase.instance.TileBrushConfigAsset;
-            //    foreach (var config in tileBrushConfigAsset.configs)
-            //    {
-            //        if (config.elementType == (int)elementType && config.level == elementsDic[elementType].GetIntValue())
-            //            brushConfigDicCache[elementType] = config.brush;
-            //    }
-            //}
-
-            //return brushConfigDicCache[elementType];
         }
 
         public int GetElementPaintBrushType(TileElementType elementType)
@@ -347,9 +335,9 @@ public partial class PATileTerrain
         {
             if (IsMultiElement())
                 return DecalSuitTileType.Sand;
-            else if (FireValue > 0 && WoodValue == 0)
+            else if (IsFire())
                 return DecalSuitTileType.Fire;
-            else if(WoodValue > 0 && FireValue == 0)
+            else if(IsWood())
                 return DecalSuitTileType.Wood;
 
             return DecalSuitTileType.None;
@@ -357,23 +345,44 @@ public partial class PATileTerrain
     
         public TileElementType GetTileElementType()
         {
-            if (FireValue - WoodValue > TerrainManager.instance.GetMinIgnoreElementValue())
+            //if (FireValue - WoodValue > TerrainManager.instance.GetMinIgnoreElementValue())
+            //    return TileElementType.Fire;
+            //else if (WoodValue - FireValue > TerrainManager.instance.GetMinIgnoreElementValue())
+            //    return TileElementType.Wood;
+            //else if (FireValue > 0)
+            //    return TileElementType.Fire;
+            //else if (WoodValue > 0)
+            //    return TileElementType.Wood;
+            //else
+            //    return TileElementType.None;
+
+           if (IsFire())
                 return TileElementType.Fire;
-            else if (WoodValue - FireValue > TerrainManager.instance.GetMinIgnoreElementValue())
-                return TileElementType.Wood;
-            else if (FireValue > 0)
-                return TileElementType.Fire;
-            else if (WoodValue > 0)
+            else if (IsWood())
                 return TileElementType.Wood;
             else
                 return TileElementType.None;
         }
 
+        public bool IsFire()
+        {
+            if (FireValueFloat - WoodValueFloat > MinIgnoreElementValue)
+                return true;
+            return FireValueFloat > 0 && WoodValueFloat.Equals(0f);
+        }
+
+        public bool IsWood()
+        {
+            if (WoodValueFloat - FireValueFloat > MinIgnoreElementValue)
+                return true;
+            return WoodValueFloat > 0 && FireValueFloat.Equals(0f);
+        }
+
         public static TileElementType GetTileElementType(PATile tile)
         {
-            if (tile != null)
-                tile.element.GetTileElementType();
-            return TileElementType.None;
+            if (tile == null)
+                return TileElementType.None;
+            return tile.element.GetTileElementType();
         }
     }
 
@@ -395,7 +404,7 @@ public partial class PATileTerrain
         Base = 0,// 底色
         Fire = 1,// 火
         Wood = 2,// 木
-        Sand = 3,// 火木融合
+        //Sand = 3,// 火木融合
     
         Fire2 = 11,// 2级（深色）火
         Fire3 = 12,// 3级（红色）火
@@ -534,8 +543,8 @@ public partial class PATileTerrain
                 count++;
             if (HasQtrTileType(QtrTileElementType.Base))
                 count++;
-            if (HasQtrTileType(QtrTileElementType.Sand))
-                count++;
+            //if (HasQtrTileType(QtrTileElementType.Sand))
+            //    count++;
             return count;
         }
 
@@ -603,49 +612,20 @@ public partial class PATileTerrain
                     bits = 0;
                 }
             }
-            else if (HasQtrTileType(QtrTileElementType.Wood))
-            {
-                // wood和fire融合
-                if (HasQtrTileType(QtrTileElementType.Fire))
-                {
-                    type = WoodLevel1Brush;
-                    toType = FireLevel1Brush;
-                    bits = GetBits(QtrTileElementType.Wood);
-                }
-                // wood和base融合
-                else if (HasQtrTileType(QtrTileElementType.Base))
-                {
-                    type = WoodLevel1Brush;
-                    toType = BaseBrush;
-                    bits = GetBits(QtrTileElementType.Wood);
-                }
-                else if (HasQtrTileType(QtrTileElementType.Sand))
-                {
-                    type = WoodLevel1Brush;
-                    toType = SandBrush;
-                    bits = GetBits(QtrTileElementType.Wood);
-                }
-                // 纯wood
-                else
-                {
-                    type = WoodLevel1Brush;
-                    toType = WoodLevel1Brush;
-                    bits = 0;
-                }
-            }
             else if (HasQtrTileType(QtrTileElementType.Fire))
             {
+                // fire和wood融合
+                if (HasQtrTileType(QtrTileElementType.Wood))
+                {
+                    type = FireLevel1Brush;
+                    toType = WoodLevel1Brush;
+                    bits = GetBits(QtrTileElementType.Fire);
+                }
                 // fire和base融合
-                if (HasQtrTileType(QtrTileElementType.Base))
+                else if (HasQtrTileType(QtrTileElementType.Base))
                 {
                     type = FireLevel1Brush;
                     toType = BaseBrush;
-                    bits = GetBits(QtrTileElementType.Fire);
-                }
-                else if (HasQtrTileType(QtrTileElementType.Sand))
-                {
-                    type = FireLevel1Brush;
-                    toType = SandBrush;
                     bits = GetBits(QtrTileElementType.Fire);
                 }
                 // 纯fire
@@ -656,20 +636,20 @@ public partial class PATileTerrain
                     bits = 0;
                 }
             }
-            else if (HasQtrTileType(QtrTileElementType.Sand))
+            else if (HasQtrTileType(QtrTileElementType.Wood))
             {
-                // sand和base融合
+                // wood和base融合
                 if (HasQtrTileType(QtrTileElementType.Base))
                 {
-                    type = SandBrush;
+                    type = WoodLevel1Brush;
                     toType = BaseBrush;
-                    bits = GetBits(QtrTileElementType.Sand);
+                    bits = GetBits(QtrTileElementType.Wood);
                 }
-                //纯sand
+                // 纯wood
                 else
                 {
-                    type = SandBrush;
-                    toType = SandBrush;
+                    type = WoodLevel1Brush;
+                    toType = WoodLevel1Brush;
                     bits = 0;
                 }
             }
@@ -810,12 +790,12 @@ public partial class PATileTerrain
     
         public bool IsFireTile()
         {
-            return element.FireValue > 0 && element.WoodValue == 0;
+            return element.IsFire();
         }
 
         public bool IsWoodTile()
         {
-            return element.WoodValue > 0 && element.FireValue== 0;
+            return element.IsWood();
         }
     }
 	
