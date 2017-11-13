@@ -321,7 +321,7 @@ public partial class PATileTerrain
                 toQtrTileElementType = QtrTileElementType.Fire;
                 fromType = WoodLevel1Brush;
                 toType = FireLevel1Brush;
-            } 
+            }
 
             tile.SetTileProp(fromType, toType, 7);
             tile.SetQtrTiles(toQtrTileElementType, qtrTileElementType, qtrTileElementType, qtrTileElementType);
@@ -620,23 +620,41 @@ public partial class PATileTerrain
     }
 
     // tile只有一个未确定的qtrtile
-    //int IsTileMiss1(PATile tile)
-    //{
-    //    int index = -1;
-    //    int count = 0;
-    //    for (int i = 0; i < tile.qtrTiles.Length; i++ )
-    //    {
-    //        if (tile.qtrTiles[i] == QtrTileElementType.None)
-    //        {
-    //            index = i;
-    //            count++;
-    //        } 
-    //    }
-    //    if (count == 1)
-    //        return index;
-    //    else
-    //        return -1;
-    //}
+    int IsTileMiss1(PATile tile)
+    {
+        int index = -1;
+        int count = 0;
+        for (int i = 0; i < tile.qtrTiles.Length; i++)
+        {
+            if (tile.qtrTiles[i] == QtrTileElementType.None)
+            {
+                index = i;
+                count++;
+            }
+        }
+        if (count == 1)
+            return index;
+        else
+            return -1;
+    }
+
+    public int GetTileMissQtrCount(PATile tile)
+    {
+        int count = 0;
+        for (int i = 0; i < tile.qtrTiles.Length; i++)
+            if (tile.qtrTiles[i] == QtrTileElementType.None)
+                count++;
+        return count;
+    }
+
+    public int GetTileQtrMissIndex(PATile tile)
+    {
+        for (int i = 0; i < tile.qtrTiles.Length; i++)
+            if (tile.qtrTiles[i] == QtrTileElementType.None)
+                return i;
+
+        return -1;
+    }
 
     ////如果tile只有一个qtrtile是未知的 那么未知的qtrtile直接设置成融合属性
     //void ProcessMiss1Tile(PATile tile)
@@ -648,22 +666,93 @@ public partial class PATileTerrain
     //    if(tile.element.IsMultiElement())
     //        tile.qtrTiles[miss1Index] = QtrTileElementType.Sand;
     //}
-    /// <summary>
-    /// 没有确定的qtrtile使用第二大的属性填充。
-    /// </summary>
-    /// <param name="tile"></param>
-    void ProcessMissTile(PATile tile)
+    
+    void ProcessMiss1Tile(PATile tile)
     {
-        QtrTileElementType missedQtrTileElementType = QtrTileElementType.None;
-        if(tile.element.FireValueFloat > tile.element.WoodValueFloat)
-            missedQtrTileElementType = QtrTileElementType.Wood;
-        else
-            missedQtrTileElementType = QtrTileElementType.Fire;
+        if (tile.IsQtrTilesSet())
+            return;
+
+        PATile[] nTiles = GetNeighboringTilesNxN(tile, 1);
+
+        PATile leftBottomTile = nTiles[0];
+        PATile leftTile = nTiles[1];
+        PATile leftTopTile = nTiles[2];
+        PATile topTile = nTiles[3];
+        PATile rightTopTile = nTiles[4];
+        PATile rightTile = nTiles[5];
+        PATile rightBottomTile = nTiles[6];
+        PATile bottomTile = nTiles[7];
+
+        int fireCount = 0;
+        int woodCount = 0;
 
         for (int i = 0; i < tile.qtrTiles.Length; i++)
         {
-            if (tile.qtrTiles[i] == QtrTileElementType.None)
-                tile.qtrTiles[i] = missedQtrTileElementType;
+            if (tile.qtrTiles[i] == QtrTileElementType.Fire)
+                fireCount++;
+            else if(tile.qtrTiles[i] == QtrTileElementType.Wood)
+                woodCount++;
+        } 
+
+        QtrTileElementType missedQtrTileElementType = QtrTileElementType.None;
+        //if (tile.element.FireValueFloat > tile.element.WoodValueFloat)
+        //{
+        //    if (fireCount - woodCount > 1)
+        //        missedQtrTileElementType = QtrTileElementType.Wood;
+        //    else
+        //        missedQtrTileElementType = QtrTileElementType.Fire;
+        //}
+        //else if (tile.element.WoodValueFloat > tile.element.FireValueFloat)
+        //{
+        //    if (woodCount - fireCount > 1)
+        //        missedQtrTileElementType = QtrTileElementType.Fire;
+        //    else
+        //        missedQtrTileElementType = QtrTileElementType.Wood;
+        //}
+        //else
+        //    Debug.LogError("error state");
+
+        int randomValue = RandomManager.instance.Range(1,3);
+        missedQtrTileElementType = (QtrTileElementType)randomValue;
+
+        int missIndex = GetTileQtrMissIndex(tile);
+        tile.qtrTiles[missIndex] = missedQtrTileElementType;
+
+        if (missIndex == 0)
+        {
+            if (leftTile != null && leftTile.qtrTiles[3] == QtrTileElementType.None)
+                leftTile.qtrTiles[3] = missedQtrTileElementType;
+            if (leftBottomTile != null && leftBottomTile.qtrTiles[2] == QtrTileElementType.None)
+                leftBottomTile.qtrTiles[2] = missedQtrTileElementType;
+            if (bottomTile != null && bottomTile.qtrTiles[1] == QtrTileElementType.None)
+                bottomTile.qtrTiles[1] = missedQtrTileElementType;
+        }
+        else if (missIndex == 1)
+        {
+            if (leftTopTile != null && leftTopTile.qtrTiles[3] == QtrTileElementType.None)
+                leftTopTile.qtrTiles[3] = missedQtrTileElementType;
+            if (leftTile != null && leftTile.qtrTiles[2] == QtrTileElementType.None)
+                leftTile.qtrTiles[2] = missedQtrTileElementType;
+            if (topTile != null && topTile.qtrTiles[0] == QtrTileElementType.None)
+                topTile.qtrTiles[0] = missedQtrTileElementType;
+        }
+        else if (missIndex == 2)
+        {
+            if (rightTopTile != null && rightTopTile.qtrTiles[0] == QtrTileElementType.None)
+                rightTopTile.qtrTiles[0] = missedQtrTileElementType;
+            if (rightTile != null && rightTile.qtrTiles[1] == QtrTileElementType.None)
+                rightTile.qtrTiles[1] = missedQtrTileElementType;
+            if (topTile != null && topTile.qtrTiles[3] == QtrTileElementType.None)
+                topTile.qtrTiles[3] = missedQtrTileElementType;
+        }
+        else if (missIndex == 3)
+        {
+            if (rightBottomTile != null && rightBottomTile.qtrTiles[1] == QtrTileElementType.None)
+                rightBottomTile.qtrTiles[1] = missedQtrTileElementType;
+            if (rightTile != null && rightTile.qtrTiles[0] == QtrTileElementType.None)
+                rightTile.qtrTiles[0] = missedQtrTileElementType;
+            if (bottomTile != null && bottomTile.qtrTiles[2] == QtrTileElementType.None)
+                bottomTile.qtrTiles[2] = missedQtrTileElementType;
         }
     }
 
@@ -704,41 +793,41 @@ public partial class PATileTerrain
         QtrTileElementType qte0 = GetMixQtrTileElementType(bottomTile, 1);
         QtrTileElementType qte1 = GetMixQtrTileElementType(leftBottomTile, 2);
         QtrTileElementType qte2 = GetMixQtrTileElementType(leftTile, 3);
-        if (qte0 != QtrTileElementType.None)
+        if (qte0 != QtrTileElementType.None && qte0 != QtrTileElementType.Base)
             tile.qtrTiles[0] = qte0;
-        else if (qte1 != QtrTileElementType.None)
+        else if (qte1 != QtrTileElementType.None && qte1 != QtrTileElementType.Base)
             tile.qtrTiles[0] = qte1;
-        else if (qte2 != QtrTileElementType.None)
+        else if (qte2 != QtrTileElementType.None && qte2 != QtrTileElementType.Base)
             tile.qtrTiles[0] = qte2;
 
         qte0 = GetMixQtrTileElementType(leftTile, 2);
         qte1 = GetMixQtrTileElementType(leftTopTile, 3);
         qte2 = GetMixQtrTileElementType(topTile, 0);
-        if (qte0 != QtrTileElementType.None)
+        if (qte0 != QtrTileElementType.None && qte0 != QtrTileElementType.Base)
             tile.qtrTiles[1] = qte0;
-        else if (qte1 != QtrTileElementType.None)
+        else if (qte1 != QtrTileElementType.None && qte1 != QtrTileElementType.Base)
             tile.qtrTiles[1] = qte1;
-        else if (qte2 != QtrTileElementType.None)
+        else if (qte2 != QtrTileElementType.None && qte2 != QtrTileElementType.Base)
             tile.qtrTiles[1] = qte2;
 
         qte0 = GetMixQtrTileElementType(topTile, 3);
         qte1 = GetMixQtrTileElementType(rightTopTile, 0);
         qte2 = GetMixQtrTileElementType(rightTile, 1);
-        if (qte0 != QtrTileElementType.None)
+        if (qte0 != QtrTileElementType.None && qte0 != QtrTileElementType.Base)
             tile.qtrTiles[2] = qte0;
-        else if (qte1 != QtrTileElementType.None)
+        else if (qte1 != QtrTileElementType.None && qte1 != QtrTileElementType.Base)
             tile.qtrTiles[2] = qte1;
-        else if (qte2 != QtrTileElementType.None)
+        else if (qte2 != QtrTileElementType.None && qte2 != QtrTileElementType.Base)
             tile.qtrTiles[2] = qte2;
 
         qte0 = GetMixQtrTileElementType(rightTile, 0);
         qte1 = GetMixQtrTileElementType(rightBottomTile, 1);
         qte2 = GetMixQtrTileElementType(bottomTile, 2);
-        if (qte0 != QtrTileElementType.None)
+        if (qte0 != QtrTileElementType.None && qte0 != QtrTileElementType.Base)
             tile.qtrTiles[3] = qte0;
-        else if (qte1 != QtrTileElementType.None)
+        else if (qte1 != QtrTileElementType.None && qte1 != QtrTileElementType.Base)
             tile.qtrTiles[3] = qte1;
-        else if (qte2 != QtrTileElementType.None)
+        else if (qte2 != QtrTileElementType.None && qte2 != QtrTileElementType.Base)
             tile.qtrTiles[3] = qte2;
     }
 
@@ -966,7 +1055,6 @@ public partial class PATileTerrain
         }
     }
 
-    //checkBaseTile == true时会检测是否是base（所有属性都是0）的tile,为了优化计算 有时收集的tile里面会包含base
     public void PaintTiles(ref Dictionary<int, PATileTerrain.PATile> tiles)
     {
         //先处理单属性地格 多属性的后处理
@@ -983,20 +1071,46 @@ public partial class PATileTerrain
             PaintASingleElementTile(tile,postProcessSingleElementTiles);
         }
 
-        foreach (var tile in multiElementTiles)
-            PaintAMultiElementTile(tile,postProcessMultiElementTiles);
+        //foreach (var tile in multiElementTiles)
+        //    PaintAMultiElementTile(tile, postProcessMultiElementTiles);
 
-        foreach (var tile in postProcessMultiElementTiles)
+        foreach (var tile in multiElementTiles)
         {
+            tile.SetQtrTiles(QtrTileElementType.None);
             ProcessMultiElementTile(tile);
-            //ProcessMiss1Tile(tile);
         }
 
-        foreach (var tile in postProcessMultiElementTiles)
-            ProcessMissTile(tile);
+        int processCount = 0;
+        while (true)
+        {
+            List<PATile> missTiles = new List<PATile>();
+            List<PATile> miss1Tiles = new List<PATile>();
+            foreach (var tile in postProcessMultiElementTiles)
+            {
+                int missCount = GetTileMissQtrCount(tile);
+                if (missCount > 0)
+                {
+                    if (missCount == 1)
+                        miss1Tiles.Add(tile);
+                    missTiles.Add(tile);
+                }
+            }
+            if (missTiles.Count == 0)
+                break;
 
+            foreach (var tile in miss1Tiles)
+                ProcessMiss1Tile(tile);
 
-        foreach (var tile in postProcessMultiElementTiles)
+            processCount++;
+            if (processCount >= 20)
+            {
+                Debug.LogWarning("processCount >= 20");
+                break;
+            }
+        }
+        Debug.Log("processCount " + processCount);
+
+        foreach (var tile in multiElementTiles)
             PaintPostProcessMultiElementTile(tile);
 
         foreach (var tile in postProcessSingleElementTiles)

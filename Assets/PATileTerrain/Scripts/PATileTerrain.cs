@@ -932,7 +932,9 @@ public partial class PATileTerrain: MonoBehaviour
 
     protected void UpdateTileUV(PATile tile)
 	{
-		if (tile.type == -1) { return; }	
+		if (tile.type == -1) { return; }
+
+        
 
 		Mesh mesh = GetChunkMesh(tile.chunkId);
 		Vector2[] uvs = mesh.uv;
@@ -949,10 +951,15 @@ public partial class PATileTerrain: MonoBehaviour
 			tile.bits = 0;
 		} else
 		{			
-			int id = FindTransitionBitsId(tile.bits);
-			int transitionId;			
 			
-			PATSTransition transition = FindTransition(tile.type, tile.toType, out transitionId);	
+            //int transitionId;			
+            //PATSTransition transition = FindTransition(tile.type, tile.toType, out transitionId);	
+
+            PATSTransition transition = FindTransition(tile.type, tile.toType);
+            if (tile.type == transition.to)
+                tile.bits = InvertBits(tile.bits);
+            int id = FindTransitionBitsId(tile.bits);
+
 			if (transition == null)
 			{
 				Debug.LogError("For the tile set is not known transition! tile.x = " + tile.x + " tile.y = " +tile.y);

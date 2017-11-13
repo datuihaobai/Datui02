@@ -85,7 +85,7 @@ public class Shuijing : Building
 
     public void CreateBuildings(PATileTerrain tileTerrain)
     {
-        //return;
+        return;
         RandomManager.instance.SetSeed(tileTerrain.settings.GetCrystalBuilding(tile.id).randomSeed);
         PATileTerrainChunk chunk = tileTerrain.GetChunk(tile.chunkId);
 

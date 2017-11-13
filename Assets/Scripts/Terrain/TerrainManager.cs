@@ -563,7 +563,7 @@ public class TerrainManager : SingletonAppMonoBehaviour<TerrainManager>
         }
         return false;
     }
-    // includeMore == true 为了优化结算 多收集一圈tile 
+
     void PaintElement(Shuijing shuijing, ref Dictionary<int, PATileTerrain.PATile> collectTiles)
     {
         shuijing.affectTiles.Clear();
